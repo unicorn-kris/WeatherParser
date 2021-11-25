@@ -1,17 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AngleSharp;
+using System;
+using System.Configuration;
+using System.Runtime.Remoting.Contexts;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using WeatherParser.RepositoryContracts;
 using WeatherParser.ServiceContracts;
 
 namespace WeatherParser.Service
 {
-    public class Service6Day : IWeatherDataService
+    public class WeatherDataService : IWeatherParserService
     {
-        public string GetData(string url)
+        private readonly IWeatherParserRepository _weatherParserRepository;
+
+        private IBrowsingContext context = BrowsingContext.New(AngleSharp.Configuration.Default);
+        public WeatherDataService(IWeatherParserRepository weatherParserRepository)
         {
-            throw new NotImplementedException();
+            _weatherParserRepository = weatherParserRepository;
+        }
+        public async Task<bool> GetDataAsinc(string url)
+        {
+            var document = await context.OpenAsync(url);
+
+
         }
 
         public string GetHumidity(string url)

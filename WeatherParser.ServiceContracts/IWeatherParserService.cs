@@ -1,8 +1,8 @@
 ﻿namespace WeatherParser.ServiceContracts
 {
-    public interface IWeatherDataService
+    public interface IWeatherParserService
     {
-        string GetData(string url);
+        string GetDataAsync(string url);
         string GetTemperature(string url);
         string GetPressure(string url);
         string GetWindSpeed(string url);

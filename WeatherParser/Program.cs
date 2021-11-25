@@ -10,6 +10,7 @@ namespace WeatherParser.ConsolePL
     {
         static void Main(string[] args)
         {
+
         }
     }
 }

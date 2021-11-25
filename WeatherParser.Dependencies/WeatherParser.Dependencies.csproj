@@ -44,5 +44,23 @@
     <Compile Include="DependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherParser.RepositoryContracts\WeatherParser.RepositoryContracts.csproj">
+      <Project>{0F5154FB-F681-45C9-A40E-1026ECE65E8E}</Project>
+      <Name>WeatherParser.RepositoryContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.RepositoryFiles\WeatherParser.RepositoryFiles.csproj">
+      <Project>{DDB836D4-5505-4B8C-8B3B-D815CECB6259}</Project>
+      <Name>WeatherParser.RepositoryFiles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.ServiceContracts\WeatherParser.ServiceContracts.csproj">
+      <Project>{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}</Project>
+      <Name>WeatherParser.ServiceContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.Service\WeatherParser.Service.csproj">
+      <Project>{588301B3-2323-4F25-BF9A-BAB394C3DEA1}</Project>
+      <Name>WeatherParser.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
