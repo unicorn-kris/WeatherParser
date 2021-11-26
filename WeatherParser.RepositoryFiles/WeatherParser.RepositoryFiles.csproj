@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj">
+      <Project>{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}</Project>
+      <Name>WeatherParser.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeatherParser.RepositoryContracts\WeatherParser.RepositoryContracts.csproj">
       <Project>{0F5154FB-F681-45C9-A40E-1026ECE65E8E}</Project>
       <Name>WeatherParser.RepositoryContracts</Name>

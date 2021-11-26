@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WeatherParser.Dependencies;
+using WeatherParser.Entities;
+using WeatherParser.ServiceContracts;
 
 namespace WeatherParser.ConsolePL
 {
@@ -10,6 +8,8 @@ namespace WeatherParser.ConsolePL
     {
         static void Main(string[] args)
         {
+            IWeatherParserService weatherParserService = DependencyResolver.WeatherParserService;
+            var result = weatherParserService.GetDataAsync(MainUrlSaratov.urlWeatherToday);
 
         }
     }

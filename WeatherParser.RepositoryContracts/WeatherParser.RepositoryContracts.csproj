@@ -44,5 +44,11 @@
     <Compile Include="IWeatherParserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj">
+      <Project>{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}</Project>
+      <Name>WeatherParser.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

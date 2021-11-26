@@ -49,5 +49,23 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherParser.Dependencies\WeatherParser.Dependencies.csproj">
+      <Project>{34BD73A2-F4AE-4291-B450-2F25E64E7592}</Project>
+      <Name>WeatherParser.Dependencies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj">
+      <Project>{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}</Project>
+      <Name>WeatherParser.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.ServiceContracts\WeatherParser.ServiceContracts.csproj">
+      <Project>{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}</Project>
+      <Name>WeatherParser.ServiceContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.Service\WeatherParser.Service.csproj">
+      <Project>{588301B3-2323-4F25-BF9A-BAB394C3DEA1}</Project>
+      <Name>WeatherParser.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
