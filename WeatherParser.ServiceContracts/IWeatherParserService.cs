@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using WeatherParser.Entities;
 
 namespace WeatherParser.ServiceContracts
 {
     public interface IWeatherParserService
     {
-        bool GetDataAsync(string url);
+        bool SaveWeatherData(string url);
+        Dictionary<DateTime, List<List<WeatherData>>> GetWeatherData(DateTime targetDate);
+
     }
 }

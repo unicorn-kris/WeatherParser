@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}</ProjectGuid>
+    <ProjectGuid>{83D4D20A-9F16-4C2B-84A7-1AB2BF7431FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WeatherParser.ServiceContracts</RootNamespace>
-    <AssemblyName>WeatherParser.ServiceContracts</AssemblyName>
+    <RootNamespace>WeatherParser.RepositoryDataBase</RootNamespace>
+    <AssemblyName>WeatherParser.RepositoryDataBase</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IWeatherParserService.cs" />
+    <Compile Include="WeatherDataRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj">
       <Project>{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}</Project>
       <Name>WeatherParser.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeatherParser.RepositoryContracts\WeatherParser.RepositoryContracts.csproj">
+      <Project>{0F5154FB-F681-45C9-A40E-1026ECE65E8E}</Project>
+      <Name>WeatherParser.RepositoryContracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

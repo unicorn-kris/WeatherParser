@@ -17,7 +17,12 @@ namespace WeatherParser.Service
             _weatherParserRepository = weatherParserRepository;
         }
 
-        public bool GetDataAsync(string url)
+        public Dictionary<DateTime, List<List<WeatherData>>> GetWeatherData(DateTime targetDate)
+        {
+            return _weatherParserRepository.GetWeatherData(targetDate);
+        }
+
+        public bool SaveWeatherData(string url)
         {
             List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
 
@@ -36,7 +41,9 @@ namespace WeatherParser.Service
             {
                 WeatherData weatherData = new WeatherData();
 
-                weatherData.Date = DateTime.Parse(date[0].GetAttribute("Title").Remove(0, date[0].GetAttribute("Title").IndexOf(',') + 5).Trim());
+                weatherData.CollectionDate = DateTime.Now;
+
+                weatherData.Date = DateTime.Parse(date[7].GetAttribute("Title").Remove(0, date[7].GetAttribute("Title").IndexOf(',') + 5).Trim());
 
                 string temperature = temperatures[0]
                     .GetElementsByClassName("values")[0]
@@ -78,9 +85,6 @@ namespace WeatherParser.Service
                     .QuerySelectorAll("span")[0].TextContent.Trim());
 
                 listOfWeatherData.Add(weatherData);
-                Console.WriteLine(weatherData.Date);
-                Console.ReadLine();
-
             }
 
             return _weatherParserRepository.SaveWeatherData(listOfWeatherData);
