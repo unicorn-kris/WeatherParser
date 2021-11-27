@@ -9,9 +9,9 @@ namespace WeatherParser.RepositoryFiles
 {
     public class WeatherDataRepository : IWeatherParserRepository
     {
-        public Dictionary<DateTime, List<List<WeatherData>>> GetWeatherData(DateTime targetDate)
+        public Dictionary<DateTime, List<WeatherData>> GetWeatherData(DateTime targetDate)
         {
-            Dictionary<DateTime, List<List<WeatherData>>> dataInFiles = new Dictionary<DateTime, List<List<WeatherData>>>();
+            Dictionary<DateTime, List<WeatherData>> dataInFiles = new Dictionary<DateTime, List<WeatherData>>();
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
 
             using (StreamReader fileTemperature = new StreamReader("C:/MonitoringWeather/Temperature.txt"))
@@ -19,15 +19,14 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileTemperature.EndOfStream)
                 {
                     var tempStr = fileTemperature.ReadLine().Trim().Split(' ');
-                    int indexList = 0;
+                    
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         if (!dataInFiles.ContainsKey(DateTime.Parse(tempStr[0])))
                         {
-                            dataInFiles.Add(DateTime.Parse(tempStr[0]), new List<List<WeatherData>>());
+                            dataInFiles.Add(DateTime.Parse(tempStr[0]), new List<WeatherData>());
                         }
 
-                        dataInFiles[DateTime.Parse(tempStr[0])].Add(new List<WeatherData>());
 
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
@@ -44,9 +43,8 @@ namespace WeatherParser.RepositoryFiles
                                 weatherData.Temperature = double.Parse(tempStr[i]);
                             }
 
-                            dataInFiles[DateTime.Parse(tempStr[0])][indexList].Add(weatherData);
+                            dataInFiles[DateTime.Parse(tempStr[0])].Add(weatherData);
                         }
-                        ++indexList;
                     }
                 }
             }
@@ -56,16 +54,15 @@ namespace WeatherParser.RepositoryFiles
                 while (!filePressure.EndOfStream)
                 {
                     var tempStr = filePressure.ReadLine().Trim().Split(' ');
-                    int indexList = 0;
+
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
-                            dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].Pressure = int.Parse(tempStr[i]);
+                            dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].Pressure = int.Parse(tempStr[i]);
                             ++indexWeatherData;
                         }
-                        ++indexList;
                     }
                 }
             }
@@ -75,7 +72,7 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileWindSpeed.EndOfStream)
                 {
                     var tempStr = fileWindSpeed.ReadLine().Trim().Split(' ');
-                    int indexList = 0;
+                    
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
@@ -83,17 +80,16 @@ namespace WeatherParser.RepositoryFiles
                         {
                             if (!tempStr[i].Any(c => c == '-'))
                             {
-                                dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].WindSpeedFirst = int.Parse(tempStr[i]);
-                                dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].WindSpeedSecond = int.MaxValue;
+                                dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindSpeedFirst = int.Parse(tempStr[i]);
+                                dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindSpeedSecond = int.MaxValue;
                             }
                             else
                             {
-                                dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].WindSpeedFirst = int.Parse(tempStr[i].Split('-')[0]);
-                                dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].WindSpeedSecond = int.Parse(tempStr[i].Split('-')[1]);
+                                dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindSpeedFirst = int.Parse(tempStr[i].Split('-')[0]);
+                                dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindSpeedSecond = int.Parse(tempStr[i].Split('-')[1]);
                             }
                             ++indexWeatherData;
                         }
-                        ++indexList;
                     }
                 }
             }
@@ -103,16 +99,15 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileWindDirection.EndOfStream)
                 {
                     var tempStr = fileWindDirection.ReadLine().Trim().Split(' ');
-                    int indexList = 0;
+                    
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
-                            dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].WindDirection = tempStr[i];
+                            dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindDirection = tempStr[i];
                             ++indexWeatherData;
                         }
-                        ++indexList;
                     }
                 }
             }
@@ -122,16 +117,15 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileHumidity.EndOfStream)
                 {
                     var tempStr = fileHumidity.ReadLine().Trim().Split(' ');
-                    int indexList = 0;
+                    
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
-                            dataInFiles[DateTime.Parse(tempStr[0])][indexList][indexWeatherData].Humidity = int.Parse(tempStr[i]);
+                            dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].Humidity = int.Parse(tempStr[i]);
                             ++indexWeatherData;
                         }
-                        ++indexList;
                     }
                 }
             }

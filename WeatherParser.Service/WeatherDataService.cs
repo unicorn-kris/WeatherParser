@@ -17,7 +17,7 @@ namespace WeatherParser.Service
             _weatherParserRepository = weatherParserRepository;
         }
 
-        public Dictionary<DateTime, List<List<WeatherData>>> GetWeatherData(DateTime targetDate)
+        public Dictionary<DateTime, List<WeatherData>> GetWeatherData(DateTime targetDate)
         {
             return _weatherParserRepository.GetWeatherData(targetDate);
         }

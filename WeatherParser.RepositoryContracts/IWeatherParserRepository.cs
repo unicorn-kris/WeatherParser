@@ -7,7 +7,7 @@ namespace WeatherParser.RepositoryContracts
     public interface IWeatherParserRepository
     {
         bool SaveWeatherData(List<WeatherData> listOfWeatherData);
-        Dictionary<DateTime, List<List<WeatherData>>> GetWeatherData(DateTime targetDate);
+        Dictionary<DateTime, List<WeatherData>> GetWeatherData(DateTime targetDate);
 
     }
 }
