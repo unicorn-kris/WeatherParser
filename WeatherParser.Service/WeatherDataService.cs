@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WeatherParser.Contract;
 using WeatherParser.Entities;
-using WeatherParser.RepositoryContracts;
-using WeatherParser.ServiceContracts;
+using WeatherParser.Repository.Contract;
 
 namespace WeatherParser.Service
 {

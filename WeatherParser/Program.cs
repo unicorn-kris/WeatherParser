@@ -1,7 +1,8 @@
-﻿using System;
-using WeatherParser.Dependencies;
+﻿using Autofac;
+using System;
+using WeatherParser.Contract;
 using WeatherParser.Entities;
-using WeatherParser.ServiceContracts;
+using WeatherParser.Repository.Contract;
 
 namespace WeatherParser.ConsolePL
 {
@@ -9,11 +10,17 @@ namespace WeatherParser.ConsolePL
     {
         static void Main(string[] args)
         {
-            IWeatherParserService weatherParserService = DependencyResolver.WeatherParserService;
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<WeatherParserConsoleModule>();
+
+            var container = builder.Build();
+
+            IWeatherParserService weatherParserService = container.Resolve<IWeatherParserService>();
+
             try
             {
-                var resultToday= weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherToday);
-                var resultTomorrow = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherTomorrow); 
+                var resultToday = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherToday);
+                var resultTomorrow = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherTomorrow);
                 var result3Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeather3Day);
                 var result4Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater4Day);
                 var result5Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater5Day);
@@ -25,7 +32,7 @@ namespace WeatherParser.ConsolePL
                 Console.WriteLine("Error");
             }
 
-           var result = weatherParserService.GetWeatherData(DateTime.Now);
+            var result = weatherParserService.GetWeatherData(DateTime.Now);
         }
     }
 }

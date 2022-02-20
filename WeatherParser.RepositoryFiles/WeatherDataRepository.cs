@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WeatherParser.Entities;
-using WeatherParser.RepositoryContracts;
+using WeatherParser.Repository.Contract;
 
-namespace WeatherParser.RepositoryFiles
+namespace WeatherParser.Repository
 {
     public class WeatherDataRepository : IWeatherParserRepository
     {
@@ -19,7 +19,7 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileTemperature.EndOfStream)
                 {
                     var tempStr = fileTemperature.ReadLine().Trim().Split(' ');
-                    
+
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         if (!dataInFiles.ContainsKey(DateTime.Parse(tempStr[0])))
@@ -72,7 +72,7 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileWindSpeed.EndOfStream)
                 {
                     var tempStr = fileWindSpeed.ReadLine().Trim().Split(' ');
-                    
+
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
@@ -99,7 +99,7 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileWindDirection.EndOfStream)
                 {
                     var tempStr = fileWindDirection.ReadLine().Trim().Split(' ');
-                    
+
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;
@@ -117,7 +117,7 @@ namespace WeatherParser.RepositoryFiles
                 while (!fileHumidity.EndOfStream)
                 {
                     var tempStr = fileHumidity.ReadLine().Trim().Split(' ');
-                    
+
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
                         int indexWeatherData = 0;

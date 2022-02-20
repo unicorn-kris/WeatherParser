@@ -15,15 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{762120EE-36DF-4034-A73C-645697E1B96E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Dependencies", "WeatherParser.Dependencies\WeatherParser.Dependencies.csproj", "{34BD73A2-F4AE-4291-B450-2F25E64E7592}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.ServiceContracts", "WeatherParser.ServiceContracts\WeatherParser.ServiceContracts.csproj", "{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Service", "WeatherParser.Service\WeatherParser.Service.csproj", "{588301B3-2323-4F25-BF9A-BAB394C3DEA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.RepositoryContracts", "WeatherParser.RepositoryContracts\WeatherParser.RepositoryContracts.csproj", "{0F5154FB-F681-45C9-A40E-1026ECE65E8E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.RepositoryFiles", "WeatherParser.RepositoryFiles\WeatherParser.RepositoryFiles.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Repository", "WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,22 +33,10 @@ Global
 		{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34BD73A2-F4AE-4291-B450-2F25E64E7592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34BD73A2-F4AE-4291-B450-2F25E64E7592}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34BD73A2-F4AE-4291-B450-2F25E64E7592}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34BD73A2-F4AE-4291-B450-2F25E64E7592}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6BC9904-B374-4B75-A76F-5AE2F527CB5B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{588301B3-2323-4F25-BF9A-BAB394C3DEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{588301B3-2323-4F25-BF9A-BAB394C3DEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{588301B3-2323-4F25-BF9A-BAB394C3DEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{588301B3-2323-4F25-BF9A-BAB394C3DEA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F5154FB-F681-45C9-A40E-1026ECE65E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F5154FB-F681-45C9-A40E-1026ECE65E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F5154FB-F681-45C9-A40E-1026ECE65E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F5154FB-F681-45C9-A40E-1026ECE65E8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDB836D4-5505-4B8C-8B3B-D815CECB6259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDB836D4-5505-4B8C-8B3B-D815CECB6259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDB836D4-5505-4B8C-8B3B-D815CECB6259}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,10 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E27D6945-216B-463B-82F4-9D8B9CDD60EE} = {4E130A99-52CD-4657-8F24-F8B455CC15E4}
 		{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6} = {4CE39F57-AE96-4B86-88AE-F319A4A6199D}
-		{34BD73A2-F4AE-4291-B450-2F25E64E7592} = {4CE39F57-AE96-4B86-88AE-F319A4A6199D}
-		{C6BC9904-B374-4B75-A76F-5AE2F527CB5B} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}
 		{588301B3-2323-4F25-BF9A-BAB394C3DEA1} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}
-		{0F5154FB-F681-45C9-A40E-1026ECE65E8E} = {762120EE-36DF-4034-A73C-645697E1B96E}
 		{DDB836D4-5505-4B8C-8B3B-D815CECB6259} = {762120EE-36DF-4034-A73C-645697E1B96E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
