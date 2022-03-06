@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="WeatherParser.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
+        mc:Ignorable="d"
+        Height="450" Width="800"
+        >
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="3" Background="#FFEEEEEE" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.RowSpan="2">
+                <DatePicker SelectedDate="{Binding SelectedDate}"/>
+            </Grid>
+            
+            <Grid Grid.Row="1">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="2" VerticalAlignment="Center">
+                    <Button Command="{Binding TemperatureCommand}" Margin="2" FontSize="15">
+                        Temperature
+                    </Button>   
+                    <Button Margin="2">
+                        Wind Speed
+                    </Button>
+                    <Button Margin="2">
+                        Wind Direction
+                    </Button>
+                    <Button Margin="2">
+                        Pressure
+                    </Button>
+                    <Button Margin="2">
+                        Humidity
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center">
+                    <CheckBox Margin="2">
+                        1.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        4.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        7.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        10.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        13.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        16.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        19.00
+                    </CheckBox>
+                    <CheckBox Margin="2">
+                        22.00
+                    </CheckBox>
+                </StackPanel>
+                
+            </Grid>    
+            
+        </Grid>
+
+        <lvc:CartesianChart Grid.Column="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"/>
+
+    </Grid>
+</UserControl>

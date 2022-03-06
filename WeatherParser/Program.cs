@@ -33,6 +33,8 @@ namespace WeatherParser.ConsolePL
             }
 
             var result = weatherParserService.GetWeatherData(DateTime.Now);
+
+            Console.ReadLine();
         }
     }
 }

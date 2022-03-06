@@ -4,7 +4,7 @@ using WeatherParser.Repository;
 
 namespace WeatherParser.Service
 {
-    public class ServiceModulee : Module
+    public class ServiceModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
