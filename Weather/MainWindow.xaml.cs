@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF
@@ -9,10 +7,10 @@ namespace WeatherParser.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : UserControl
+    public partial class MainWindow : Window
     {
-        private Autofac.IContainer _container;
-       
+        private IContainer _container;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -22,9 +20,6 @@ namespace WeatherParser.WPF
             _container = builder.Build();
 
             DataContext = _container.Resolve<IMainWindowViewModel>();
-
-            
         }
-
     }
 }

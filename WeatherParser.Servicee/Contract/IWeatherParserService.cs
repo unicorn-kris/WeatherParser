@@ -7,7 +7,11 @@ namespace WeatherParser.Contract
     public interface IWeatherParserService
     {
         bool SaveWeatherData(string url);
-        Dictionary<DateTime, List<WeatherData>> GetWeatherData(DateTime targetDate);
 
+        Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate);
+
+        DateTime GetFirstDate();
+
+        DateTime GetLastDate();
     }
 }

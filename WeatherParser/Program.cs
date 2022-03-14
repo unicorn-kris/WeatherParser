@@ -32,7 +32,7 @@ namespace WeatherParser.ConsolePL
                 Console.WriteLine("Error");
             }
 
-            var result = weatherParserService.GetWeatherData(DateTime.Now);
+            var result = weatherParserService.GetAllWeatherData(DateTime.Now);
 
             Console.ReadLine();
         }

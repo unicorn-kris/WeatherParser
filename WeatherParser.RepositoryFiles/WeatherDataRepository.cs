@@ -9,7 +9,7 @@ namespace WeatherParser.Repository
 {
     public class WeatherDataRepository : IWeatherParserRepository
     {
-        public Dictionary<DateTime, List<WeatherData>> GetWeatherData(DateTime targetDate)
+        public Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate)
         {
             Dictionary<DateTime, List<WeatherData>> dataInFiles = new Dictionary<DateTime, List<WeatherData>>();
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
@@ -131,6 +131,16 @@ namespace WeatherParser.Repository
             }
 
             return dataInFiles;
+        }
+
+        public DateTime GetFirstDate()
+        {
+            return DateTime.Parse(File.ReadAllLines("C:/MonitoringWeather/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]);
+        }
+
+        public DateTime GetLastDate()
+        {
+            return DateTime.Parse(File.ReadAllLines("C:/MonitoringWeather/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]);
         }
 
         public bool SaveWeatherData(List<WeatherData> listOfWeatherData)
