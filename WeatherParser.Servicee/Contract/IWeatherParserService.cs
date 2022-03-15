@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using WeatherParser.Entities;
 
-namespace WeatherParser.Contract
+namespace WeatherParser.Service.Contract
 {
     public interface IWeatherParserService
     {
-        bool SaveWeatherData(string url);
+        bool SaveWeatherData(string url, int dayNum);
 
         Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate);
 

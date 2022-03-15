@@ -2,17 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherParser.Contract;
+using WeatherParser.Service.Contract;
 using WeatherParser.Entities;
 using WeatherParser.Repository.Contract;
 
 namespace WeatherParser.Service
 {
-    public class WeatherDataService : IWeatherParserService
+    public class WeatherParserService : IWeatherParserService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
 
-        public WeatherDataService(IWeatherParserRepository weatherParserRepository)
+        public WeatherParserService(IWeatherParserRepository weatherParserRepository)
         {
             _weatherParserRepository = weatherParserRepository;
         }
@@ -32,7 +32,7 @@ namespace WeatherParser.Service
             return _weatherParserRepository.GetLastDate();
         }
 
-        public bool SaveWeatherData(string url)
+        public bool SaveWeatherData(string url, int dayNum)
         {
             List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
 
@@ -53,7 +53,7 @@ namespace WeatherParser.Service
 
                 weatherData.CollectionDate = DateTime.Now;
 
-                //weatherData.Date = DateTime.Parse(date[7].GetAttribute("Title").Remove(0, date[7].GetAttribute("Title").IndexOf(',') + 5).Trim());
+                weatherData.Date = weatherData.CollectionDate.AddDays(dayNum);
 
                 string temperature = temperatures[0]
                     .GetElementsByClassName("chart")[0]

@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using System;
-using WeatherParser.Contract;
+using WeatherParser.Service.Contract;
 using WeatherParser.Entities;
 using WeatherParser.Repository.Contract;
 
@@ -19,13 +19,13 @@ namespace WeatherParser.ConsolePL
 
             try
             {
-                var resultToday = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherToday);
-                var resultTomorrow = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherTomorrow);
-                var result3Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeather3Day);
-                var result4Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater4Day);
-                var result5Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater5Day);
-                var result6Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater6Day);
-                var result7Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater7Day);
+                var resultToday = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherToday, 0);
+                var resultTomorrow = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeatherTomorrow, 1);
+                var result3Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeather3Day, 2);
+                var result4Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater4Day, 3);
+                var result5Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater5Day, 4);
+                var result6Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater6Day, 5);
+                var result7Day = weatherParserService.SaveWeatherData(MainUrlSaratov.urlWeater7Day, 6);
             }
             catch
             {

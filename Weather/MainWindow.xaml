@@ -17,6 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -70,7 +71,14 @@
                     
                 </StackPanel>
                 
-            </Grid>    
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <StackPanel>
+                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="10" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="10" FontSize="15" FontFamily="Georgia"/>
+                </StackPanel>
+            </Grid>
             
         </Grid>
 

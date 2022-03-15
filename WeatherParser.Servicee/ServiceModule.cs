@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using WeatherParser.Contract;
 using WeatherParser.Repository;
+using WeatherParser.Service.Contract;
 
 namespace WeatherParser.Service
 {
@@ -8,7 +8,7 @@ namespace WeatherParser.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataService>().As<IWeatherParserService>();
+            builder.RegisterType<WeatherParserService>().As<IWeatherParserService>();
 
             builder.RegisterModule<RepositoryModule>();
         }

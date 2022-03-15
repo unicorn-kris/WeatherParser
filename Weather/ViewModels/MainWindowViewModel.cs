@@ -8,8 +8,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using WeatherParser.Contract;
+using WeatherParser.Service.Contract;
 using WeatherParser.Entities;
+using WeatherParser.TimerSaveDataService;
+using System.Windows;
+using System.Diagnostics;
 
 namespace WeatherParser.WPF.ViewModels
 {
@@ -33,30 +36,14 @@ namespace WeatherParser.WPF.ViewModels
 
         #region ctor
 
-        public MainWindowViewModel(IWeatherParserService weatherParserService)
+        public MainWindowViewModel(IWeatherParserService weatherParserService, ITimerSaveData timerSaveData)
         {
+            timerSaveData.SaveData();
+
             Series = new ObservableCollection<ISeries>();
             XAxes = new ObservableCollection<Axis>();
             YAxes = new ObservableCollection<Axis>() { new Axis() };
             Times = new ObservableCollection<TimeViewModel>();
-
-            for (int i = 0; i < 8; ++i)
-            {
-                if (i == 0)
-                {
-                    Times.Add(new TimeViewModel { CurrentTime = 1 });
-                }
-                else
-                {
-                    Times.Add(new TimeViewModel { CurrentTime = Times[i - 1].CurrentTime + 3 });
-                }
-
-                Times[i].IsChecked = false;
-                Times[i].IsDateChecked = false;
-
-                //subscribe mainViewModel on ischecked property change for change _isTimeSelected
-                PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
-            }
 
             TemperatureCommand = new RelayCommand(Temperature);
             PressureCommand = new RelayCommand(Pressure);
@@ -66,8 +53,11 @@ namespace WeatherParser.WPF.ViewModels
 
             _weatherParserService = weatherParserService;
 
-            FirstDate = _weatherParserService.GetFirstDate();
-            LastDate = _weatherParserService.GetLastDate();
+            RestartAppCommand = new RelayCommand(Restart);
+
+            RefreshDataCommand = new RelayCommand(RefreshData);
+
+            RefreshData(null);
         }
 
         private void OnTimeChecked(object? sender, PropertyChangedEventArgs e)
@@ -146,6 +136,11 @@ namespace WeatherParser.WPF.ViewModels
         //public ICommand WindDirectionCommand { get; }
 
         public ICommand HumidityCommand { get; }
+
+        public ICommand RestartAppCommand { get; }
+
+        public ICommand RefreshDataCommand { get; }
+
 
         #endregion
 
@@ -279,13 +274,47 @@ namespace WeatherParser.WPF.ViewModels
                         }
                         Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
                         //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-
                     }
                 }
             }
             DisableButtonsAndCheckBoxes();
         }
 
+
+        private void Restart(object? parameter)
+        {
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            Application.Current.Shutdown();
+        }
+
+        private void RefreshData(object? parameter)
+        {
+            IsTimeSelected = false;
+            SelectedDate = null;
+           
+            Times.Clear();
+
+            for (int i = 0; i < 8; ++i)
+            {
+                if (i == 0)
+                {
+                    Times.Add(new TimeViewModel { CurrentTime = 1 });
+                }
+                else
+                {
+                    Times.Add(new TimeViewModel { CurrentTime = Times[i - 1].CurrentTime + 3 });
+                }
+
+                Times[i].IsChecked = false;
+                Times[i].IsDateChecked = false;
+
+                //subscribe mainViewModel on ischecked property change for change _isTimeSelected
+                PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
+            }
+
+            FirstDate = _weatherParserService.GetFirstDate();
+            LastDate = _weatherParserService.GetLastDate();
+        }
         #endregion
 
         private void DisableButtonsAndCheckBoxes()

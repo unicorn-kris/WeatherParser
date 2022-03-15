@@ -7,7 +7,7 @@ using WeatherParser.Repository.Contract;
 
 namespace WeatherParser.Repository
 {
-    public class WeatherDataRepository : IWeatherParserRepository
+    public class WeatherParserRepository : IWeatherParserRepository
     {
         public Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate)
         {
