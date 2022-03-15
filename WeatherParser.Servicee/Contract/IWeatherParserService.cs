@@ -6,7 +6,7 @@ namespace WeatherParser.Service.Contract
 {
     public interface IWeatherParserService
     {
-        bool SaveWeatherData(string url, int dayNum);
+        void SaveWeatherData(string url, int dayNum);
 
         Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate);
 

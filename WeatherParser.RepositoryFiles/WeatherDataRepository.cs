@@ -143,7 +143,7 @@ namespace WeatherParser.Repository
             return DateTime.Parse(File.ReadAllLines("C:/MonitoringWeather/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]);
         }
 
-        public bool SaveWeatherData(List<WeatherData> listOfWeatherData)
+        public void SaveWeatherData(List<WeatherData> listOfWeatherData)
         {
             string pathMain = @"C:/MonitoringWeather";
             if (!Directory.Exists(pathMain))
@@ -215,13 +215,13 @@ namespace WeatherParser.Repository
                     fileHumidity.WriteLine();
                 }
             }
-            catch
+            catch (Exception e)
             {
-                return false;
+                using (StreamWriter fileError = new StreamWriter("C:/MonitoringWeather/Errors.txt", true))
+                {
+                    fileError.WriteLine(e.Message);
+                }
             }
-
-            return true;
-
         }
     }
 }

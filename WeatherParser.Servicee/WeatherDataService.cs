@@ -32,7 +32,7 @@ namespace WeatherParser.Service
             return _weatherParserRepository.GetLastDate();
         }
 
-        public bool SaveWeatherData(string url, int dayNum)
+        public void SaveWeatherData(string url, int dayNum)
         {
             List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
 
@@ -104,7 +104,7 @@ namespace WeatherParser.Service
                 listOfWeatherData.Add(weatherData);
             }
 
-            return _weatherParserRepository.SaveWeatherData(listOfWeatherData);
+            _weatherParserRepository.SaveWeatherData(listOfWeatherData);
         }
 
     }
