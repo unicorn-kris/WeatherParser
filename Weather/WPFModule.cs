@@ -7,7 +7,7 @@ namespace WeatherParser.WPF
 {
     public class WPFModule : Module
     {
-        protected override void Load(Autofac.ContainerBuilder builder)
+        protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<ServiceModule>();
 
