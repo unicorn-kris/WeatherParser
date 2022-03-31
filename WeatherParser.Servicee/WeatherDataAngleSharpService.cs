@@ -9,11 +9,11 @@ using WeatherParser.Service.Contract;
 
 namespace WeatherParser.Service
 {
-    public class WeatherParserService : IWeatherParserService
+    public class WeatherDataAngleSharpService : IWeatherParserService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
 
-        public WeatherParserService(IWeatherParserRepository weatherParserRepository)
+        public WeatherDataAngleSharpService(IWeatherParserRepository weatherParserRepository)
         {
             _weatherParserRepository = weatherParserRepository;
         }

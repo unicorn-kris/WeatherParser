@@ -78,7 +78,10 @@
     <Compile Include="Contract\IWeatherParserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceModule.cs" />
-    <Compile Include="WeatherDataService.cs" />
+    <Compile Include="WeatherDataAPIService.cs" />
+    <Compile Include="WeatherDataAngleSharpService.cs" />
+    <Compile Include="WeatherDataHtmlAgilityPackService.cs" />
+    <Compile Include="WeatherDataSeleniumService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj">
