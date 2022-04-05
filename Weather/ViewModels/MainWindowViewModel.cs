@@ -88,7 +88,7 @@ namespace WeatherParser.WPF.ViewModels
 
                     XAxes.Add(new Axis()
                     {
-                        Labels = _weatherData.Keys.Select(s => s.Date.ToString()).ToList(),
+                        Labels = _weatherData.Keys.Select(s => s.Date.ToString("dd.MM.yyyy")).ToList(),
                         //Labels = new List<string>() { "1", "2", "3" },
                         LabelsPaint = new SolidColorPaintTask(SKColors.Black)
                     });

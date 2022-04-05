@@ -34,7 +34,12 @@ namespace WeatherParser.Service
         }
 
         public void SaveWeatherData(string url, int dayNum)
-        { }
-            
+        {
+            List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
+
+
+
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using AngleSharp.Io.Network;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using WeatherParser.Entities;
 using WeatherParser.Repository.Contract;
@@ -37,13 +38,13 @@ namespace WeatherParser.Service
         {
             List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
 
-            //var config = Configuration.Default.WithDefaultLoader();
-            var config = Configuration.Default.With(new HttpClientRequester()).WithDefaultLoader();
-
-
-            var doc = BrowsingContext.New(config).OpenNewAsync(url);
-
+            var config = Configuration.Default.WithDefaultLoader();
+            var doc = BrowsingContext.New(config).OpenAsync(url);
             var parsedHtml = doc.Result;
+
+            var html = parsedHtml.Body.OuterHtml;
+
+            File.WriteAllText("log.txt", html);
 
             var temperatures = parsedHtml.GetElementsByClassName("widget-row-chart widget-row-chart-temperature");
             var windSpeeds = parsedHtml.GetElementsByClassName("widget-row widget-row-wind-speed-gust row-with-caption");

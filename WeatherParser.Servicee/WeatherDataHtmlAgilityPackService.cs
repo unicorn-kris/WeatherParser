@@ -35,6 +35,6 @@ namespace WeatherParser.Service
 
         public void SaveWeatherData(string url, int dayNum)
         { }
-    {
+    
     }
 }
