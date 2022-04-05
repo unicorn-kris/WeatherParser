@@ -1,0 +1,20 @@
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Could not load file or assembly 'AngleSharp.Io, Version=0.16.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea'. Не удается найти указанный файл.
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Specified argument was out of the range of valid values. (Parameter 'index')
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
