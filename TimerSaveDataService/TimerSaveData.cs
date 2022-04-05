@@ -17,7 +17,7 @@ namespace WeatherParser.TimerSaveDataService
 
         public void SaveData()
         {
-            DispatcherTimer timer = new DispatcherTimer();
+            var timer = new DispatcherTimer();
 
             SaveWeather();
 
