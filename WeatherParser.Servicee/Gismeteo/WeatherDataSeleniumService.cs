@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WeatherParser.Entities;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Service.Contract;
 
 namespace WeatherParser.Service
 {
-    class WeatherDataSeleniumService: IWeatherParserService
+    class WeatherDataSeleniumService : IWeatherParserService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
 
@@ -37,9 +34,8 @@ namespace WeatherParser.Service
         {
             List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
 
-
-
         }
+
 
     }
 }

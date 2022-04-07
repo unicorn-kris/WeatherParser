@@ -1,6 +1,6 @@
-﻿namespace WeatherParser.Entities
+﻿namespace WeatherParser.Entities.Urls
 {
-    public static class MainUrlSaratov
+    public static class UrlsSaratovGismeteo
     {
         //сслыки на страницы для сбора данных о погоде
         public static string urlWeatherToday = "https://www.gismeteo.ru/weather-saratov-5032/";
