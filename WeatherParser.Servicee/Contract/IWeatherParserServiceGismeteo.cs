@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeatherParser.Entities;
+using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Service.Contract
 {
-    public interface IWeatherParserService
+    public interface IWeatherParserServiceGismeteo
     {
         void SaveWeatherData(string url, int dayNum);
 
-        Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate);
+        Dictionary<DateTime, List<WeatherDataService>> GetAllWeatherData(DateTime targetDate);
 
         DateTime GetFirstDate();
 

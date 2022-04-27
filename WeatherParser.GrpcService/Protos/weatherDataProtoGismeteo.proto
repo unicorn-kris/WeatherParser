@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+
+option csharp_namespace = "WeatherParser.GrpcService.Services";
+
+package WeatherDataProtoGismeteo;
+
+service WeatherDataProtoGismeteo {
+  rpc SaveWeatherData (WeatherDataSaveRequest) returns (google.protobuf.Empty) {}
+  rpc GetAllWeatherData (google.protobuf.Timestamp) returns (WeatherDataGetResponse) {}
+  rpc GetFirstDate(google.protobuf.Empty) returns (google.protobuf.Timestamp) {}
+  rpc GetLastDate (google.protobuf.Empty) returns (google.protobuf.Timestamp) {}
+}
+
+message WeatherDataSaveRequest {
+  string url = 1;
+  int32 day = 2;
+}
+
+message WeatherDataProto{
+	google.protobuf.Timestamp CollectionDate = 1;
+	google.protobuf.Timestamp Date = 2;
+	double Temperature = 3;
+	int32 Pressure = 4;
+	int32 Humidity = 5;
+	int32 WindSpeedFirst = 6;
+	int32 WindSpeedSecond = 7;
+	google.protobuf.StringValue WindDirection = 8;
+}
+
+message weatherDataList{
+	repeated WeatherDataProto weatherDataList = 1;
+}
+
+message KeyValuePair {
+  google.protobuf.Timestamp key = 1;
+  weatherDataList value = 2;
+}
+
+message WeatherDataGetResponse {
+	repeated KeyValuePair weatherDataDictionary = 1;
+}

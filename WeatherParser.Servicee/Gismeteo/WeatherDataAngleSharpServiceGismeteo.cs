@@ -1,27 +1,54 @@
 ﻿using AngleSharp;
-using AngleSharp.Io.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WeatherParser.Entities;
 using WeatherParser.Repository.Contract;
+using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Contract;
+using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Service
 {
-    public class WeatherDataAngleSharpService : IWeatherParserService
+    public class WeatherDataAngleSharpServiceGismeteo : IWeatherParserServiceGismeteo
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
 
-        public WeatherDataAngleSharpService(IWeatherParserRepository weatherParserRepository)
+        public WeatherDataAngleSharpServiceGismeteo(IWeatherParserRepository weatherParserRepository)
         {
             _weatherParserRepository = weatherParserRepository;
         }
 
-        public Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate)
+        public Dictionary<DateTime, List<WeatherDataService>> GetAllWeatherData(DateTime targetDate)
         {
-            return _weatherParserRepository.GetAllWeatherData(targetDate);
+            var resultData = new Dictionary<DateTime, List<WeatherDataService>>();
+
+            var weatherData = _weatherParserRepository.GetAllWeatherData(targetDate);
+
+            //map repository entity to service entity
+            foreach (var weather in weatherData)
+            {
+                var newListOfWeatherData = new List<WeatherDataService>();
+
+                foreach (var item in weather.Value)
+                {
+                    newListOfWeatherData.Add(new WeatherDataService()
+                    {
+                        Temperature = item.Temperature,
+                        Humidity = item.Humidity,
+                        Pressure = item.Pressure,
+                        WindSpeedFirst = item.WindSpeedFirst,
+                        WindSpeedSecond = item.WindSpeedSecond,
+                        WindDirection = item.WindDirection,
+                        CollectionDate = item.CollectionDate,
+                        Date = item.Date
+                    });
+                }
+
+                resultData.Add(weather.Key, newListOfWeatherData);
+            }
+
+            return resultData;
         }
 
         public DateTime GetFirstDate()
@@ -36,7 +63,7 @@ namespace WeatherParser.Service
 
         public void SaveWeatherData(string url, int dayNum)
         {
-            List<WeatherData> listOfWeatherData = new List<WeatherData>(8);
+            List<WeatherDataService> listOfWeatherData = new List<WeatherDataService>(8);
 
             var config = Configuration.Default.WithDefaultLoader();
             var doc = BrowsingContext.New(config).OpenAsync(url);
@@ -54,7 +81,7 @@ namespace WeatherParser.Service
 
             for (int i = 0; i < 8; ++i)
             {
-                WeatherData weatherData = new WeatherData();
+                WeatherDataService weatherData = new WeatherDataService();
 
                 weatherData.CollectionDate = DateTime.Now;
 
@@ -109,7 +136,25 @@ namespace WeatherParser.Service
                 listOfWeatherData.Add(weatherData);
             }
 
-            _weatherParserRepository.SaveWeatherData(listOfWeatherData);
+            //map service entity to repository entity
+            var newListOfWeatherData = new List<WeatherDataRepository>();
+
+            foreach (var weatherData in listOfWeatherData)
+            {
+                newListOfWeatherData.Add(new WeatherDataRepository()
+                {
+                    Temperature = weatherData.Temperature,
+                    Humidity = weatherData.Humidity,
+                    Pressure = weatherData.Pressure,
+                    WindSpeedFirst = weatherData.WindSpeedFirst,
+                    WindSpeedSecond = weatherData.WindSpeedSecond,
+                    WindDirection = weatherData.WindDirection,
+                    CollectionDate = weatherData.CollectionDate,
+                    Date = weatherData.Date,
+                });
+            }
+
+            _weatherParserRepository.SaveWeatherData(newListOfWeatherData);
         }
     }
 }

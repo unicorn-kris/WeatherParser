@@ -5,10 +5,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.GrpcService\WeatherParser.GrpcService.csproj" />
     <ProjectReference Include="..\WeatherParser.Servicee\WeatherParser.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.45.0" />
   </ItemGroup>
+
+	
 </Project>

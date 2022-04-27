@@ -6,7 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />

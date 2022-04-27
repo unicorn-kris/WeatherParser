@@ -8,11 +8,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using WeatherParser.Service.Contract;
-using WeatherParser.Entities;
 using WeatherParser.TimerSaveDataService;
 using System.Windows;
 using System.Diagnostics;
+using WeatherParser.GrpcService.Services;
+using Google.Protobuf.WellKnownTypes;
+using WeatherParser.Presentation.Entities;
 
 namespace WeatherParser.WPF.ViewModels
 {
@@ -24,9 +25,9 @@ namespace WeatherParser.WPF.ViewModels
 
         private bool _isTimeSelected = false;
 
-        private IWeatherParserService _weatherParserService;
+        private WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient _weatherParserService;
 
-        private Dictionary<DateTime, List<WeatherData>> _weatherData;
+        private Dictionary<DateTime, List<WeatherDataPresentation>> _weatherData;
 
         private DateTime _firstDate;
 
@@ -36,7 +37,7 @@ namespace WeatherParser.WPF.ViewModels
 
         #region ctor
 
-        public MainWindowViewModel(IWeatherParserService weatherParserService, ITimerSaveData timerSaveData)
+        public MainWindowViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService, ITimerSaveData timerSaveData)
         {
             timerSaveData.SaveData();
 
@@ -78,7 +79,8 @@ namespace WeatherParser.WPF.ViewModels
 
                 if (_selectedDate != null)
                 {
-                    _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+                    _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
+
                     for (int i = 0; i < Times.Count; ++i)
                     {
                         Times[i].IsDateChecked = true;
@@ -88,6 +90,7 @@ namespace WeatherParser.WPF.ViewModels
 
                     XAxes.Add(new Axis()
                     {
+                        //fix
                         Labels = _weatherData.Keys.Select(s => s.Date.ToString("dd.MM.yyyy")).ToList(),
                         //Labels = new List<string>() { "1", "2", "3" },
                         LabelsPaint = new SolidColorPaintTask(SKColors.Black)
@@ -149,7 +152,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
 
-            _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
 
             if (_weatherData != null)
             {
@@ -176,7 +179,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
 
-            _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
 
             if (_weatherData != null)
             {
@@ -204,7 +207,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
 
-            _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
 
             if (_weatherData != null)
             {
@@ -231,7 +234,7 @@ namespace WeatherParser.WPF.ViewModels
         //{
         //    Series.Clear();
 
-        //    _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+        //    _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
 
         //    if (_weatherData != null)
         //    {
@@ -258,7 +261,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
 
-            _weatherData = _weatherParserService.GetAllWeatherData(_selectedDate.Value);
+            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
 
             if (_weatherData != null)
             {
@@ -312,8 +315,8 @@ namespace WeatherParser.WPF.ViewModels
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
 
-            FirstDate = _weatherParserService.GetFirstDate();
-            LastDate = _weatherParserService.GetLastDate();
+            FirstDate = _weatherParserService.GetFirstDate(new Empty()).ToDateTime();
+            LastDate = _weatherParserService.GetLastDate(new Empty()).ToDateTime();
         }
         #endregion
 
@@ -329,5 +332,35 @@ namespace WeatherParser.WPF.ViewModels
             SelectedDate = null;
         }
 
+        private Dictionary<DateTime, List<WeatherDataPresentation>> GetResponseToDictionary(WeatherDataGetResponse weatherDataGetResponse)
+        {
+            var result = new Dictionary<DateTime, List<WeatherDataPresentation>>();
+
+            foreach (var item in weatherDataGetResponse.WeatherDataDictionary)
+            {
+                var weatherDataList = new List<WeatherDataPresentation>();
+
+                foreach(var weatherData in item.Value.WeatherDataList)
+                {
+                    weatherDataList.Add(new WeatherDataPresentation()
+                    {
+                        CollectionDate = weatherData.CollectionDate.ToDateTime(),
+                        Date = weatherData.Date.ToDateTime(),
+                        Temperature = weatherData.Temperature,
+                        Humidity = weatherData.Humidity,
+                        Pressure = weatherData.Pressure,
+                        WindDirection = weatherData.WindDirection,
+                        WindSpeedFirst = weatherData.WindSpeedFirst,
+                        WindSpeedSecond = weatherData.WindSpeedSecond
+                    });
+                }
+
+                if (!result.ContainsKey(item.Key.ToDateTime()))
+                {
+                    result.Add(item.Key.ToDateTime(), weatherDataList);
+                }
+            }
+            return result;
+        }
     }
 }

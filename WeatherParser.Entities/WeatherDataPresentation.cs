@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WeatherParser.Entities
+namespace WeatherParser.Presentation.Entities
 {
-    public class WeatherData
+    public class WeatherDataPresentation
     {
         //объект для сохранения данных о погоде
         public DateTime CollectionDate { get; set; }

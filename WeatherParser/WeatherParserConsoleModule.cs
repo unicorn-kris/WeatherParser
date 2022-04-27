@@ -1,10 +1,7 @@
 ﻿using Autofac;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherParser.Service;
+using Grpc.Core;
+using Grpc.Net.Client;
+using WeatherParser.GrpcService.Services;
 using WeatherParser.TimerSaveDataService;
 
 namespace WeatherParser.ConsolePL
@@ -13,7 +10,10 @@ namespace WeatherParser.ConsolePL
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<ServiceModule>();
+            builder.Register(c => GrpcChannel.ForAddress("http://localhost:5000")).As<ChannelBase>().SingleInstance();
+
+            builder.RegisterType<WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient>();
+
             builder.RegisterType<ITimerSaveData>().As<TimerSaveData>().SingleInstance();
         }
     }

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.ConsolePL", "WeatherParser\WeatherParser.ConsolePL.csproj", "{E27D6945-216B-463B-82F4-9D8B9CDD60EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.ConsolePL", "WeatherParser\WeatherParser.ConsolePL.csproj", "{E27D6945-216B-463B-82F4-9D8B9CDD60EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Entities", "WeatherParser.Entities\WeatherParser.Entities.csproj", "{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Presentation.Entities", "WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj", "{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}"
 EndProject
@@ -15,13 +15,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{762120EE-36DF-4034-A73C-645697E1B96E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Repository", "WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Repository", "WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.WPF", "Weather\WeatherParser.WPF.csproj", "{43BF3001-EA38-4821-9F02-A6CA74127DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Service", "WeatherParser.Servicee\WeatherParser.Service.csproj", "{A08DDF14-4179-4121-8572-28088198943E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service", "WeatherParser.Servicee\WeatherParser.Service.csproj", "{A08DDF14-4179-4121-8572-28088198943E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimerSaveDataService", "TimerSaveDataService\TimerSaveDataService.csproj", "{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimerSaveDataService", "TimerSaveDataService\TimerSaveDataService.csproj", "{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.GrpcService", "WeatherParser.GrpcService\WeatherParser.GrpcService.csproj", "{8C62A650-31D5-4D62-A132-B4E934496304}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C62A650-31D5-4D62-A132-B4E934496304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C62A650-31D5-4D62-A132-B4E934496304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C62A650-31D5-4D62-A132-B4E934496304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C62A650-31D5-4D62-A132-B4E934496304}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E27D6945-216B-463B-82F4-9D8B9CDD60EE} = {4E130A99-52CD-4657-8F24-F8B455CC15E4}
 		{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6} = {4CE39F57-AE96-4B86-88AE-F319A4A6199D}
+		{4CE39F57-AE96-4B86-88AE-F319A4A6199D} = {4E130A99-52CD-4657-8F24-F8B455CC15E4}
 		{DDB836D4-5505-4B8C-8B3B-D815CECB6259} = {762120EE-36DF-4034-A73C-645697E1B96E}
 		{43BF3001-EA38-4821-9F02-A6CA74127DA9} = {4E130A99-52CD-4657-8F24-F8B455CC15E4}
 		{A08DDF14-4179-4121-8572-28088198943E} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}

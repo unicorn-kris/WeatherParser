@@ -8,7 +8,7 @@ namespace WeatherParser.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataHtmlAgilityPackService>().As<IWeatherParserService>();
+            builder.RegisterType<WeatherDataHtmlAgilityPackServiceGismeteo>().As<IWeatherParserServiceGismeteo>();
 
             builder.RegisterModule<RepositoryModule>();
         }

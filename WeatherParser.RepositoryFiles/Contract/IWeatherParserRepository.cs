@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeatherParser.Entities;
+using WeatherParser.Repository.Entities;
 
 namespace WeatherParser.Repository.Contract
 {
     public interface IWeatherParserRepository
     {
-        void SaveWeatherData(List<WeatherData> listOfWeatherData);
+        void SaveWeatherData(List<WeatherDataRepository> listOfWeatherData);
 
-        Dictionary<DateTime, List<WeatherData>> GetAllWeatherData(DateTime targetDate);
+        Dictionary<DateTime, List<WeatherDataRepository>> GetAllWeatherData(DateTime targetDate);
 
         DateTime GetFirstDate();
 

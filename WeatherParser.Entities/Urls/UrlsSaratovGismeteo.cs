@@ -1,4 +1,4 @@
-﻿namespace WeatherParser.Entities.Urls
+﻿namespace WeatherParser.Presentation.Entities.Urls
 {
     public static class UrlsSaratovGismeteo
     {
