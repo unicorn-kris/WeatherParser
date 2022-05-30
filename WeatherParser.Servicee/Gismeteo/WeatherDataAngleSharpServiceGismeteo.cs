@@ -1,7 +1,6 @@
 ﻿using AngleSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;

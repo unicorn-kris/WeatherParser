@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using WeatherParser.Service.Entities;
 using WeatherParser.Repository.Contract;
-using WeatherParser.Service.Contract;
 using WeatherParser.Repository.Entities;
+using WeatherParser.Service.Contract;
+using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Service
 {
@@ -251,36 +251,36 @@ namespace WeatherParser.Service
             }
         }
 
-    public string LoadPage(string url) //загрузка страницы
-    {
-        HttpWebResponse response = null;
-        string result = "";
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-        try
+        public string LoadPage(string url) //загрузка страницы
         {
-            response = (HttpWebResponse)request.GetResponse();
-        }
-        catch
-        {
-            return null;
-        }
-
-        if (response != null && response.StatusCode == HttpStatusCode.OK)
-        {
-            Stream receiveStream = response.GetResponseStream();
-            if (receiveStream != null)
+            HttpWebResponse response = null;
+            string result = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            try
             {
-                StreamReader readStream;
-                if (response.CharacterSet == null)
-                    readStream = new StreamReader(receiveStream);
-                else
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                result = readStream.ReadToEnd();
-                readStream.Close();
+                response = (HttpWebResponse)request.GetResponse();
             }
-            response.Close();
+            catch
+            {
+                return null;
+            }
+
+            if (response != null && response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                if (receiveStream != null)
+                {
+                    StreamReader readStream;
+                    if (response.CharacterSet == null)
+                        readStream = new StreamReader(receiveStream);
+                    else
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    result = readStream.ReadToEnd();
+                    readStream.Close();
+                }
+                response.Close();
+            }
+            return result;
         }
-        return result;
     }
-}
 }

@@ -1,23 +1,23 @@
-﻿using LiveChartsCore;
+﻿using Autofac;
+using Google.Protobuf.WellKnownTypes;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows.Input;
-using WeatherParser.TimerSaveDataService;
-using System.Windows;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
-using Google.Protobuf.WellKnownTypes;
-using WeatherParser.Presentation.Entities;
+using WeatherParser.TimerSaveDataService;
+using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
 {
-    internal class MainWindowViewModel : NotifyPropertyChangedBase, IMainWindowViewModel
+    internal class MainWindowViewModel : NotifyPropertyChangedBase
     {
         #region fields
 
@@ -30,6 +30,8 @@ namespace WeatherParser.WPF.ViewModels
         private DateTime _firstDate;
 
         private DateTime _lastDate;
+
+        private IContainer _container;
 
         #endregion
 
@@ -57,6 +59,11 @@ namespace WeatherParser.WPF.ViewModels
             RefreshDataCommand = new RelayCommand(RefreshData);
 
             RefreshData(null);
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<WPFModule>();
+
+            _container = builder.Build();
         }
 
         private void OnTimeChecked(object? sender, PropertyChangedEventArgs e)
@@ -86,11 +93,11 @@ namespace WeatherParser.WPF.ViewModels
 
                     XAxes.Clear();
 
-                        XAxes.Add(new Axis()
-                        {
-                            Labels = dataGetResponse.WeatherDataDictionary.Select(s => s.Key.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
-                            LabelsPaint = new SolidColorPaintTask(SKColors.Black)
-                        });
+                    XAxes.Add(new Axis()
+                    {
+                        Labels = dataGetResponse.WeatherDataDictionary.Select(s => s.Key.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
+                        LabelsPaint = new SolidColorPaintTask(SKColors.Black)
+                    });
                 }
             }
         }
@@ -146,29 +153,41 @@ namespace WeatherParser.WPF.ViewModels
         #region buttons
         public void Temperature(object? parameter)
         {
+            var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
+            temperatureCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+
             DisableButtonsAndCheckBoxes();
         }
 
         public void Pressure(object? parameter)
         {
-            DisableButtonsAndCheckBoxes();
+            var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
+            pressureCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
 
+            DisableButtonsAndCheckBoxes();
         }
 
         public void WindSpeed(object? parameter)
         {
+            var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
+            windSpeedCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+
             DisableButtonsAndCheckBoxes();
         }
 
         //public void WindDirection(object? parameter)
         //{
-        
-        //    DisableButtonsAndCheckBoxes();
+        //  var windDirectionCommand = _container.ResolveNamed<Commands.ICommand>("WindDirectionCommand");
+        //  windDirectionCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+
+        //  DisableButtonsAndCheckBoxes();
         //}
 
         public void Humidity(object? parameter)
         {
-            
+            var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
+            humidityCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+
             DisableButtonsAndCheckBoxes();
         }
 
@@ -183,7 +202,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             IsTimeSelected = false;
             SelectedDate = null;
-           
+
             Times.Clear();
 
             for (int i = 0; i < 8; ++i)

@@ -5,6 +5,8 @@ using Grpc.Net.Client;
 using Grpc.Core;
 using WeatherParser.GrpcService.Services;
 using Serilog;
+using WeatherParser.WPF.Commands;
+using WeatherParser.WPF.Decorators;
 
 namespace WeatherParser.WPF
 {
@@ -16,7 +18,7 @@ namespace WeatherParser.WPF
 
             builder.RegisterType<WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient>();
 
-            builder.RegisterType<MainWindowViewModel>().As<IMainWindowViewModel>().SingleInstance();
+            builder.RegisterType<MainWindowViewModel>().AsSelf().SingleInstance();
 
             builder.Register<ILogger>(log =>
             {
@@ -27,6 +29,13 @@ namespace WeatherParser.WPF
 
             builder.RegisterModule<TimerSaveDataModule>();
 
+            builder.RegisterType<GetHumidityCommand>().As<ICommand>().Named<ICommand>("HumidityCommand");
+            builder.RegisterType<GetPressureCommand>().As<ICommand>().Named<ICommand>("PressureCommand");
+            builder.RegisterType<GetTemperatureCommand>().As<ICommand>().Named<ICommand>("TemperatureCommand");
+            builder.RegisterType<GetWindDirectionCommand>().As<ICommand>().Named<ICommand>("WindDirectionCommand");
+            builder.RegisterType<GetWindSpeedCommand>().As<ICommand>().Named<ICommand>("WindSpeedCommand");
+
+            builder.RegisterDecorator<LoggingDecorator, ICommand>();
         }
     }
 }

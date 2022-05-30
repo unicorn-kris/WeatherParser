@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WeatherParser.Repository.Entities;
 using WeatherParser.Repository.Contract;
+using WeatherParser.Repository.Entities;
 
 namespace WeatherParser.Repository
 {
@@ -135,12 +135,12 @@ namespace WeatherParser.Repository
 
         public DateTime GetFirstDate()
         {
-            return DateTime.Parse(File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]).ToUniversalTime();
+            return DateTime.Parse(File.ReadLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]).ToUniversalTime();
         }
 
         public DateTime GetLastDate()
         {
-            return DateTime.Parse(File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]).ToUniversalTime();
+            return DateTime.Parse(File.ReadLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]).ToUniversalTime();
         }
 
         public void SaveWeatherData(List<WeatherDataRepository> listOfWeatherData)
@@ -151,95 +151,85 @@ namespace WeatherParser.Repository
                 Directory.CreateDirectory(pathMain);
             }
 
-            
-            try
+            if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt")
+                    .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
             {
                 using (StreamWriter fileTemperature = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt", true))
                 {
-                    if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt")
-                        .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
+
+                    fileTemperature.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
+                    fileTemperature.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
+                    foreach (var tempOfWeatherData in listOfWeatherData)
                     {
-                        fileTemperature.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
-                        fileTemperature.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
-                        foreach (var tempOfWeatherData in listOfWeatherData)
-                        {
-                            fileTemperature.Write($"{tempOfWeatherData.Temperature} ");
-                        }
-                        fileTemperature.WriteLine();
+                        fileTemperature.Write($"{tempOfWeatherData.Temperature} ");
                     }
-                }
-
-                using (StreamWriter filePressure = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Pressure.txt", true))
-                {
-                    if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Pressure.txt")
-                        .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
-                    {
-                        filePressure.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
-                        filePressure.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
-                        foreach (var tempOfWeatherData in listOfWeatherData)
-                        {
-                            filePressure.Write($"{tempOfWeatherData.Pressure} ");
-                        }
-                        filePressure.WriteLine();
-                    }
-                }
-
-                using (StreamWriter fileWindSpeed = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/WindSpeed.txt", true))
-                {
-                    if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/WindSpeed.txt")
-                        .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
-                    {
-                        fileWindSpeed.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
-                        fileWindSpeed.Write($"{listOfWeatherData[0].Date.ToShortDateString()}");
-                        foreach (var tempOfWeatherData in listOfWeatherData)
-                        {
-                            fileWindSpeed.Write($" {tempOfWeatherData.WindSpeedFirst}");
-                            if (tempOfWeatherData.WindSpeedSecond != int.MaxValue)
-                            {
-                                fileWindSpeed.Write($"-{tempOfWeatherData.WindSpeedSecond}");
-                            }
-                        }
-                        fileWindSpeed.WriteLine();
-                    }
-                }
-
-                using (StreamWriter fileWindDirection = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/WindDirection.txt", true))
-                {
-                    if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/WindDirection.txt")
-                        .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
-                    {
-                        fileWindDirection.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
-
-                        fileWindDirection.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
-                        foreach (var tempOfWeatherData in listOfWeatherData)
-                        {
-                            fileWindDirection.Write($"{tempOfWeatherData.WindDirection} ");
-                        }
-                        fileWindDirection.WriteLine();
-                    }
-                }
-
-                using (StreamWriter fileHumidity = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Humidity.txt", true))
-                {
-                    if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Humidity.txt")
-                        .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
-                    {
-                        fileHumidity.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
-
-                        fileHumidity.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
-                        foreach (var tempOfWeatherData in listOfWeatherData)
-                        {
-                            fileHumidity.Write($"{tempOfWeatherData.Humidity} ");
-                        }
-                        fileHumidity.WriteLine();
-                    }
+                    fileTemperature.WriteLine();
                 }
             }
-            catch (Exception e)
+
+            if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Pressure.txt")
+                    .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
             {
-                using (StreamWriter fileError = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Errors.txt", true))
+                using (StreamWriter filePressure = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Pressure.txt", true))
                 {
-                    fileError.WriteLine(e.Message);
+                    filePressure.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
+                    filePressure.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
+                    foreach (var tempOfWeatherData in listOfWeatherData)
+                    {
+                        filePressure.Write($"{tempOfWeatherData.Pressure} ");
+                    }
+                    filePressure.WriteLine();
+                }
+            }
+
+            if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/WindSpeed.txt")
+                .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
+            {
+                using (StreamWriter fileWindSpeed = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/WindSpeed.txt", true))
+                {
+                    fileWindSpeed.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
+                    fileWindSpeed.Write($"{listOfWeatherData[0].Date.ToShortDateString()}");
+                    foreach (var tempOfWeatherData in listOfWeatherData)
+                    {
+                        fileWindSpeed.Write($" {tempOfWeatherData.WindSpeedFirst}");
+                        if (tempOfWeatherData.WindSpeedSecond != int.MaxValue)
+                        {
+                            fileWindSpeed.Write($"-{tempOfWeatherData.WindSpeedSecond}");
+                        }
+                    }
+                    fileWindSpeed.WriteLine();
+                }
+            }
+
+            if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/WindDirection.txt")
+                .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
+            {
+                using (StreamWriter fileWindDirection = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/WindDirection.txt", true))
+                {
+                    fileWindDirection.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
+
+                    fileWindDirection.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
+                    foreach (var tempOfWeatherData in listOfWeatherData)
+                    {
+                        fileWindDirection.Write($"{tempOfWeatherData.WindDirection} ");
+                    }
+                    fileWindDirection.WriteLine();
+                }
+            }
+
+            if (!File.ReadAllLines("../WeatherParser.RepositoryFiles/SaveFiles/Humidity.txt")
+                .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == listOfWeatherData[0].CollectionDate))
+            {
+                using (StreamWriter fileHumidity = new StreamWriter("../WeatherParser.RepositoryFiles/SaveFiles/Humidity.txt", true))
+                {
+                    fileHumidity.Write($"{listOfWeatherData[0].CollectionDate.ToShortDateString()} ");
+
+                    fileHumidity.Write($"{listOfWeatherData[0].Date.ToShortDateString()} ");
+                    foreach (var tempOfWeatherData in listOfWeatherData)
+                    {
+                        fileHumidity.Write($"{tempOfWeatherData.Humidity} ");
+                    }
+                    fileHumidity.WriteLine();
                 }
             }
         }

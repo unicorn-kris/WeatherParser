@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using Serilog;
+using System;
 using System.Windows.Threading;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities.Urls;
@@ -10,9 +10,12 @@ namespace WeatherParser.TimerSaveDataService
     {
         private WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient _weatherParserService;
 
-        public TimerSaveData(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService)
+        private ILogger _logger;
+
+        public TimerSaveData(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService, ILogger logger)
         {
             _weatherParserService = weatherParserService;
+            _logger = logger;
         }
 
         public void SaveData()
@@ -45,10 +48,7 @@ namespace WeatherParser.TimerSaveDataService
             }
             catch (Exception e)
             {
-                using (StreamWriter fileError = new StreamWriter("C:/MonitoringWeather/Errors.txt", true))
-                {
-                    fileError.WriteLine(e.Message);
-                }
+                _logger.Error($"SaveData have an error: {e.Message} StackTrace: {e.StackTrace}");
             }
         }
     }

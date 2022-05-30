@@ -11,7 +11,7 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
-    internal class GetWindDirectionCommand : ICommand
+    internal class GetWindDirectionCommand : CommandBase, ICommand
     {
         ILogger _logger;
 
@@ -20,15 +20,23 @@ namespace WeatherParser.WPF.Commands
             _logger = logger;
         }
 
-        public override void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
-            Dictionary<DateTime, List<WeatherDataPresentation>> weatherData,
+        public void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
             DateTime? selectedDate,
             ObservableCollection<ISeries> Series,
             ObservableCollection<TimeViewModel> Times)
         {
             Series.Clear();
 
-            weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(selectedDate.Value.ToUniversalTime().ToTimestamp()));
+            Dictionary<DateTime, List<WeatherDataPresentation>> weatherData = null;
+
+            try
+            {
+                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(selectedDate.Value.ToUniversalTime().ToTimestamp()));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{this.GetType().Name} have an exception with message: {ex.Message}");
+            }
 
             if (weatherData != null)
             {
@@ -43,7 +51,6 @@ namespace WeatherParser.WPF.Commands
                             tempValues.Add(temp[i].WindDirection);
                         }
                         Series.Add(new LineSeries<string> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
-                        //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
                     }
                 }
             }

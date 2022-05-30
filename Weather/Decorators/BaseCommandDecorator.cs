@@ -1,13 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LiveChartsCore;
+using Serilog;
+using System;
+using System.Collections.ObjectModel;
+using WeatherParser.GrpcService.Services;
+using WeatherParser.WPF.Commands;
+using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Decorators
 {
-    internal class BaseCommandDecorator: ICommand
+    internal abstract class BaseCommandDecorator : ICommand
     {
+        protected ICommand _command;
+        protected ILogger _logger;
 
+        public BaseCommandDecorator(ILogger logger, ICommand command)
+        {
+            _command = command;
+            _logger = logger;
+        }
+
+        public abstract void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+            DateTime? selectedDate,
+            ObservableCollection<ISeries> Series,
+            ObservableCollection<TimeViewModel> Times);
     }
 }

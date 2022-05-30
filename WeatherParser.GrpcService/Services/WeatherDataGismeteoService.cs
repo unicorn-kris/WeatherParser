@@ -60,11 +60,11 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<Timestamp> GetFirstDate(Empty request, ServerCallContext context)
+        public async override Task<Timestamp> GetFirstDate(Empty request, ServerCallContext context)
         {
             try
             {
-                return Task.FromResult(_weatherParserService.GetFirstDate().ToTimestamp());
+                return await Task.FromResult(_weatherParserService.GetFirstDate().ToTimestamp());
             }
             catch (Exception ex)
             {
@@ -73,11 +73,11 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<Timestamp> GetLastDate(Empty request, ServerCallContext context)
+        public async override Task<Timestamp> GetLastDate(Empty request, ServerCallContext context)
         {
             try
             {
-                return Task.FromResult(_weatherParserService.GetLastDate().ToTimestamp());
+                return await Task.FromResult(_weatherParserService.GetLastDate().ToTimestamp());
             }
             catch (Exception ex)
             {
@@ -86,12 +86,12 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<Empty> SaveWeatherData(WeatherDataSaveRequest request, ServerCallContext context)
+        public async override Task<Empty> SaveWeatherData(WeatherDataSaveRequest request, ServerCallContext context)
         {
             try
             {
                 _weatherParserService.SaveWeatherData(request.Url, request.Day);
-                return Task.FromResult(new Empty());
+                return await Task.FromResult(new Empty());
             }
             catch (Exception ex)
             {
