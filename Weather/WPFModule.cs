@@ -4,6 +4,7 @@ using TimerSaveDataService;
 using Grpc.Net.Client;
 using Grpc.Core;
 using WeatherParser.GrpcService.Services;
+using Serilog;
 
 namespace WeatherParser.WPF
 {
@@ -17,7 +18,15 @@ namespace WeatherParser.WPF
 
             builder.RegisterType<MainWindowViewModel>().As<IMainWindowViewModel>().SingleInstance();
 
+            builder.Register<ILogger>(log =>
+            {
+                return new LoggerConfiguration()
+                    .WriteTo.File("log.txt")
+                    .CreateLogger();
+            }).SingleInstance();
+
             builder.RegisterModule<TimerSaveDataModule>();
+
         }
     }
 }

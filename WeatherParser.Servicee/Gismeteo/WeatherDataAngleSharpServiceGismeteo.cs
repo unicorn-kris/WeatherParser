@@ -69,9 +69,9 @@ namespace WeatherParser.Service
             var doc = BrowsingContext.New(config).OpenAsync(url);
             var parsedHtml = doc.Result;
 
-            var html = parsedHtml.Body.OuterHtml;
+            //var html = parsedHtml.Body.OuterHtml;
 
-            File.WriteAllText("log.txt", html);
+            //File.WriteAllText("log.txt", html);
 
             var temperatures = parsedHtml.GetElementsByClassName("widget-row-chart widget-row-chart-temperature");
             var windSpeeds = parsedHtml.GetElementsByClassName("widget-row widget-row-wind-speed-gust row-with-caption");

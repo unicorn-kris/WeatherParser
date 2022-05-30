@@ -27,8 +27,6 @@ namespace WeatherParser.WPF.ViewModels
 
         private WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient _weatherParserService;
 
-        private Dictionary<DateTime, List<WeatherDataPresentation>> _weatherData;
-
         private DateTime _firstDate;
 
         private DateTime _lastDate;
@@ -79,7 +77,7 @@ namespace WeatherParser.WPF.ViewModels
 
                 if (_selectedDate != null)
                 {
-                    _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
+                    var dataGetResponse = _weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp());
 
                     for (int i = 0; i < Times.Count; ++i)
                     {
@@ -88,13 +86,11 @@ namespace WeatherParser.WPF.ViewModels
 
                     XAxes.Clear();
 
-                    XAxes.Add(new Axis()
-                    {
-                        //fix
-                        Labels = _weatherData.Keys.Select(s => s.Date.ToString("dd.MM.yyyy")).ToList(),
-                        //Labels = new List<string>() { "1", "2", "3" },
-                        LabelsPaint = new SolidColorPaintTask(SKColors.Black)
-                    });
+                        XAxes.Add(new Axis()
+                        {
+                            Labels = dataGetResponse.WeatherDataDictionary.Select(s => s.Key.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
+                            LabelsPaint = new SolidColorPaintTask(SKColors.Black)
+                        });
                 }
             }
         }
@@ -150,136 +146,29 @@ namespace WeatherParser.WPF.ViewModels
         #region buttons
         public void Temperature(object? parameter)
         {
-            Series.Clear();
-
-            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
-
-            if (_weatherData != null)
-            {
-                for (int i = 0; i < Times.Count; ++i)
-                {
-                    if (Times[i].IsChecked)
-                    {
-                        var tempValues = new List<double>();
-
-                        foreach (var temp in _weatherData.Values)
-                        {
-                            tempValues.Add(temp[i].Temperature);
-                        }
-                        Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00"});
-                        //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-
-                    }
-                }
-            }
             DisableButtonsAndCheckBoxes();
         }
 
         public void Pressure(object? parameter)
         {
-            Series.Clear();
-
-            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
-
-            if (_weatherData != null)
-            {
-                for (int i = 0; i < Times.Count; ++i)
-                {
-                    if (Times[i].IsChecked)
-                    {
-                        var tempValues = new List<double>();
-
-                        foreach (var temp in _weatherData.Values)
-                        {
-                            tempValues.Add(temp[i].Pressure);
-                        }
-                        Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
-                        //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-
-                    }
-                }
-            }
             DisableButtonsAndCheckBoxes();
 
         }
 
         public void WindSpeed(object? parameter)
         {
-            Series.Clear();
-
-            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
-
-            if (_weatherData != null)
-            {
-                for (int i = 0; i < Times.Count; ++i)
-                {
-                    if (Times[i].IsChecked)
-                    {
-                        var tempValues = new List<double>();
-
-                        foreach (var temp in _weatherData.Values)
-                        {
-                            tempValues.Add(temp[i].WindSpeedFirst);
-                        }
-                        Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
-                        //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-
-                    }
-                }
-            }
             DisableButtonsAndCheckBoxes();
         }
 
         //public void WindDirection(object? parameter)
         //{
-        //    Series.Clear();
-
-        //    _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
-
-        //    if (_weatherData != null)
-        //    {
-        //        for (int i = 0; i < Times.Count; ++i)
-        //        {
-        //            if (Times[i].IsChecked)
-        //            {
-        //                var tempValues = new List<string>();
-
-        //                foreach (var temp in _weatherData.Values)
-        //                {
-        //                    tempValues.Add(temp[i].WindDirection);
-        //                }
-        //                Series.Add(new LineSeries<string> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
-        //                //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-
-        //            }
-        //        }
-        //    }
+        
         //    DisableButtonsAndCheckBoxes();
         //}
 
         public void Humidity(object? parameter)
         {
-            Series.Clear();
-
-            _weatherData = GetResponseToDictionary(_weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp()));
-
-            if (_weatherData != null)
-            {
-                for (int i = 0; i < Times.Count; ++i)
-                {
-                    if (Times[i].IsChecked)
-                    {
-                        var tempValues = new List<double>();
-
-                        foreach (var temp in _weatherData.Values)
-                        {
-                            tempValues.Add(temp[i].Humidity);
-                        }
-                        Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
-                        //Series.Add(new LineSeries<double> { Values = new List<double>() { 1, 2, 3}, Name = $"{Times[i].CurrentTime}.00"});
-                    }
-                }
-            }
+            
             DisableButtonsAndCheckBoxes();
         }
 
@@ -332,35 +221,5 @@ namespace WeatherParser.WPF.ViewModels
             SelectedDate = null;
         }
 
-        private Dictionary<DateTime, List<WeatherDataPresentation>> GetResponseToDictionary(WeatherDataGetResponse weatherDataGetResponse)
-        {
-            var result = new Dictionary<DateTime, List<WeatherDataPresentation>>();
-
-            foreach (var item in weatherDataGetResponse.WeatherDataDictionary)
-            {
-                var weatherDataList = new List<WeatherDataPresentation>();
-
-                foreach(var weatherData in item.Value.WeatherDataList)
-                {
-                    weatherDataList.Add(new WeatherDataPresentation()
-                    {
-                        CollectionDate = weatherData.CollectionDate.ToDateTime(),
-                        Date = weatherData.Date.ToDateTime(),
-                        Temperature = weatherData.Temperature,
-                        Humidity = weatherData.Humidity,
-                        Pressure = weatherData.Pressure,
-                        WindDirection = weatherData.WindDirection,
-                        WindSpeedFirst = weatherData.WindSpeedFirst,
-                        WindSpeedSecond = weatherData.WindSpeedSecond
-                    });
-                }
-
-                if (!result.ContainsKey(item.Key.ToDateTime()))
-                {
-                    result.Add(item.Key.ToDateTime(), weatherDataList);
-                }
-            }
-            return result;
-        }
     }
 }

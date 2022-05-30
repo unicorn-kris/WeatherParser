@@ -18,3 +18,38 @@ Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\Gi
 Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
 Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
 Could not find a part of the path 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\Weather\bin\Debug\net5.0-windows\SaveFiles\MonitoringWeather\Errors.txt'.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
+The process cannot access the file 'C:\Users\krisF\OneDrive\Документы\GitHub\WeatherParser\WeatherParser.RepositoryFiles\SaveFiles\Temperature.txt' because it is being used by another process.
