@@ -10,9 +10,9 @@
     <ProjectReference Include="..\WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.16.0" />
-    <PackageReference Include="AngleSharp.Io" Version="0.16.0" />
-    <PackageReference Include="Autofac" Version="6.3.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
+    <PackageReference Include="AngleSharp.Io" Version="0.17.0" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.45" />
   </ItemGroup>
 </Project>

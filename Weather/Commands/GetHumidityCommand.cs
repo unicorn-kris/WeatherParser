@@ -20,8 +20,6 @@ namespace WeatherParser.WPF.Commands
             _logger = logger;
         }
 
-        public Dictionary<DateTime, List<WeatherDataPresentation>> GetResponseToDictionary(WeatherDataGetResponse weatherDataGetResponse) => base.GetResponseToDictionary(weatherDataGetResponse);
-
         public void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
             DateTime? selectedDate,
             ObservableCollection<ISeries> Series,
