@@ -6,9 +6,9 @@ namespace WeatherParser.Repository.Contract
 {
     public interface IWeatherParserRepository
     {
-        void SaveWeatherData(List<WeatherDataRepository> listOfWeatherData);
+        void SaveWeatherData(DateTime targetDate, WeatherRepository listOfWeatherData);
 
-        Dictionary<DateTime, List<WeatherDataRepository>> GetAllWeatherData(DateTime targetDate);
+        Dictionary<DateTime, List<WeatherRepository>> GetAllWeatherData(DateTime targetDate);
 
         DateTime GetFirstDate();
 

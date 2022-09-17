@@ -31,7 +31,7 @@ namespace WeatherParser.WPF.Commands
 
             try
             {
-                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(selectedDate.Value.ToUniversalTime().ToTimestamp()));
+                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp()));
             }
             catch (Exception ex)
             {
@@ -44,13 +44,13 @@ namespace WeatherParser.WPF.Commands
                 {
                     if (Times[i].IsChecked)
                     {
-                        var tempValues = new List<double>();
+                        var humValues = new List<double>();
 
-                        foreach (var temp in weatherData.Values)
+                        foreach (var hum in weatherData[selectedDate.Value])
                         {
-                            tempValues.Add(temp[i].Humidity);
+                            humValues.Add(hum.Humidity[i]);
                         }
-                        Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
+                        Series.Add(new LineSeries<double> { Values = humValues, Name = $"{Times[i].CurrentTime}.00" });
                     }
                 }
             }

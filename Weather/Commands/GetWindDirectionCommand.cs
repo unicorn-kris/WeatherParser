@@ -27,11 +27,11 @@ namespace WeatherParser.WPF.Commands
         {
             Series.Clear();
 
-            Dictionary<DateTime, List<WeatherDataPresentation>> weatherData = null;
+            Dictionary < DateTime, List < WeatherDataPresentation>> weatherData = null;
 
             try
             {
-                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(selectedDate.Value.ToUniversalTime().ToTimestamp()));
+                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp()));
             }
             catch (Exception ex)
             {
@@ -44,13 +44,13 @@ namespace WeatherParser.WPF.Commands
                 {
                     if (Times[i].IsChecked)
                     {
-                        var tempValues = new List<string>();
+                        var windDirValues = new List<string>();
 
-                        foreach (var temp in weatherData.Values)
+                        foreach (var windDir in weatherData[selectedDate.Value])
                         {
-                            tempValues.Add(temp[i].WindDirection);
+                            windDirValues.Add(windDir.WindDirection[i]);
                         }
-                        Series.Add(new LineSeries<string> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
+                        Series.Add(new LineSeries<string> { Values = windDirValues, Name = $"{Times[i].CurrentTime}.00" });
                     }
                 }
             }

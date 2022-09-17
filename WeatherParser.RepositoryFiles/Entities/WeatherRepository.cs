@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WeatherParser.Presentation.Entities
+namespace WeatherParser.Repository.Entities
 {
-    public class WeatherDataPresentation
+    public class WeatherRepository
     {
-        //объект для данных о погоде
+        //объект для сбора данных о погоде
         public DateTime Date { get; set; }
         public List<double> Temperature { get; set; }
         public List<int> Pressure { get; set; }
         public List<int> Humidity { get; set; }
         public List<int> WindSpeed { get; set; }
         public List<string> WindDirection { get; set; }
-
     }
 }

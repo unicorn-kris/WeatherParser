@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using WeatherParser.Service.Entities;
 
-namespace WeatherParser.Service.Contract
+namespace WeatherParser.Servicee.Contract.Graphics
 {
     public interface IWeatherParserServiceGismeteo
     {
         void SaveWeatherData(string url, int dayNum);
 
-        Dictionary<DateTime, List<WeatherDataService>> GetAllWeatherData(DateTime targetDate);
+        Dictionary<DateTime, List<WeatherService>> GetAllWeatherData(DateTime targetDate);
 
         DateTime GetFirstDate();
 

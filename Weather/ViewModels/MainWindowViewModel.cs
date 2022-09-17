@@ -84,7 +84,7 @@ namespace WeatherParser.WPF.ViewModels
 
                 if (_selectedDate != null)
                 {
-                    var dataGetResponse = _weatherParserService.GetAllWeatherData(_selectedDate.Value.ToUniversalTime().ToTimestamp());
+                    var dataGetResponse = _weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)_selectedDate, DateTimeKind.Utc).ToTimestamp());
 
                     for (int i = 0; i < Times.Count; ++i)
                     {

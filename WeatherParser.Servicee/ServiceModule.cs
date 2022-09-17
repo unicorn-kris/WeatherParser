@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using WeatherParser.Repository;
-using WeatherParser.Service.Contract;
+using WeatherParser.Servicee.Contract.Graphics;
 
 namespace WeatherParser.Service
 {

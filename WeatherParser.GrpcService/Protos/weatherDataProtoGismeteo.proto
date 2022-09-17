@@ -24,12 +24,31 @@ message WeatherDataSaveRequest {
 message WeatherDataProto{
 	google.protobuf.Timestamp CollectionDate = 1;
 	google.protobuf.Timestamp Date = 2;
-	double Temperature = 3;
-	int32 Pressure = 4;
-	int32 Humidity = 5;
-	int32 WindSpeedFirst = 6;
-	int32 WindSpeedSecond = 7;
-	google.protobuf.StringValue WindDirection = 8;
+	Temperatures Temperatures = 3;
+	Pressures Pressures = 4;
+	Humidities Humidities = 5;
+	WindSpeeds WindSpeeds = 6;
+	WindDirections WindDirections = 7;
+}
+
+message Temperatures{
+	repeated double Temperature = 1;
+}
+
+message Pressures{
+	repeated int32 Pressure = 1;
+}
+
+message Humidities{
+	repeated int32 Humidity = 1;
+}
+
+message WindSpeeds{
+	repeated int32 WindSpeed = 1;
+}
+
+message WindDirections{
+	repeated google.protobuf.StringValue WindDirection = 1;
 }
 
 message weatherDataList{

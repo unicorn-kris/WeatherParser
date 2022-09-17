@@ -17,16 +17,44 @@ namespace WeatherParser.WPF.Commands
 
                 foreach (var weatherData in item.Value.WeatherDataList)
                 {
+                    var temps = new List<double>();
+                    foreach (var temp in weatherData.Temperatures.Temperature)
+                    {
+                        temps.Add(temp);
+                    }
+
+                    var hums = new List<int>();
+                    foreach (var hum in weatherData.Humidities.Humidity)
+                    {
+                        hums.Add(hum);
+                    }
+
+                    var press = new List<int>();
+                    foreach (var pres in weatherData.Pressures.Pressure)
+                    {
+                        press.Add(pres);
+                    }
+
+                    var windDirs = new List<string>();
+                    foreach (var windDir in weatherData.WindDirections.WindDirection)
+                    {
+                        windDirs.Add(windDir);
+                    }
+
+                    var windSpeeds = new List<int>();
+                    foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
+                    {
+                        windSpeeds.Add(windSpeed);
+                    }
+
                     weatherDataList.Add(new WeatherDataPresentation()
                     {
-                        CollectionDate = weatherData.CollectionDate.ToDateTime(),
                         Date = weatherData.Date.ToDateTime(),
-                        Temperature = weatherData.Temperature,
-                        Humidity = weatherData.Humidity,
-                        Pressure = weatherData.Pressure,
-                        WindDirection = weatherData.WindDirection,
-                        WindSpeedFirst = weatherData.WindSpeedFirst,
-                        WindSpeedSecond = weatherData.WindSpeedSecond
+                        Temperature = temps,
+                        Humidity = hums,
+                        Pressure = press,
+                        WindDirection = windDirs,
+                        WindSpeed = windSpeeds
                     });
                 }
 

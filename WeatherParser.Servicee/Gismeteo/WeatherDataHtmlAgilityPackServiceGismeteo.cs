@@ -7,8 +7,8 @@ using System.Net;
 using System.Text;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
-using WeatherParser.Service.Contract;
 using WeatherParser.Service.Entities;
+using WeatherParser.Servicee.Contract.Graphics;
 
 namespace WeatherParser.Service
 {
@@ -21,28 +21,26 @@ namespace WeatherParser.Service
             _weatherParserRepository = weatherParserRepository;
         }
 
-        public Dictionary<DateTime, List<WeatherDataService>> GetAllWeatherData(DateTime targetDate)
+        public Dictionary<DateTime, List<WeatherService>> GetAllWeatherData(DateTime targetDate)
         {
-            var resultData = new Dictionary<DateTime, List<WeatherDataService>>();
+            var resultData = new Dictionary<DateTime, List<WeatherService>>();
 
             var weatherData = _weatherParserRepository.GetAllWeatherData(targetDate);
 
             //map repository entity to service entity
             foreach (var weather in weatherData)
             {
-                var newListOfWeatherData = new List<WeatherDataService>();
+                var newListOfWeatherData = new List<WeatherService>();
 
                 foreach (var item in weather.Value)
                 {
-                    newListOfWeatherData.Add(new WeatherDataService()
+                    newListOfWeatherData.Add(new WeatherService()
                     {
                         Temperature = item.Temperature,
                         Humidity = item.Humidity,
                         Pressure = item.Pressure,
-                        WindSpeedFirst = item.WindSpeedFirst,
-                        WindSpeedSecond = item.WindSpeedSecond,
+                        WindSpeed = item.WindSpeed,
                         WindDirection = item.WindDirection,
-                        CollectionDate = item.CollectionDate,
                         Date = item.Date
                     });
                 }
@@ -65,14 +63,16 @@ namespace WeatherParser.Service
 
         public void SaveWeatherData(string url, int dayNum)
         {
-            List<WeatherDataService> listOfWeatherData = new List<WeatherDataService>(8);
-
-            for (int i = 0; i < 8; ++i)
+            WeatherService listOfWeatherData = new WeatherService()
             {
-                listOfWeatherData.Add(new WeatherDataService());
-                listOfWeatherData[i].CollectionDate = DateTime.Now;
-                listOfWeatherData[i].Date = listOfWeatherData[i].CollectionDate.AddDays(dayNum);
-            }
+                Temperature = new List<double>(),
+                Humidity = new List<int>(),
+                Pressure = new List<int>(),
+                WindDirection = new List<string>(),
+                WindSpeed = new List<int>()
+            };
+
+            listOfWeatherData.Date = DateTime.UtcNow.AddDays(dayNum);
 
             string pageContent = LoadPage(url);
             HtmlAgilityPack.HtmlDocument document = new HtmlAgilityPack.HtmlDocument();
@@ -107,11 +107,13 @@ namespace WeatherParser.Service
                             temperature[j] = temperature[j].Remove(0, 1);
                         }
 
-                        listOfWeatherData[j].Temperature = int.Parse(temperature[j]);
-
                         if (minus != -1)
                         {
-                            listOfWeatherData[j].Temperature *= -1;
+                            listOfWeatherData.Temperature.Add(int.Parse(temperature[j]) * -1);
+                        }
+                        else
+                        {
+                            listOfWeatherData.Temperature.Add(int.Parse(temperature[j]));
                         }
 
                     }
@@ -142,7 +144,7 @@ namespace WeatherParser.Service
                             humidity[j] = humidity[j].Remove(0, 1);
                         }
 
-                        listOfWeatherData[j].Humidity = int.Parse(humidity[j]);
+                        listOfWeatherData.Humidity.Add(int.Parse(humidity[j]));
                     }
                 }
 
@@ -170,7 +172,7 @@ namespace WeatherParser.Service
                             pressure[j] = pressure[j].Remove(0, 1);
                         }
 
-                        listOfWeatherData[j].Pressure = int.Parse(pressure[j]);
+                        listOfWeatherData.Pressure.Add(int.Parse(pressure[j]));
                     }
                 }
 
@@ -195,13 +197,11 @@ namespace WeatherParser.Service
                     {
                         if (windSpeed[j].Any(c => c == '-'))
                         {
-                            listOfWeatherData[j].WindSpeedFirst = int.Parse(windSpeed[j].Split('-')[0]);
-                            listOfWeatherData[j].WindSpeedSecond = int.Parse(windSpeed[j].Split('-')[1]);
+                            listOfWeatherData.WindSpeed.Add(int.Parse(windSpeed[j].Split('-')[0]));
                         }
                         else
                         {
-                            listOfWeatherData[j].WindSpeedFirst = int.Parse(windSpeed[j]);
-                            listOfWeatherData[j].WindSpeedSecond = int.MaxValue;
+                            listOfWeatherData.WindSpeed.Add(int.Parse(windSpeed[j]));
                         }
                     }
                 }
@@ -225,29 +225,22 @@ namespace WeatherParser.Service
 
                     for (int j = 0; j < 8; ++j)
                     {
-                        listOfWeatherData[j].WindDirection = windDir[j];
+                        listOfWeatherData.WindDirection.Add(windDir[j]);
                     }
                 }
 
                 //map service entity to repository entity
-                var newListOfWeatherData = new List<WeatherDataRepository>();
-
-                foreach (var weatherData in listOfWeatherData)
-                {
-                    newListOfWeatherData.Add(new WeatherDataRepository()
+                var newListOfWeatherData = new WeatherRepository()
                     {
-                        Temperature = weatherData.Temperature,
-                        Humidity = weatherData.Humidity,
-                        Pressure = weatherData.Pressure,
-                        WindSpeedFirst = weatherData.WindSpeedFirst,
-                        WindSpeedSecond = weatherData.WindSpeedSecond,
-                        WindDirection = weatherData.WindDirection,
-                        CollectionDate = weatherData.CollectionDate,
-                        Date = weatherData.Date,
-                    });
-                }
+                        Temperature = listOfWeatherData.Temperature,
+                        Humidity = listOfWeatherData.Humidity,
+                        Pressure = listOfWeatherData.Pressure,
+                        WindSpeed = listOfWeatherData.WindSpeed,
+                        WindDirection = listOfWeatherData.WindDirection,
+                        Date = listOfWeatherData.Date,
+                    };
 
-                _weatherParserRepository.SaveWeatherData(newListOfWeatherData);
+                _weatherParserRepository.SaveWeatherData(DateTime.UtcNow, newListOfWeatherData);
             }
         }
 
