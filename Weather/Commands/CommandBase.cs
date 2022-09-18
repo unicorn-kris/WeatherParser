@@ -1,21 +1,42 @@
-﻿using System;
+﻿using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using WeatherParser.GrpcService.Services;
-using WeatherParser.Presentation.Entities;
+using WeatherParser.Presentation.Entities.Entities;
+using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
     internal abstract class CommandBase
     {
-        public Dictionary<DateTime, List<WeatherDataPresentation>> GetResponseToDictionary(WeatherDataGetResponse weatherDataGetResponse)
+        public List<WeatherDataPresentation> GetLabelsAndResponse(
+            WeatherDataGetResponse weatherDataGetResponse,
+            ObservableCollection<Axis> XAxes,
+            ObservableCollection<TimeViewModel> Times,
+            DateTime selectedDate)
         {
-            var result = new Dictionary<DateTime, List<WeatherDataPresentation>>();
-
-            foreach (var item in weatherDataGetResponse.WeatherDataDictionary)
+            if (selectedDate != null)
             {
-                var weatherDataList = new List<WeatherDataPresentation>();
+                XAxes.Clear();
 
-                foreach (var weatherData in item.Value.WeatherDataList)
+                XAxes.Add(new Axis()
+                {
+                    Labels = weatherDataGetResponse.WeatherData.Select(s => s.TargetDate.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
+                    LabelsPaint = new SolidColorPaintTask(SKColors.Black)
+                });
+            }
+
+            var result = new List<WeatherDataPresentation>();
+
+            foreach (var item in weatherDataGetResponse.WeatherData)
+            {
+                var weatherDataList = new List<WeatherPresentation>();
+
+                foreach (var weatherData in item.Weather.WeatherList)
                 {
                     var temps = new List<double>();
                     foreach (var temp in weatherData.Temperatures.Temperature)
@@ -47,7 +68,7 @@ namespace WeatherParser.WPF.Commands
                         windSpeeds.Add(windSpeed);
                     }
 
-                    weatherDataList.Add(new WeatherDataPresentation()
+                    weatherDataList.Add(new WeatherPresentation()
                     {
                         Date = weatherData.Date.ToDateTime(),
                         Temperature = temps,
@@ -58,10 +79,7 @@ namespace WeatherParser.WPF.Commands
                     });
                 }
 
-                if (!result.ContainsKey(item.Key.ToDateTime()))
-                {
-                    result.Add(item.Key.ToDateTime(), weatherDataList);
-                }
+                result.Add(new WeatherDataPresentation() { TargetDate = item.TargetDate.ToDateTime(), Weather = weatherDataList });
             }
             return result;
         }

@@ -10,11 +10,6 @@ namespace WeatherParser.RepositoryFiles
 {
     public class WeatherDataNoSQLRepository : IWeatherParserRepository
     {
-        public Dictionary<DateTime, List<WeatherRepository>> GetAllWeatherData(DateTime targetDate)
-        {
-            throw new NotImplementedException();
-        }
-
         public DateTime GetFirstDate()
         {
             throw new NotImplementedException();
@@ -25,7 +20,12 @@ namespace WeatherParser.RepositoryFiles
             throw new NotImplementedException();
         }
 
-        public void SaveWeatherData(DateTime targetDate, WeatherRepository listOfWeatherData)
+        public void SaveWeatherData(WeatherDataRepository weatherData)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<WeatherDataRepository> IWeatherParserRepository.GetAllWeatherData(DateTime targetDate)
         {
             throw new NotImplementedException();
         }

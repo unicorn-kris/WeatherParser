@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.ObjectModel;
 using WeatherParser.GrpcService.Services;
@@ -11,6 +12,7 @@ namespace WeatherParser.WPF.Commands
         void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
              DateTime? selectedDate,
              ObservableCollection<ISeries> Series,
-             ObservableCollection<TimeViewModel> Times);
+             ObservableCollection<TimeViewModel> Times,
+             ObservableCollection<Axis> XAxes);
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WeatherParser.Presentation.Entities
+namespace WeatherParser.Presentation.Entities.Entities
 {
-    public class WeatherDataPresentation
+    public class WeatherPresentation
     {
         //объект для данных о погоде
         public DateTime Date { get; set; }

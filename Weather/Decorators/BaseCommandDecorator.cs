@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
 using System.Collections.ObjectModel;
@@ -18,10 +19,10 @@ namespace WeatherParser.WPF.Decorators
             _command = command;
             _logger = logger;
         }
-
-        public abstract void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
-            DateTime? selectedDate,
-            ObservableCollection<ISeries> Series,
-            ObservableCollection<TimeViewModel> Times);
+        public abstract void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService, 
+            DateTime? selectedDate, 
+            ObservableCollection<ISeries> Series, 
+            ObservableCollection<TimeViewModel> Times, 
+            ObservableCollection<Axis> XAxes);
     }
 }

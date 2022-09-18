@@ -20,15 +20,15 @@ namespace WeatherParser.GrpcService.Services
         {
             try
             {
-                Dictionary<DateTime, List<WeatherService>> weatherData = _weatherParserService.GetAllWeatherData(request.ToDateTime());
+                List<WeatherDataService> weatherData = _weatherParserService.GetAllWeatherData(request.ToDateTime());
 
-                var returnWeatherDataDict = new WeatherDataGetResponse();
+                var returnWeatherData = new WeatherDataGetResponse();
 
                 foreach (var newWeatherData in weatherData)
                 {
-                    var newList = new weatherDataList();
+                    var newList = new WeatherDataList();
 
-                    foreach (var item in newWeatherData.Value)
+                    foreach (var item in newWeatherData.Weather)
                     {
                         var temps = new Temperatures();
                         foreach (var temp in item.Temperature)
@@ -60,7 +60,7 @@ namespace WeatherParser.GrpcService.Services
                             windSpeeds.WindSpeed.Add(windSpeed);
                         }
 
-                        newList.WeatherDataList.Add(new WeatherDataProto()
+                        newList.WeatherList.Add(new WeatherDataProto()
                         {
                             Date = DateTime.SpecifyKind(item.Date, DateTimeKind.Utc).ToTimestamp(),
                             Temperatures = temps,
@@ -72,14 +72,14 @@ namespace WeatherParser.GrpcService.Services
 
                     }
 
-                    returnWeatherDataDict.WeatherDataDictionary.Add(new KeyValuePair()
+                    returnWeatherData.WeatherData.Add(new TargetDateWeather()
                     {
-                        Key = DateTime.SpecifyKind(newWeatherData.Key, DateTimeKind.Utc).ToTimestamp(),
-                        Value = newList
+                        TargetDate = DateTime.SpecifyKind(newWeatherData.TargetDate, DateTimeKind.Utc).ToTimestamp(),
+                        Weather = newList
                     });
                 }
 
-                return Task.FromResult(returnWeatherDataDict);
+                return Task.FromResult(returnWeatherData);
             }
 
             catch (Exception ex)

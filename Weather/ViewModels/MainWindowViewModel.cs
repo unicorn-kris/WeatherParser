@@ -82,22 +82,9 @@ namespace WeatherParser.WPF.ViewModels
             {
                 OnPropertyChanged(value, ref _selectedDate);
 
-                if (_selectedDate != null)
+                for (int i = 0; i < Times.Count; ++i)
                 {
-                    var dataGetResponse = _weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)_selectedDate, DateTimeKind.Utc).ToTimestamp());
-
-                    for (int i = 0; i < Times.Count; ++i)
-                    {
-                        Times[i].IsDateChecked = true;
-                    }
-
-                    XAxes.Clear();
-
-                    XAxes.Add(new Axis()
-                    {
-                        Labels = dataGetResponse.WeatherDataDictionary.Select(s => s.Key.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
-                        LabelsPaint = new SolidColorPaintTask(SKColors.Black)
-                    });
+                    Times[i].IsDateChecked = true;
                 }
             }
         }
@@ -105,14 +92,12 @@ namespace WeatherParser.WPF.ViewModels
         public DateTime FirstDate
         {
             get => _firstDate;
-
             set => OnPropertyChanged(value, ref _firstDate);
         }
 
         public DateTime LastDate
         {
             get => _lastDate;
-
             set => OnPropertyChanged(value, ref _lastDate);
         }
 
@@ -154,7 +139,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Temperature(object? parameter)
         {
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+            temperatureCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -162,7 +147,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Pressure(object? parameter)
         {
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+            pressureCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -170,7 +155,7 @@ namespace WeatherParser.WPF.ViewModels
         public void WindSpeed(object? parameter)
         {
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+            windSpeedCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -178,7 +163,7 @@ namespace WeatherParser.WPF.ViewModels
         //public void WindDirection(object? parameter)
         //{
         //  var windDirectionCommand = _container.ResolveNamed<Commands.ICommand>("WindDirectionCommand");
-        //  windDirectionCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+        //  windDirectionCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
 
         //  DisableButtonsAndCheckBoxes();
         //}
@@ -186,7 +171,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Humidity(object? parameter)
         {
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.Execute(_weatherParserService, _selectedDate, Series, Times);
+            humidityCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }

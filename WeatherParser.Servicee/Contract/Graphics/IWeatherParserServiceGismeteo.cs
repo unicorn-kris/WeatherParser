@@ -8,7 +8,7 @@ namespace WeatherParser.Servicee.Contract.Graphics
     {
         void SaveWeatherData(string url, int dayNum);
 
-        Dictionary<DateTime, List<WeatherService>> GetAllWeatherData(DateTime targetDate);
+        List<WeatherDataService> GetAllWeatherData(DateTime targetDate);
 
         DateTime GetFirstDate();
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
+using WeatherParser.Presentation.Entities.Entities;
 using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
@@ -23,15 +24,16 @@ namespace WeatherParser.WPF.Commands
         public void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
             DateTime? selectedDate,
             ObservableCollection<ISeries> Series,
-            ObservableCollection<TimeViewModel> Times)
+            ObservableCollection<TimeViewModel> Times,
+            ObservableCollection<Axis> XAxes)
         {
             Series.Clear();
 
-            Dictionary<DateTime, List<WeatherDataPresentation>> weatherData = null;
+            List<WeatherDataPresentation> weatherData = null;
 
             try
             {
-                weatherData = GetResponseToDictionary(weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp()));
+                weatherData = GetLabelsAndResponse(weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp()), XAxes, Times, (DateTime)selectedDate);
             }
             catch (Exception ex)
             {
@@ -46,9 +48,12 @@ namespace WeatherParser.WPF.Commands
                     {
                         var tempValues = new List<double>();
 
-                        foreach (var temp in weatherData[selectedDate.Value])
+                        foreach (var weather in weatherData)
                         {
-                            tempValues.Add(temp.Temperature[i]);
+                            foreach (var temp in weather.Weather)
+                            {
+                                tempValues.Add(temp.Humidity[i]);
+                            }
                         }
                         Series.Add(new LineSeries<double> { Values = tempValues, Name = $"{Times[i].CurrentTime}.00" });
                     }

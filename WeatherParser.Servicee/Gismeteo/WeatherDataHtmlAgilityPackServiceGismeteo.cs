@@ -21,31 +21,32 @@ namespace WeatherParser.Service
             _weatherParserRepository = weatherParserRepository;
         }
 
-        public Dictionary<DateTime, List<WeatherService>> GetAllWeatherData(DateTime targetDate)
+        public List<WeatherDataService> GetAllWeatherData(DateTime targetDate)
         {
-            var resultData = new Dictionary<DateTime, List<WeatherService>>();
-
-            var weatherData = _weatherParserRepository.GetAllWeatherData(targetDate);
+            var repositoryData = _weatherParserRepository.GetAllWeatherData(targetDate);
+            var resultData = new List<WeatherDataService>();
 
             //map repository entity to service entity
-            foreach (var weather in weatherData)
+            foreach (var weather in repositoryData)
             {
-                var newListOfWeatherData = new List<WeatherService>();
-
-                foreach (var item in weather.Value)
+                resultData.Add(new WeatherDataService()
                 {
-                    newListOfWeatherData.Add(new WeatherService()
+                    TargetDate = weather.TargetDate,
+                    Weather = new List<WeatherService>()
+                });
+
+                foreach (var weatherData in weather.Weather)
+                {
+                    resultData.Last().Weather.Add(new WeatherService()
                     {
-                        Temperature = item.Temperature,
-                        Humidity = item.Humidity,
-                        Pressure = item.Pressure,
-                        WindSpeed = item.WindSpeed,
-                        WindDirection = item.WindDirection,
-                        Date = item.Date
+                        Date = weatherData.Date,
+                        Temperature = weatherData.Temperature,
+                        Humidity = weatherData.Humidity,
+                        Pressure = weatherData.Pressure,
+                        WindDirection = weatherData.WindDirection,
+                        WindSpeed = weatherData.WindSpeed
                     });
                 }
-
-                resultData.Add(weather.Key, newListOfWeatherData);
             }
 
             return resultData;
@@ -230,17 +231,24 @@ namespace WeatherParser.Service
                 }
 
                 //map service entity to repository entity
-                var newListOfWeatherData = new WeatherRepository()
-                    {
-                        Temperature = listOfWeatherData.Temperature,
-                        Humidity = listOfWeatherData.Humidity,
-                        Pressure = listOfWeatherData.Pressure,
-                        WindSpeed = listOfWeatherData.WindSpeed,
-                        WindDirection = listOfWeatherData.WindDirection,
-                        Date = listOfWeatherData.Date,
-                    };
 
-                _weatherParserRepository.SaveWeatherData(DateTime.UtcNow, newListOfWeatherData);
+                var newListOfWeatherData = new WeatherRepository()
+                {
+                    Temperature = listOfWeatherData.Temperature,
+                    Humidity = listOfWeatherData.Humidity,
+                    Pressure = listOfWeatherData.Pressure,
+                    WindSpeed = listOfWeatherData.WindSpeed,
+                    WindDirection = listOfWeatherData.WindDirection,
+                    Date = listOfWeatherData.Date,
+                };
+
+                var newWeatherDataRepository = new WeatherDataRepository()
+                {
+                    TargetDate = DateTime.UtcNow,
+                    Weather = new List<WeatherRepository>() { newListOfWeatherData }
+                };
+
+                _weatherParserRepository.SaveWeatherData(newWeatherDataRepository);
             }
         }
 

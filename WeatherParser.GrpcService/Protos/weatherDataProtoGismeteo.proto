@@ -22,13 +22,12 @@ message WeatherDataSaveRequest {
 }
 
 message WeatherDataProto{
-	google.protobuf.Timestamp CollectionDate = 1;
-	google.protobuf.Timestamp Date = 2;
-	Temperatures Temperatures = 3;
-	Pressures Pressures = 4;
-	Humidities Humidities = 5;
-	WindSpeeds WindSpeeds = 6;
-	WindDirections WindDirections = 7;
+	google.protobuf.Timestamp Date = 1;
+	Temperatures Temperatures = 2;
+	Pressures Pressures = 3;
+	Humidities Humidities = 4;
+	WindSpeeds WindSpeeds = 5;
+	WindDirections WindDirections = 6;
 }
 
 message Temperatures{
@@ -51,15 +50,15 @@ message WindDirections{
 	repeated google.protobuf.StringValue WindDirection = 1;
 }
 
-message weatherDataList{
-	repeated WeatherDataProto weatherDataList = 1;
+message WeatherDataList{
+	repeated WeatherDataProto WeatherList = 1;
 }
 
-message KeyValuePair {
-  google.protobuf.Timestamp key = 1;
-  weatherDataList value = 2;
+message TargetDateWeather {
+  google.protobuf.Timestamp TargetDate = 1;
+  WeatherDataList Weather = 2;
 }
 
 message WeatherDataGetResponse {
-	repeated KeyValuePair weatherDataDictionary = 1;
+	repeated TargetDateWeather WeatherData = 1;
 }
