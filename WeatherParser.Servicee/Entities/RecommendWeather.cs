@@ -10,7 +10,6 @@ namespace WeatherParser.Servicee.Entities
         public List<int> Pressures { get; set; }
         public List<int> Humidities { get; set; }
         public List<int> WindSpeedsFirst { get; set; }
-        public List<int> WindSpeedsSecond { get; set; }
         public List<string> WindDirections { get; set; }
     }
 }
