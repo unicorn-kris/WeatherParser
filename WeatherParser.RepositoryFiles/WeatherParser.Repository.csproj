@@ -6,6 +6,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Helpers\Helpers.csproj" />
     <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
   </ItemGroup>
   <ItemGroup>

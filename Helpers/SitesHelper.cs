@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace WeatherParser.RepositoryFiles
+namespace Helpers
 {
     /// <summary>
     /// This helper used for saving information about included "plugins" with sites parsers thats saved by developers in SitesHelperCollection.cs

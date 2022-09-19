@@ -6,7 +6,7 @@ namespace WeatherParser.Servicee.Contract.Graphics
 {
     public interface IWeatherParserServiceGismeteo
     {
-        void SaveWeatherData(string url, int dayNum);
+        void SaveWeatherData();
 
         List<WeatherDataService> GetAllWeatherData(DateTime targetDate);
 
