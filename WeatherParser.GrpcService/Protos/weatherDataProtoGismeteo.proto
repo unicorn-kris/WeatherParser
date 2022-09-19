@@ -10,7 +10,7 @@ option csharp_namespace = "WeatherParser.GrpcService.Services";
 package WeatherDataProtoGismeteo;
 
 service WeatherDataProtoGismeteo {
-  rpc SaveWeatherData (WeatherDataSaveRequest) returns (google.protobuf.Empty) {}
+  rpc SaveWeatherData (google.protobuf.Empty) returns (google.protobuf.Empty) {}
   rpc GetAllWeatherData (google.protobuf.Timestamp) returns (WeatherDataGetResponse) {}
   rpc GetFirstDate(google.protobuf.Empty) returns (google.protobuf.Timestamp) {}
   rpc GetLastDate (google.protobuf.Empty) returns (google.protobuf.Timestamp) {}

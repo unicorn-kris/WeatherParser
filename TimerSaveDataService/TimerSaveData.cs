@@ -1,8 +1,8 @@
-﻿using Serilog;
+﻿using Google.Protobuf.WellKnownTypes;
+using Serilog;
 using System;
 using System.Windows.Threading;
 using WeatherParser.GrpcService.Services;
-using WeatherParser.Presentation.Entities.Urls;
 
 namespace WeatherParser.TimerSaveDataService
 {
@@ -38,13 +38,7 @@ namespace WeatherParser.TimerSaveDataService
         {
             try
             {
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeatherToday, Day = 0 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeatherTomorrow, Day = 1 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeather3Day, Day = 2 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater4Day, Day = 3 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater5Day, Day = 4 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater6Day, Day = 5 });
-                _weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater7Day, Day = 6 });
+                _weatherParserService.SaveWeatherData(new Empty());
             }
             catch (Exception e)
             {

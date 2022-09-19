@@ -62,7 +62,7 @@ namespace WeatherParser.Service
             return _weatherParserRepository.GetLastDate();
         }
 
-        public void SaveWeatherData(string url, int dayNum)
+        public void SaveWeatherData()
         {
             WeatherService listOfWeatherData = new WeatherService()
             {
@@ -73,9 +73,9 @@ namespace WeatherParser.Service
                 WindSpeed = new List<int>()
             };
 
-            listOfWeatherData.Date = DateTime.UtcNow.AddDays(dayNum);
+            listOfWeatherData.Date = DateTime.UtcNow.AddDays(1);
 
-            string pageContent = LoadPage(url);
+            string pageContent = LoadPage("");
             HtmlAgilityPack.HtmlDocument document = new HtmlAgilityPack.HtmlDocument();
 
             if (pageContent != "" && pageContent != null)

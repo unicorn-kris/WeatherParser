@@ -173,6 +173,11 @@ namespace WeatherParser.Repository
             return DateTime.Parse(File.ReadLines("../WeatherParser.RepositoryFiles/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]);
         }
 
+        public List<SiteRepository> GetSites()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveWeatherData(WeatherDataRepository weatherData)
         {
             string pathMain = @"../WeatherParser.RepositoryFiles/SaveFiles";

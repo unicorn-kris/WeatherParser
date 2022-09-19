@@ -61,5 +61,10 @@ namespace WeatherParser.Service
         {
 
         }
+
+        public void SaveWeatherData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

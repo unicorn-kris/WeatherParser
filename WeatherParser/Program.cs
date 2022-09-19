@@ -2,7 +2,6 @@
 using Google.Protobuf.WellKnownTypes;
 using System;
 using WeatherParser.GrpcService.Services;
-using WeatherParser.Presentation.Entities.Urls;
 
 namespace WeatherParser.ConsolePL
 {
@@ -19,13 +18,7 @@ namespace WeatherParser.ConsolePL
 
             try
             {
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeatherToday, Day = 0 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeatherTomorrow, Day = 1 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeather3Day, Day = 2 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater4Day, Day = 3 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater5Day, Day = 4 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater6Day, Day = 5 });
-                weatherParserService.SaveWeatherData(new WeatherDataSaveRequest() { Url = UrlsSaratovGismeteo.urlWeater7Day, Day = 6 });
+                weatherParserService.SaveWeatherData(new Empty());
             }
             catch
             {

@@ -115,11 +115,11 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public async override Task<Empty> SaveWeatherData(WeatherDataSaveRequest request, ServerCallContext context)
+        public async override Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
         {
             try
             {
-                _weatherParserService.SaveWeatherData(request.Url, request.Day);
+                _weatherParserService.SaveWeatherData();
                 return await Task.FromResult(new Empty());
             }
             catch (Exception ex)

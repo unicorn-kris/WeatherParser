@@ -59,10 +59,10 @@ namespace WeatherParser.Service
             return _weatherParserRepository.GetLastDate();
         }
 
-        public void SaveWeatherData(string url, int dayNum)
+        public void SaveWeatherData()
         {
             var config = Configuration.Default.WithDefaultLoader();
-            var doc = BrowsingContext.New(config).OpenAsync(url);
+            var doc = BrowsingContext.New(config).OpenAsync("");
             var parsedHtml = doc.Result;
 
             //var html = parsedHtml.Body.OuterHtml;
@@ -84,7 +84,7 @@ namespace WeatherParser.Service
                 WindSpeed = new List<int>()
             };
 
-            weatherData.Date = DateTime.UtcNow.AddDays(dayNum);
+            weatherData.Date = DateTime.UtcNow.AddDays(1);
 
             for (int i = 0; i < 8; ++i)
             {
