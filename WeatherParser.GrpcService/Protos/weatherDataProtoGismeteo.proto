@@ -11,14 +11,21 @@ package WeatherDataProtoGismeteo;
 
 service WeatherDataProtoGismeteo {
   rpc SaveWeatherData (google.protobuf.Empty) returns (google.protobuf.Empty) {}
-  rpc GetAllWeatherData (google.protobuf.Timestamp) returns (WeatherDataGetResponse) {}
-  rpc GetFirstDate(google.protobuf.Empty) returns (google.protobuf.Timestamp) {}
-  rpc GetLastDate (google.protobuf.Empty) returns (google.protobuf.Timestamp) {}
+  rpc GetAllWeatherData (WeatherDataRequest) returns (WeatherDataGetResponse) {}
+  rpc GetFirstAndLastDate(SiteID) returns (FirstLastDates) {}
 }
 
-message WeatherDataSaveRequest {
-  string url = 1;
-  int32 day = 2;
+message WeatherDataRequest{
+  string siteID = 1;
+  google.protobuf.Timestamp date = 2;
+}
+
+message SiteID{
+	string siteID = 1;
+}
+
+message FirstLastDates{
+	repeated google.protobuf.Timestamp Dates = 1;
 }
 
 message WeatherDataProto{

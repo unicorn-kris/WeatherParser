@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
@@ -14,12 +13,8 @@ namespace WeatherParser.RepositoryFiles
     public class WeatherDataNoSQLRepository : IWeatherParserRepository
     {
         private const string SitesCollectionName = "SitesCollection";
-        public DateTime GetFirstDate()
-        {
-            throw new NotImplementedException();
-        }
 
-        public DateTime GetLastDate()
+        public DateTime GetFirstAndLastDate(Guid siteId)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +24,7 @@ namespace WeatherParser.RepositoryFiles
             throw new NotImplementedException();
         }
 
-        public List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate)
+        public List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate, Guid siteId)
         {
             var dbClient = new MongoClient("mongodb://localhost:27017");
 

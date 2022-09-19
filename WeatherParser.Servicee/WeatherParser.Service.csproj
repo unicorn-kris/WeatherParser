@@ -8,6 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.GismeteoService\WeatherParser.Service.GismeteoService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.17.1" />

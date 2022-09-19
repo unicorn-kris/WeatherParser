@@ -33,7 +33,7 @@ namespace WeatherParser.GrpcService
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<WeatherDataGismeteoService>();
+                endpoints.MapGrpcService<WeatherDataService>();
 
                 endpoints.MapGet("/", async context =>
                 {

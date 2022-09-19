@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WeatherParser.Service.Entities
+﻿namespace WeatherParser.Service.Entities
 {
     public class WeatherDataService
     {
+        public Guid SiteId { get; set; }
         public DateTime TargetDate { get; set; }
         public List<WeatherService> Weather { get; set; }
     }

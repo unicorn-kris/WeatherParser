@@ -1,26 +1,25 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using WeatherParser.Service.Entities;
-using WeatherParser.Servicee.Contract.Graphics;
+using WeatherParser.Service.Contract;
 
 namespace WeatherParser.GrpcService.Services
 {
-    public class WeatherDataGismeteoService : WeatherDataProtoGismeteo.WeatherDataProtoGismeteoBase
+    public class WeatherDataService : WeatherDataProtoGismeteo.WeatherDataProtoGismeteoBase
     {
-        private readonly ILogger<WeatherDataGismeteoService> _logger;
-        private readonly IWeatherParserServiceGismeteo _weatherParserService;
+        private readonly ILogger<IService> _logger;
+        private readonly IService _weatherParserService;
 
-        public WeatherDataGismeteoService(ILogger<WeatherDataGismeteoService> logger, IWeatherParserServiceGismeteo weatherParserServiceGismeteo)
+        public WeatherDataService(ILogger<IService> logger, IService weatherParserService)
         {
             _logger = logger;
-            _weatherParserService = weatherParserServiceGismeteo;
+            _weatherParserService = weatherParserService;
         }
 
-        public override Task<WeatherDataGetResponse> GetAllWeatherData(Timestamp request, ServerCallContext context)
+        public override Task<WeatherDataGetResponse> GetAllWeatherData(WeatherDataRequest request, ServerCallContext context)
         {
             try
             {
-                List<WeatherDataService> weatherData = _weatherParserService.GetAllWeatherData(request.ToDateTime());
+                List<Service.Entities.WeatherDataService> weatherData = _weatherParserService.GetAllWeatherData(request.Date.ToDateTime(), new Guid(request.SiteID));
 
                 var returnWeatherData = new WeatherDataGetResponse();
 
@@ -89,28 +88,23 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public async override Task<Timestamp> GetFirstDate(Empty request, ServerCallContext context)
+        public async override Task<FirstLastDates> GetFirstAndLastDate(SiteID request, ServerCallContext context)
         {
             try
             {
-                return await Task.FromResult(DateTime.SpecifyKind(_weatherParserService.GetFirstDate(), DateTimeKind.Utc).ToTimestamp());
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "GetFirstDate failed");
-                throw new RpcException(new Status(StatusCode.Internal, ex.Message));
-            }
-        }
+                var dates = _weatherParserService.GetFirstAndLastDate(new Guid(request.SiteID_));
 
-        public async override Task<Timestamp> GetLastDate(Empty request, ServerCallContext context)
-        {
-            try
-            {
-                return await Task.FromResult(DateTime.SpecifyKind(_weatherParserService.GetLastDate(), DateTimeKind.Utc).ToTimestamp());
+                var result = new FirstLastDates();
+
+                foreach (var date in dates)
+                {
+                    result.Dates.Add(DateTime.SpecifyKind(date, DateTimeKind.Utc).ToTimestamp());
+                }
+                return await Task.FromResult(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetLastDate failed");
+                _logger.LogError(ex, "GetFirstAndLastDate failed");
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }

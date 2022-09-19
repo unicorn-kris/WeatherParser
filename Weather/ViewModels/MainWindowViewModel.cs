@@ -1,9 +1,6 @@
 ﻿using Autofac;
-using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,6 +14,8 @@ using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
 {
+
+    //TODO dependency from site
     internal class MainWindowViewModel : NotifyPropertyChangedBase
     {
         #region fields
@@ -208,8 +207,10 @@ namespace WeatherParser.WPF.ViewModels
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
 
-            FirstDate = _weatherParserService.GetFirstDate(new Empty()).ToDateTime();
-            LastDate = _weatherParserService.GetLastDate(new Empty()).ToDateTime();
+            //TODO dependency from site
+
+            //FirstDate = _weatherParserService.GetFirstDate(new Empty()).ToDateTime();
+            //LastDate = _weatherParserService.GetLastDate(new Empty()).ToDateTime();
         }
         #endregion
 

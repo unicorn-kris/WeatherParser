@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using WeatherParser.Repository;
-using WeatherParser.Servicee.Contract.Graphics;
+using WeatherParser.Service.Contract;
+using WeatherParser.Service.Plugins.GismeteoService;
 
 namespace WeatherParser.Service
 {
@@ -8,7 +9,10 @@ namespace WeatherParser.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataHtmlAgilityPackServiceGismeteo>().As<IWeatherParserServiceGismeteo>();
+            builder.RegisterType<Service>().As<IService>();
+
+            //register all plugins modules
+            builder.RegisterModule<GismeteoServiceModule>();
 
             builder.RegisterModule<RepositoryModule>();
         }

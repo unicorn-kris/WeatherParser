@@ -9,7 +9,7 @@ namespace WeatherParser.Repository
 {
     public class WeatherDataFileRepository : IWeatherParserRepository
     {
-        public List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate)
+        public List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate, Guid siteId)
         {
             Dictionary<DateTime, List<WeatherRepository>> dataInFiles = new Dictionary<DateTime, List<WeatherRepository>>();
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
@@ -161,6 +161,11 @@ namespace WeatherParser.Repository
             }
 
             return resultData;
+        }
+
+        public DateTime GetFirstAndLastDate(Guid siteId)
+        {
+            throw new NotImplementedException();
         }
 
         public DateTime GetFirstDate()

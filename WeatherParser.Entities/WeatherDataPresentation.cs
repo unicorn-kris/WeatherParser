@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WeatherParser.Presentation.Entities.Entities
+namespace WeatherParser.Presentation.Entities
 {
     public class WeatherDataPresentation
     {
