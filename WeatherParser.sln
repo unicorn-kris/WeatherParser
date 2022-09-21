@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.ConsolePL", "WeatherParser\WeatherParser.ConsolePL.csproj", "{E27D6945-216B-463B-82F4-9D8B9CDD60EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.ConsolePL", "WeatherParser.ConsolePL\WeatherParser.ConsolePL.csproj", "{E27D6945-216B-463B-82F4-9D8B9CDD60EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Presentation.Entities", "WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj", "{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Presentation.Entities", "WeatherParser.Presentation.Entities\WeatherParser.Presentation.Entities.csproj", "{FFAEDD39-9F3F-42B9-B63F-0393876DB8A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}"
 EndProject
@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{762120EE-36DF-4034-A73C-645697E1B96E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Repository", "WeatherParser.RepositoryFiles\WeatherParser.Repository.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Repository", "WeatherParser.Repository\WeatherParser.Repository.csproj", "{DDB836D4-5505-4B8C-8B3B-D815CECB6259}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.WPF", "Weather\WeatherParser.WPF.csproj", "{43BF3001-EA38-4821-9F02-A6CA74127DA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.WPF", "WeatherParser.WPF\WeatherParser.WPF.csproj", "{43BF3001-EA38-4821-9F02-A6CA74127DA9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service", "WeatherParser.Service\WeatherParser.Service.csproj", "{A08DDF14-4179-4121-8572-28088198943E}"
 EndProject

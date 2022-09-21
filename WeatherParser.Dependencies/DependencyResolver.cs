@@ -1,5 +1,5 @@
 ﻿using WeatherParser.RepositoryContracts;
-using WeatherParser.RepositoryFiles;
+using WeatherParser.Repository;
 using WeatherParser.Service;
 using WeatherParser.ServiceContracts;
 

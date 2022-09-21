@@ -17,8 +17,6 @@ using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
 {
-
-    //TODO dependency from site
     internal class MainWindowViewModel : NotifyPropertyChangedBase
     {
         #region fields
@@ -242,7 +240,6 @@ namespace WeatherParser.WPF.ViewModels
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
         }
-        #endregion
 
         private void DisableButtonsAndCheckBoxes()
         {
@@ -256,6 +253,7 @@ namespace WeatherParser.WPF.ViewModels
             SelectedDate = null;
             SelectedSite = null;
         }
+        #endregion
 
     }
 }

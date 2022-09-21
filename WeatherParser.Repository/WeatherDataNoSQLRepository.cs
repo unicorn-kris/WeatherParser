@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 
-namespace WeatherParser.RepositoryFiles
+namespace WeatherParser.Repository
 {
     public class WeatherDataNoSQLRepository : IWeatherParserRepository
     {

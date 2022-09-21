@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimerSaveDataService\TimerSaveDataService.csproj" />
-    <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Presentation.Entities\WeatherParser.Presentation.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.GrpcService\WeatherParser.GrpcService.csproj" />
   </ItemGroup>
   <ItemGroup>

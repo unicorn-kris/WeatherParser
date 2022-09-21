@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeatherParser.Entities;
+using WeatherParser.Presentation.Entities;
 
 namespace WeatherParser.ServiceContracts
 {

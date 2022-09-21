@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанные со сборкой.
-[assembly: AssemblyTitle("WeatherParser.RepositoryFiles")]
+[assembly: AssemblyTitle("WeatherParser.Presentation.Entities")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WeatherParser.RepositoryFiles")]
+[assembly: AssemblyProduct("WeatherParser.Presentation.Entities")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("ddb836d4-5505-4b8c-8b3b-d815cecb6259")]
+[assembly: Guid("ffaedd39-9f3f-42b9-b63f-0393876db8a6")]
 
 // Сведения о версии сборки состоят из указанных ниже четырех значений:
 //
