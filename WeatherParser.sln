@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Repository", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.WPF", "Weather\WeatherParser.WPF.csproj", "{43BF3001-EA38-4821-9F02-A6CA74127DA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service", "WeatherParser.Servicee\WeatherParser.Service.csproj", "{A08DDF14-4179-4121-8572-28088198943E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service", "WeatherParser.Service\WeatherParser.Service.csproj", "{A08DDF14-4179-4121-8572-28088198943E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimerSaveDataService", "TimerSaveDataService\TimerSaveDataService.csproj", "{E4FF9A36-58C4-4E39-A58E-5F5AE2C4487D}"
 EndProject

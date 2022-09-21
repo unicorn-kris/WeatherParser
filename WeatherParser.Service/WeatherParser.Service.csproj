@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>WeatherParser.Servicee</RootNamespace>
-    <AssemblyName>WeatherParser.Servicee</AssemblyName>
+    <RootNamespace>WeatherParser.Service</RootNamespace>
+    <AssemblyName>WeatherParser.Service</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>

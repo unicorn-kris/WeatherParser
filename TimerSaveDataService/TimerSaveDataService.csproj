@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WeatherParser.Entities\WeatherParser.Presentation.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.GrpcService\WeatherParser.GrpcService.csproj" />
-    <ProjectReference Include="..\WeatherParser.Servicee\WeatherParser.Service.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service\WeatherParser.Service.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />

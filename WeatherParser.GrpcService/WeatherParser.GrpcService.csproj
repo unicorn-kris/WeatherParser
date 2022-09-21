@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WeatherParser.Servicee\WeatherParser.Service.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service\WeatherParser.Service.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
