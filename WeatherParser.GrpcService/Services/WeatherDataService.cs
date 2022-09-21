@@ -88,19 +88,16 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public async override Task<FirstLastDates> GetFirstAndLastDate(SiteID request, ServerCallContext context)
+        public override Task<FirstLastDates> GetFirstAndLastDate(SiteID request, ServerCallContext context)
         {
             try
             {
-                var dates = _weatherParserService.GetFirstAndLastDate(new Guid(request.SiteID_));
+                var dates = _weatherParserService.GetFirstAndLastDate(new Guid(request.ID));
 
-                var result = new FirstLastDates();
-
-                foreach (var date in dates)
-                {
-                    result.Dates.Add(DateTime.SpecifyKind(date, DateTimeKind.Utc).ToTimestamp());
-                }
-                return await Task.FromResult(result);
+                return Task.FromResult(new FirstLastDates() { 
+                    FirstDate = DateTime.SpecifyKind(dates.firstDate, DateTimeKind.Utc).ToTimestamp(), 
+                    LastDate = DateTime.SpecifyKind(dates.lastDate, DateTimeKind.Utc).ToTimestamp()
+                });
             }
             catch (Exception ex)
             {
@@ -109,12 +106,12 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public async override Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
+        public override Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
         {
             try
             {
                 _weatherParserService.SaveWeatherData();
-                return await Task.FromResult(new Empty());
+                return Task.FromResult(new Empty());
             }
             catch (Exception ex)
             {
@@ -122,5 +119,25 @@ namespace WeatherParser.GrpcService.Services
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }
+
+        public override Task<SitesList> GetSites(Empty request, ServerCallContext context)
+        {
+            try
+            {
+                var sitesService = _weatherParserService.GetSites();
+                var resultSites = new SitesList();
+                foreach (var site in sitesService)
+                {
+                    resultSites.Sites.Add(new Site() { SiteId = site.ID.ToString(), SiteName = site.Name });
+                }
+                return Task.FromResult(resultSites);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetSites failed");
+                throw new RpcException(new Status(StatusCode.Internal, ex.Message));
+            }
+        }
+
     }
 }

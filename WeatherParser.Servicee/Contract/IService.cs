@@ -8,7 +8,7 @@ namespace WeatherParser.Service.Contract
     {
         void SaveWeatherData();
         List<WeatherDataService> GetAllWeatherData(DateTime targetDate, Guid siteId);
-        List<DateTime> GetFirstAndLastDate(Guid siteId);
+        (DateTime firstDate, DateTime lastDate) GetFirstAndLastDate(Guid siteId);
         List<SiteService> GetSites();
     }
 }

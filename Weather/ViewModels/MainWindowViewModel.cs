@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
+using WeatherParser.Presentation.Entities;
 using WeatherParser.TimerSaveDataService;
 using IContainer = Autofac.IContainer;
 
@@ -31,6 +34,8 @@ namespace WeatherParser.WPF.ViewModels
         private DateTime _lastDate;
 
         private IContainer _container;
+
+        private SitePresentation _selectedSite;
 
         #endregion
 
@@ -73,6 +78,35 @@ namespace WeatherParser.WPF.ViewModels
         #endregion
 
         #region props
+
+        public SitePresentation SelectedSite
+        {
+            get =>  _selectedSite;
+            set
+            {
+                OnPropertyChanged(value, ref _selectedSite);
+                if (_selectedSite != null)
+                {
+                    var dates = _weatherParserService.GetFirstAndLastDate(new SiteID() { ID = _selectedSite.ID.ToString() });
+                    FirstDate = dates.FirstDate.ToDateTime();
+                    LastDate = dates.LastDate.ToDateTime();
+                }
+            }
+        }
+
+        public ObservableCollection<SitePresentation> Sites
+        {
+            get
+            {
+                var sitesService = _weatherParserService.GetSites(new Empty());
+                var sites = new ObservableCollection<SitePresentation>();
+                foreach (var site in sitesService.Sites)
+                {
+                    sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
+                }
+                return sites;
+            }
+        }
 
         public DateTime? SelectedDate
         {
@@ -138,7 +172,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Temperature(object? parameter)
         {
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
+            temperatureCommand.Execute(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -146,7 +180,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Pressure(object? parameter)
         {
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
+            pressureCommand.Execute(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -154,7 +188,7 @@ namespace WeatherParser.WPF.ViewModels
         public void WindSpeed(object? parameter)
         {
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
+            windSpeedCommand.Execute(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -162,7 +196,7 @@ namespace WeatherParser.WPF.ViewModels
         //public void WindDirection(object? parameter)
         //{
         //  var windDirectionCommand = _container.ResolveNamed<Commands.ICommand>("WindDirectionCommand");
-        //  windDirectionCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
+        //  windDirectionCommand.Execute(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
 
         //  DisableButtonsAndCheckBoxes();
         //}
@@ -170,7 +204,7 @@ namespace WeatherParser.WPF.ViewModels
         public void Humidity(object? parameter)
         {
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.Execute(_weatherParserService, _selectedDate, Series, Times, XAxes);
+            humidityCommand.Execute(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
 
             DisableButtonsAndCheckBoxes();
         }
@@ -186,6 +220,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             IsTimeSelected = false;
             SelectedDate = null;
+            SelectedSite = null;
 
             Times.Clear();
 
@@ -206,11 +241,6 @@ namespace WeatherParser.WPF.ViewModels
                 //subscribe mainViewModel on ischecked property change for change _isTimeSelected
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
-
-            //TODO dependency from site
-
-            //FirstDate = _weatherParserService.GetFirstDate(new Empty()).ToDateTime();
-            //LastDate = _weatherParserService.GetLastDate(new Empty()).ToDateTime();
         }
         #endregion
 
@@ -224,6 +254,7 @@ namespace WeatherParser.WPF.ViewModels
 
             IsTimeSelected = false;
             SelectedDate = null;
+            SelectedSite = null;
         }
 
     }

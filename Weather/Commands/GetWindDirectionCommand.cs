@@ -21,18 +21,24 @@ namespace WeatherParser.WPF.Commands
         }
 
         public void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
-            DateTime? selectedDate,
-            ObservableCollection<ISeries> Series,
-            ObservableCollection<TimeViewModel> Times,
-            ObservableCollection<Axis> XAxes)
+             DateTime? selectedDate,
+             ObservableCollection<ISeries> series,
+             SitePresentation selectedSite,
+             ObservableCollection<TimeViewModel> times,
+             ObservableCollection<Axis> xAxes)
         {
-            Series.Clear();
+            series.Clear();
 
             List<WeatherDataPresentation> weatherData = null;
 
             try
             {
-                weatherData = GetLabelsAndResponse(weatherParserService.GetAllWeatherData(DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp()), XAxes, Times, (DateTime)selectedDate);
+                weatherData = GetLabelsAndResponse(
+                    weatherParserService.GetAllWeatherData(new WeatherDataRequest() { 
+                        Date = DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp(), 
+                        SiteID = selectedSite.ID.ToString() }),
+                    xAxes,
+                    (DateTime)selectedDate);
             }
             catch (Exception ex)
             {
@@ -41,9 +47,9 @@ namespace WeatherParser.WPF.Commands
 
             if (weatherData != null)
             {
-                for (int i = 0; i < Times.Count; ++i)
+                for (int i = 0; i < times.Count; ++i)
                 {
-                    if (Times[i].IsChecked)
+                    if (times[i].IsChecked)
                     {
                         var windDirValues = new List<double>();
 
@@ -54,7 +60,7 @@ namespace WeatherParser.WPF.Commands
                                 windDirValues.Add(windDir.Humidity[i]);
                             }
                         }
-                        Series.Add(new LineSeries<double> { Values = windDirValues, Name = $"{Times[i].CurrentTime}.00" });
+                        series.Add(new LineSeries<double> { Values = windDirValues, Name = $"{times[i].CurrentTime}.00" });
                     }
                 }
             }

@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
@@ -16,7 +15,6 @@ namespace WeatherParser.WPF.Commands
         public List<WeatherDataPresentation> GetLabelsAndResponse(
             WeatherDataGetResponse weatherDataGetResponse,
             ObservableCollection<Axis> XAxes,
-            ObservableCollection<TimeViewModel> Times,
             DateTime selectedDate)
         {
             if (selectedDate != null)

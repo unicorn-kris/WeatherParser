@@ -25,7 +25,7 @@ namespace WeatherParser.Service
             throw new NotImplementedException();
         }
 
-        public List<DateTime> GetFirstAndLastDate(Guid siteId)
+        public (DateTime firstDate, DateTime lastDate) GetFirstAndLastDate(Guid siteId)
         {
             throw new NotImplementedException();
         }

@@ -13,6 +13,7 @@ service WeatherDataProtoGismeteo {
   rpc SaveWeatherData (google.protobuf.Empty) returns (google.protobuf.Empty) {}
   rpc GetAllWeatherData (WeatherDataRequest) returns (WeatherDataGetResponse) {}
   rpc GetFirstAndLastDate(SiteID) returns (FirstLastDates) {}
+  rpc GetSites(google.protobuf.Empty) returns (SitesList) {}
 }
 
 message WeatherDataRequest{
@@ -21,11 +22,21 @@ message WeatherDataRequest{
 }
 
 message SiteID{
-	string siteID = 1;
+	string ID = 1;
 }
 
 message FirstLastDates{
-	repeated google.protobuf.Timestamp Dates = 1;
+	google.protobuf.Timestamp FirstDate = 1;
+	google.protobuf.Timestamp LastDate = 2;
+}
+
+message Site{
+	string SiteId = 1;
+	string SiteName = 2;
+}
+
+message SitesList{
+	repeated Site Sites = 1;
 }
 
 message WeatherDataProto{

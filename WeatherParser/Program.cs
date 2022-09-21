@@ -25,7 +25,7 @@ namespace WeatherParser.ConsolePL
                 Console.WriteLine("Error");
             }
 
-            var result = weatherParserService.GetAllWeatherData(DateTime.UtcNow.ToTimestamp());
+            //var result = weatherParserService.GetAllWeatherData(DateTime.UtcNow.ToTimestamp());
 
             Console.ReadLine();
         }
