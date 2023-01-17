@@ -163,19 +163,10 @@ namespace WeatherParser.Repository
             return resultData;
         }
 
-        public DateTime GetFirstAndLastDate(Guid siteId)
+        public (DateTime, DateTime) GetFirstAndLastDate(Guid siteId)
         {
-            throw new NotImplementedException();
-        }
-
-        public DateTime GetFirstDate()
-        {
-            return DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]);
-        }
-
-        public DateTime GetLastDate()
-        {
-            return DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]);
+            return (DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]),
+         DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]));
         }
 
         public List<SiteRepository> GetSites()

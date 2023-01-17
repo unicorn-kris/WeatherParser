@@ -1,5 +1,4 @@
-﻿using Helpers;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -13,18 +12,19 @@ namespace Helpers
         //Saving states of fields from SitesHelperCollection in XML
         internal static void SaveSites()
         {
-            List<object> values = new List<object>();
+            List<string> values = new List<string>();
             List<Type> types = new List<Type>();
             types.Add(typeof(Guid));
 
-            //find all static fields
+            //find all static fields in SitesHelperCollection
             FieldInfo[] fields = typeof(SitesHelperCollection).GetFields(BindingFlags.Static | BindingFlags.NonPublic);
 
             //bring in collection
             foreach (FieldInfo field in fields)
             {
                 values.Add(field.Name);
-                values.Add(field.GetValue(null));
+                //If the field is static, obj is ignored. For non-static fields, obj should be an instance of a class that inherits or declares the field.
+                values.Add(field.GetValue(null).ToString());
             }
 
             //serialize collection in the file

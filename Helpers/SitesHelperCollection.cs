@@ -7,5 +7,7 @@
     public static class SitesHelperCollection
     {
         public static readonly Guid GismeteoSaratovCollection = new Guid("ed13908a-c2dc-4edb-bb9c-1678300a3435");
+
+        public static readonly Guid ForecaSaratovCollection = new Guid("d956e5c5-a4ec-434a-bf0d-6223aaada0ed");
     }
 }

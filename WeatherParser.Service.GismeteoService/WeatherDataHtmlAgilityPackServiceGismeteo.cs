@@ -1,10 +1,10 @@
 ﻿using Helpers;
-using Helpers.Urls;
 using HtmlAgilityPack;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using WeatherParser.Service.Entities;
+using WeatherParser.Service.Entities.Urls;
 using WeatherParser.Service.GismeteoService.Contract;
 
 namespace WeatherParser.Service.Plugins.GismeteoService
