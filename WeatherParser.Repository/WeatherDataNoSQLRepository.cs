@@ -193,10 +193,11 @@ namespace WeatherParser.Repository
                                     weatherData.WindDirection = weather.WindDirection;
 
                                     weatherData.WindSpeed = weather.WindSpeed;
-                                }
-                                if (!dataInFiles.ContainsKey(document.TargetDate.Date))
-                                {
-                                    dataInFiles.Add(document.TargetDate.Date, weatherData);
+
+                                    if (!dataInFiles.ContainsKey(document.TargetDate.Date))
+                                    {
+                                        dataInFiles.Add(document.TargetDate.Date, weatherData);
+                                    }
                                 }
                             }
                         }
