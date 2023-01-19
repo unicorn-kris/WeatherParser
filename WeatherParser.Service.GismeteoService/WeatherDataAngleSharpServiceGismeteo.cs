@@ -9,14 +9,14 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 {
     public class WeatherDataAngleSharpServiceGismeteo : IWeatherParserServiceGismeteo
     {
-        public List<WeatherDataService> SaveWeatherData()
+        public WeatherDataService SaveWeatherData()
         {
-            var resultListWeatherDataService = new List<WeatherDataService>();
+            var weatherDataList = new List<WeatherService>();
 
             var urls = new List<string>();
 
             //find all static fields
-            FieldInfo[] fields = typeof(GismeteoSaratovCollection).GetFields(BindingFlags.Static);
+            FieldInfo[] fields = typeof(GismeteoSaratovCollection).GetFields(BindingFlags.Static | BindingFlags.Public);
 
             //bring in collection
             foreach (FieldInfo field in fields)
@@ -98,17 +98,16 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                         .QuerySelectorAll("div")[i].TextContent.Trim()));
                 }
 
-                //map service entity to repository entity
-                var newWeatherDataRepository = new WeatherDataService()
-                {
-                    TargetDate = DateTime.UtcNow,
-                    Weather = new List<WeatherService>() { weatherData },
-                    SiteId = SitesHelperCollection.GismeteoSaratovCollection
-                };
-
-                resultListWeatherDataService.Add(newWeatherDataRepository);
+                weatherDataList.Add(weatherData);
             }
-            return resultListWeatherDataService;
+
+            //map service entity to repository entity
+            return new WeatherDataService()
+            {
+                TargetDate = DateTime.UtcNow,
+                Weather = weatherDataList,
+                SiteId = SitesHelperCollection.Gismeteo
+            }; 
         }
     }
 }

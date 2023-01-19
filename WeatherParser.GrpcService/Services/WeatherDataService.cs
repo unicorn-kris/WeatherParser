@@ -15,11 +15,11 @@ namespace WeatherParser.GrpcService.Services
             _weatherParserService = weatherParserService;
         }
 
-        public override Task<WeatherDataGetResponse> GetAllWeatherData(WeatherDataRequest request, ServerCallContext context)
+        public override async Task<WeatherDataGetResponse> GetAllWeatherData(WeatherDataRequest request, ServerCallContext context)
         {
             try
             {
-                List<Service.Entities.WeatherDataService> weatherData = _weatherParserService.GetAllWeatherData(request.Date.ToDateTime(), new Guid(request.SiteID));
+                List<Service.Entities.WeatherDataService> weatherData = await _weatherParserService.GetAllWeatherDataAsync(request.Date.ToDateTime(), new Guid(request.SiteID));
 
                 var returnWeatherData = new WeatherDataGetResponse();
 
@@ -78,7 +78,7 @@ namespace WeatherParser.GrpcService.Services
                     });
                 }
 
-                return Task.FromResult(returnWeatherData);
+                return returnWeatherData;
             }
 
             catch (Exception ex)
@@ -88,16 +88,16 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<FirstLastDates> GetFirstAndLastDate(SiteID request, ServerCallContext context)
+        public override async Task<FirstLastDates> GetFirstAndLastDate(SiteID request, ServerCallContext context)
         {
             try
             {
-                var dates = _weatherParserService.GetFirstAndLastDate(new Guid(request.ID));
+                var dates = await _weatherParserService.GetFirstAndLastDateAsync(new Guid(request.ID));
 
-                return Task.FromResult(new FirstLastDates() { 
+                return new FirstLastDates() { 
                     FirstDate = DateTime.SpecifyKind(dates.firstDate, DateTimeKind.Utc).ToTimestamp(), 
                     LastDate = DateTime.SpecifyKind(dates.lastDate, DateTimeKind.Utc).ToTimestamp()
-                });
+                };
             }
             catch (Exception ex)
             {
@@ -106,12 +106,12 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
+        public override async Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
         {
             try
             {
-                _weatherParserService.SaveWeatherData();
-                return Task.FromResult(new Empty());
+                await _weatherParserService.SaveWeatherDataAsync();
+                return new Empty();
             }
             catch (Exception ex)
             {
@@ -120,17 +120,17 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override Task<SitesList> GetSites(Empty request, ServerCallContext context)
+        public override async Task<SitesList> GetSites(Empty request, ServerCallContext context)
         {
             try
             {
-                var sitesService = _weatherParserService.GetSites();
+                var sitesService = await _weatherParserService.GetSitesAsync();
                 var resultSites = new SitesList();
                 foreach (var site in sitesService)
                 {
                     resultSites.Sites.Add(new Site() { SiteId = site.ID.ToString(), SiteName = site.Name });
                 }
-                return Task.FromResult(resultSites);
+                return resultSites;
             }
             catch (Exception ex)
             {
@@ -138,6 +138,5 @@ namespace WeatherParser.GrpcService.Services
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }
-
     }
 }

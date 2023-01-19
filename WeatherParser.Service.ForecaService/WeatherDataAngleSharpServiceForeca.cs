@@ -85,7 +85,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 {
                     TargetDate = DateTime.UtcNow,
                     Weather = new List<WeatherService>() { weatherData },
-                    SiteId = SitesHelperCollection.GismeteoSaratovCollection
+                    SiteId = SitesHelperCollection.Gismeteo
                 };
 
                 resultListWeatherDataService.Add(newWeatherDataRepository);

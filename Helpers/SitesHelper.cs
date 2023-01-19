@@ -1,44 +1,40 @@
-﻿using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
+using System.Reflection;
+using WeatherParser.Service.Entities;
 
 namespace Helpers
 {
     /// <summary>
     /// This helper used for saving information about included "plugins" with sites parsers thats saved by developers in SitesHelperCollection.cs
     /// </summary>
-    internal class SitesHelper
+    public class SitesHelper
     {
-        //Saving states of fields from SitesHelperCollection in XML
-        internal static void SaveSites()
+        //Saving states of fields from SitesHelperCollection in Json
+        public static Task SaveSites()
         {
-            List<string> values = new List<string>();
-            List<Type> types = new List<Type>();
-            types.Add(typeof(Guid));
+            List<SiteService> values = new List<SiteService>();
 
             //find all static fields in SitesHelperCollection
-            FieldInfo[] fields = typeof(SitesHelperCollection).GetFields(BindingFlags.Static | BindingFlags.NonPublic);
+            FieldInfo[] fields = typeof(SitesHelperCollection).GetFields(BindingFlags.Public | BindingFlags.Static);
 
             //bring in collection
             foreach (FieldInfo field in fields)
             {
-                values.Add(field.Name);
+                values.Add(new SiteService() { Name = field.Name, ID = new Guid(field.GetValue(null).ToString()) });
                 //If the field is static, obj is ignored. For non-static fields, obj should be an instance of a class that inherits or declares the field.
-                values.Add(field.GetValue(null).ToString());
             }
 
             //serialize collection in the file
-            var xmlSettings = new XmlWriterSettings();
-            xmlSettings.NewLineHandling = NewLineHandling.Entitize;
-            XmlSerializer ser = new XmlSerializer(typeof(List<object>), types.ToArray());
-
-            using (var file = new FileStream("../Helpers/Sites.xml", FileMode.OpenOrCreate))
+            using (var file = new StreamWriter("../Helpers/Sites.json"))
             {
-                using (var xmlWriter = XmlWriter.Create(file, xmlSettings))
+                foreach (var site in values)
                 {
-                    ser.Serialize(file, values);
+                    string jsonString = JsonConvert.SerializeObject(site);
+                    file.WriteLine(jsonString);
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

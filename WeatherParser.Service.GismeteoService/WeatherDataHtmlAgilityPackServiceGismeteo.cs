@@ -11,9 +11,9 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 {
     public class WeatherDataHtmlAgilityPackServiceGismeteo : IWeatherParserServiceGismeteo
     {
-        public List<WeatherDataService> SaveWeatherData()
+        public WeatherDataService SaveWeatherData()
         {
-            var resultListWeatherDataService = new List<WeatherDataService>();
+            var weatherDataList = new List<WeatherService>();
 
             var urls = new List<string>();
 
@@ -195,17 +195,16 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                         }
                     }
                 }
-                //map service entity to repository entity
-                var newWeatherDataRepository = new WeatherDataService()
-                {
-                    TargetDate = DateTime.UtcNow,
-                    Weather = new List<WeatherService>() { listOfWeatherData },
-                    SiteId = SitesHelperCollection.GismeteoSaratovCollection
-                };
-
-                resultListWeatherDataService.Add(newWeatherDataRepository);
+                weatherDataList.Add(listOfWeatherData);
             }
-            return resultListWeatherDataService;
+
+            //map service entity to repository entity
+            return new WeatherDataService()
+            {
+                TargetDate = DateTime.UtcNow,
+                Weather = weatherDataList,
+                SiteId = SitesHelperCollection.Gismeteo
+            };
         }
 
         public string LoadPage(string url) //загрузка страницы

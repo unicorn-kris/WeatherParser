@@ -5,6 +5,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.ViewModels;
@@ -20,7 +21,7 @@ namespace WeatherParser.WPF.Commands
             _logger = logger;
         }
 
-        public void Execute(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+        public async Task ExecuteAsync(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,
@@ -34,7 +35,7 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                     weatherParserService.GetAllWeatherData(new WeatherDataRequest() { 
+                     await weatherParserService.GetAllWeatherDataAsync(new WeatherDataRequest() { 
                          Date = DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp(), 
                          SiteID = selectedSite.ID.ToString() }),
                      xAxes,
@@ -57,7 +58,7 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var temp in weather.Weather)
                             {
-                                tempValues.Add(temp.Humidity[i]);
+                                tempValues.Add(temp.Temperature[i]);
                             }
                         }
                         series.Add(new LineSeries<double> { Values = tempValues, Name = $"{times[i].CurrentTime}.00" });

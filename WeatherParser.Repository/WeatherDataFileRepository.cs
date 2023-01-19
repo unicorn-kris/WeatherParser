@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 
@@ -9,7 +10,7 @@ namespace WeatherParser.Repository
 {
     public class WeatherDataFileRepository : IWeatherParserRepository
     {
-        public List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate, Guid siteId)
+        public Task<List<WeatherDataRepository>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId)
         {
             Dictionary<DateTime, List<WeatherRepository>> dataInFiles = new Dictionary<DateTime, List<WeatherRepository>>();
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
@@ -160,21 +161,21 @@ namespace WeatherParser.Repository
                 resultData.Add(new WeatherDataRepository() { TargetDate = weather.Key, Weather = weather.Value });
             }
 
-            return resultData;
+            return Task.FromResult(resultData);
         }
 
-        public (DateTime, DateTime) GetFirstAndLastDate(Guid siteId)
+        public Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)
         {
-            return (DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]),
-         DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1]));
+            return Task.FromResult((DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]),
+         DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1])));
         }
 
-        public List<SiteRepository> GetSites()
+        public Task<List<SiteRepository>> GetSitesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void SaveWeatherData(WeatherDataRepository weatherData)
+        public Task SaveWeatherDataAsync(WeatherDataRepository weatherData)
         {
             string pathMain = @"../WeatherParser.Repository/SaveFiles";
             if (!Directory.Exists(pathMain))
@@ -257,6 +258,8 @@ namespace WeatherParser.Repository
                     fileHumidity.WriteLine();
                 }
             }
+
+            return Task.CompletedTask;
         }
 
     }

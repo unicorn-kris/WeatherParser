@@ -24,7 +24,7 @@ namespace WeatherParser.TimerSaveDataService
 
             SaveWeather();
 
-            timer.Interval = TimeSpan.FromDays(1);
+            timer.Interval = TimeSpan.FromHours(1);
             timer.Tick += timer_Tick;
             timer.Start();
         }

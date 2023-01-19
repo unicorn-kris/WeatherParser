@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" xmlns:viewmodels="clr-namespace:WeatherParser.WPF.ViewModels"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
              mc:Ignorable="d"
         >
     
@@ -22,11 +22,18 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="5">
-                <ComboBox SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}" />
+                <ComboBox SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                          
             </Grid>
             
             <Grid Grid.Row="1">
-                <DatePicker SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}"/>
+                <DatePicker SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}"/>
             </Grid>
             
             <Grid Grid.Row="2">
@@ -45,9 +52,6 @@
                     <Button Command="{Binding WindSpeedCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Wind Speed
                     </Button>
-                    <!--<Button Command="{Binding WindDirectionCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
-                        Wind Direction
-                    </Button>-->
                     <Button Command="{Binding PressureCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Pressure
                     </Button>

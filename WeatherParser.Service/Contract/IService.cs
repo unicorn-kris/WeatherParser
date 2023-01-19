@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Service.Contract
 {
     public interface IService
     {
-        void SaveWeatherData();
-        List<WeatherDataService> GetAllWeatherData(DateTime targetDate, Guid siteId);
-        (DateTime firstDate, DateTime lastDate) GetFirstAndLastDate(Guid siteId);
-        List<SiteService> GetSites();
+        Task SaveWeatherDataAsync();
+        Task<List<WeatherDataService>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId);
+        Task<(DateTime firstDate, DateTime lastDate)> GetFirstAndLastDateAsync(Guid siteId);
+        Task<List<SiteService>> GetSitesAsync();
     }
 }

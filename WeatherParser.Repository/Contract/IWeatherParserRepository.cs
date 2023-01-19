@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WeatherParser.Repository.Entities;
 
 namespace WeatherParser.Repository.Contract
 {
     public interface IWeatherParserRepository
     {
-        void SaveWeatherData(WeatherDataRepository weatherData);
+        Task SaveWeatherDataAsync(WeatherDataRepository weatherData);
 
-        List<WeatherDataRepository> GetAllWeatherData(DateTime targetDate, Guid siteId);
+        Task<List<WeatherDataRepository>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId);
 
-        (DateTime, DateTime) GetFirstAndLastDate(Guid siteId);
+        Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId);
 
-        List<SiteRepository> GetSites();
+        Task<List<SiteRepository>> GetSitesAsync();
     }
 }

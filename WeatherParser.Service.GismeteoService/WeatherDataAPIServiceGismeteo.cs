@@ -5,7 +5,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 {
     public class WeatherDataAPIServiceGismeteo : IWeatherParserServiceGismeteo
     {
-        public List<WeatherDataService> SaveWeatherData()
+        public WeatherDataService SaveWeatherData()
         {
             throw new NotImplementedException();
         }
