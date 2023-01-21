@@ -30,6 +30,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 var doc = BrowsingContext.New(config).OpenAsync(url);
                 var parsedHtml = doc.Result;
 
+                //for checking parsed html
                 //var html = parsedHtml.Body.OuterHtml;
                 //File.WriteAllText("log.txt", html);
 
@@ -38,6 +39,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 var windDirections = parsedHtml.GetElementsByClassName("widget-row widget-row-wind-direction");
                 var pressures = parsedHtml.GetElementsByClassName("widget-row-chart widget-row-chart-pressure");
                 var humidities = parsedHtml.GetElementsByClassName("widget-row widget-row-humidity");
+                var date = parsedHtml.GetElementsByClassName("tab-content");
 
                 WeatherService weatherData = new WeatherService()
                 {
@@ -49,7 +51,8 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 };
 
                 //TODO PARSE DATE
-                weatherData.Date = DateTime.UtcNow.AddDays(1);
+                var day = string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c)));
+                weatherData.Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, int.Parse(day));
 
                 for (int i = 0; i < 8; ++i)
                 {

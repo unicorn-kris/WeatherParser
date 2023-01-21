@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace WeatherParser.Repository.Entities
@@ -8,6 +9,7 @@ namespace WeatherParser.Repository.Entities
         //объект для сбора данных о погоде
 
         //ON this date i have a weather
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime Date { get; set; }
         public List<double> Temperature { get; set; }
         public List<int> Pressure { get; set; }

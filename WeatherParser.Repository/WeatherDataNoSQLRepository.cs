@@ -1,4 +1,6 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
@@ -15,7 +17,6 @@ namespace WeatherParser.Repository
     {
         #region Private
         private const string SitesCollectionName = "SitesCollection";
-
         private IMongoDatabase GetDatabase()
         {
             var dbClient = new MongoClient("mongodb://localhost:27017");
@@ -69,7 +70,11 @@ namespace WeatherParser.Repository
 
                         var sort = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
 
-                        var documents = await db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).Sort(sort).ToListAsync();
+                        var documents = await db.GetCollection<WeatherDataRepository>(siteCollectionName)
+                            .Find(new BsonDocument())
+                            .Project<WeatherDataRepository>(fields)
+                            .Sort(sort)
+                            .ToListAsync();
 
                         if (documents.Any())
                         {
@@ -161,7 +166,6 @@ namespace WeatherParser.Repository
                     }
                     else
                     {
-
                         var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
                         var fields = fieldsBuilder.Exclude("_id");
 

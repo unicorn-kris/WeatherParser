@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -219,6 +220,7 @@ namespace WeatherParser.WPF.ViewModels
             IsTimeSelected = false;
             SelectedDate = null;
             SelectedSite = null;
+            HaveDates = false;
 
             Times.Clear();
 
@@ -239,6 +241,7 @@ namespace WeatherParser.WPF.ViewModels
                 //subscribe mainViewModel on ischecked property change for change _isTimeSelected
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
+
             Series.Clear();
             Sites.Clear();
 
@@ -247,6 +250,12 @@ namespace WeatherParser.WPF.ViewModels
             {
                 Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
             }
+
+            if (XAxes.Any())
+            {
+                XAxes[0].Labels = new List<string>() { string.Empty };
+            }
+            YAxes[0] = new Axis();
         }
 
         private void DisableButtonsAndCheckBoxes()

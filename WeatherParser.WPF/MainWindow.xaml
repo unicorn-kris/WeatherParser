@@ -93,7 +93,7 @@
 
         
         <Border Grid.Column="1" Background="AliceBlue" SnapsToDevicePixels="True" Margin="50">
-            <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" x:Name="ASS"/>
+            <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"/>
         </Border>
         
     </Grid>
