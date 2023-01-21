@@ -9,7 +9,7 @@ namespace WeatherParser.Repository.Contract
     {
         Task SaveWeatherDataAsync(WeatherDataRepository weatherData);
 
-        Task<List<WeatherDataRepository>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId);
+        Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId);
 
         Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId);
 

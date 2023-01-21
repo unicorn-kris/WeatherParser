@@ -15,11 +15,11 @@ namespace WeatherParser.GrpcService.Services
             _weatherParserService = weatherParserService;
         }
 
-        public override async Task<WeatherDataGetResponse> GetAllWeatherData(WeatherDataRequest request, ServerCallContext context)
+        public override async Task<WeatherDataGetResponse> GetAllWeatherDataByDay(WeatherDataRequest request, ServerCallContext context)
         {
             try
             {
-                List<Service.Entities.WeatherDataService> weatherData = await _weatherParserService.GetAllWeatherDataAsync(request.Date.ToDateTime(), new Guid(request.SiteID));
+                List<Service.Entities.WeatherDataService> weatherData = await _weatherParserService.GetAllWeatherDataByDayAsync(request.Date.ToDateTime(), new Guid(request.SiteID));
 
                 var returnWeatherData = new WeatherDataGetResponse();
 

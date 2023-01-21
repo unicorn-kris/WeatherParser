@@ -11,7 +11,7 @@ namespace WeatherParser.WPF.Commands
 {
     internal interface ICommand
     {
-        Task ExecuteAsync(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+        Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,

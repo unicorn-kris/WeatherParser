@@ -10,7 +10,7 @@ namespace WeatherParser.Repository
 {
     public class WeatherDataFileRepository : IWeatherParserRepository
     {
-        public Task<List<WeatherDataRepository>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId)
+        public Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
             Dictionary<DateTime, List<WeatherRepository>> dataInFiles = new Dictionary<DateTime, List<WeatherRepository>>();
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов

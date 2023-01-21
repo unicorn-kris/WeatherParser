@@ -21,7 +21,7 @@ namespace WeatherParser.WPF.Decorators
             _command = command;
             _logger = logger;
         }
-        public abstract Task ExecuteAsync(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+        public abstract Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,

@@ -11,7 +11,7 @@ package WeatherDataProtoGismeteo;
 
 service WeatherDataProtoGismeteo {
   rpc SaveWeatherData (google.protobuf.Empty) returns (google.protobuf.Empty) {}
-  rpc GetAllWeatherData (WeatherDataRequest) returns (WeatherDataGetResponse) {}
+  rpc GetAllWeatherDataByDay (WeatherDataRequest) returns (WeatherDataGetResponse) {}
   rpc GetFirstAndLastDate(SiteID) returns (FirstLastDates) {}
   rpc GetSites(google.protobuf.Empty) returns (SitesList) {}
 }

@@ -21,7 +21,7 @@ namespace WeatherParser.WPF.Commands
             _logger = logger;
         }
 
-        public async Task ExecuteAsync(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+        public async Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,
@@ -35,9 +35,7 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                    await weatherParserService.GetAllWeatherDataAsync(new WeatherDataRequest() { 
-                        Date = DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp(), 
-                        SiteID = selectedSite.ID.ToString() }), 
+                    weatherDataGetResponse, 
                     xAxes, 
                     (DateTime)selectedDate);
             }

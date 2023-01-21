@@ -16,7 +16,7 @@ namespace WeatherParser.WPF.Decorators
         public LoggingDecorator(ILogger logger, ICommand command) : base(logger, command)
         { }
 
-        public override async Task ExecuteAsync(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService,
+        public override async Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,
@@ -25,7 +25,7 @@ namespace WeatherParser.WPF.Decorators
         {
             _logger.Information($"{_command.GetType().Name} started");
 
-            await _command.ExecuteAsync(weatherParserService, selectedDate, series, selectedSite, times, xAxes);
+            await _command.ExecuteAsync(weatherDataGetResponse, selectedDate, series, selectedSite, times, xAxes);
 
             _logger.Information($"{_command.GetType().Name} finished");
         }

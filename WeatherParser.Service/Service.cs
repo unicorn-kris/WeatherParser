@@ -22,9 +22,9 @@ namespace WeatherParser.Service
             _weatherParserServiceGismeteo = weatherParserServiceGismeteo;
         }
 
-        public async Task<List<WeatherDataService>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId)
+        public async Task<List<WeatherDataService>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
-            var data = await _weatherParserRepository.GetAllWeatherDataAsync(targetDate, siteId);
+            var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(targetDate, siteId);
 
             //map weatherdatarepository to weatherdataservice
             var weatherDataList = new List<WeatherDataService>();

@@ -67,10 +67,10 @@ namespace WeatherParser.Repository
 
                         var collectionSite = db.GetCollection<WeatherDataRepository>(siteCollectionName);
 
-                        var sort = Builders<WeatherDataRepository>.Sort.Descending(data => data.TargetDate);
+                        var sort = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
 
                         var documents = await db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).Sort(sort).ToListAsync();
-                        
+
                         if (documents.Any())
                         {
                             documents.FirstOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
@@ -122,12 +122,20 @@ namespace WeatherParser.Repository
 
                     var collectionSite = db.GetCollection<WeatherDataRepository>(siteCollectionName);
 
-                   await collectionSite.InsertOneAsync(weatherData);
+                    var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+                    var fields = fieldsBuilder.Exclude("_id");
+
+                    var documents = await db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
+
+                    if (!documents.Any(doc => doc.TargetDate.Date == weatherData.TargetDate.Date))
+                    {
+                        await collectionSite.InsertOneAsync(weatherData);
+                    }
                 }
             }
         }
 
-        public async Task<List<WeatherDataRepository>> GetAllWeatherDataAsync(DateTime targetDate, Guid siteId)
+        public async Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
             var db = GetDatabase();
 

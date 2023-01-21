@@ -36,6 +36,8 @@ namespace WeatherParser.WPF.ViewModels
 
         private bool _haveDates = false;
 
+        private WeatherDataGetResponse _weatherDataGetResponse;
+
         #endregion
 
         #region ctor
@@ -109,6 +111,15 @@ namespace WeatherParser.WPF.ViewModels
                 {
                     Times[i].IsDateChecked = true;
                 }
+
+                if (SelectedSite != null && SelectedDate != null)
+                {
+                    _weatherDataGetResponse = _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
+                    {
+                        Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
+                        SiteID = SelectedSite.ID.ToString()
+                    }).ResponseAsync.Result;
+                }
             }
         }
 
@@ -172,28 +183,28 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.ExecuteAsync(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
+            temperatureCommand.ExecuteAsync(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void Pressure(object? parameter)
         {
             Series.Clear();
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.ExecuteAsync(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
+            pressureCommand.ExecuteAsync(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void WindSpeed(object? parameter)
         {
             Series.Clear();
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.ExecuteAsync(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
+            windSpeedCommand.ExecuteAsync(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void Humidity(object? parameter)
         {
             Series.Clear();
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.ExecuteAsync(_weatherParserService, _selectedDate, Series, _selectedSite, Times, XAxes);
+            humidityCommand.ExecuteAsync(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
 
