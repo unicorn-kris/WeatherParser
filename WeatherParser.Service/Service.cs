@@ -1,6 +1,7 @@
 ﻿using Helpers;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
@@ -14,12 +15,34 @@ namespace WeatherParser.Service
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
         private readonly IWeatherParserServiceGismeteo _weatherParserServiceGismeteo;
+        private PeriodicTimer _timer;
 
         public Service(IWeatherParserRepository weatherParserRepository,
             IWeatherParserServiceGismeteo weatherParserServiceGismeteo)
         {
             _weatherParserRepository = weatherParserRepository;
             _weatherParserServiceGismeteo = weatherParserServiceGismeteo;
+
+            _timer = new PeriodicTimer(TimeSpan.FromDays(1));
+            Task timerTask = HandleTimerAsync(_timer);
+        }
+
+        private async Task HandleTimerAsync(PeriodicTimer timer)
+        {
+            try
+            {
+                await SaveWeatherDataAsync();
+
+                while (await timer.WaitForNextTickAsync())
+                {
+                    await SaveWeatherDataAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Save weather exception " + ex.Message);
+            }
+
         }
 
         public async Task<List<WeatherDataService>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)

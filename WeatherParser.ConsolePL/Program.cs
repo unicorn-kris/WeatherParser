@@ -18,7 +18,7 @@ namespace WeatherParser.ConsolePL
 
             try
             {
-                weatherParserService.SaveWeatherData(new Empty());
+                //weatherParserService.SaveWeatherData(new Empty());
             }
             catch
             {

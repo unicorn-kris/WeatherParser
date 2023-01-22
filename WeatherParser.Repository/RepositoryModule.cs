@@ -7,7 +7,7 @@ namespace WeatherParser.Repository
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataNoSQLRepository>().As<IWeatherParserRepository>();
+            builder.RegisterType<WeatherDataNoSQLRepository>().As<IWeatherParserRepository>().SingleInstance();
         }
     }
 }

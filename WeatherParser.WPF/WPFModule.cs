@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using WeatherParser.WPF.ViewModels;
-using TimerSaveDataService;
 using Grpc.Net.Client;
 using Grpc.Core;
 using WeatherParser.GrpcService.Services;
@@ -26,8 +25,6 @@ namespace WeatherParser.WPF
                     .WriteTo.File("log.txt")
                     .CreateLogger();
             }).SingleInstance();
-
-            builder.RegisterModule<TimerSaveDataModule>();
 
             builder.RegisterType<GetHumidityCommand>().As<ICommand>().Named<ICommand>("HumidityCommand");
             builder.RegisterType<GetPressureCommand>().As<ICommand>().Named<ICommand>("PressureCommand");

@@ -16,6 +16,7 @@
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="AngleSharp.Io" Version="0.17.0" />
     <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="EcoCore" Version="7.0.0.14525" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.45" />
   </ItemGroup>
 </Project>

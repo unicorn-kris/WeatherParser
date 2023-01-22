@@ -106,20 +106,6 @@ namespace WeatherParser.GrpcService.Services
             }
         }
 
-        public override async Task<Empty> SaveWeatherData(Empty request, ServerCallContext context)
-        {
-            try
-            {
-                await _weatherParserService.SaveWeatherDataAsync();
-                return new Empty();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "SaveWeatherData failed");
-                throw new RpcException(new Status(StatusCode.Internal, ex.Message));
-            }
-        }
-
         public override async Task<SitesList> GetSites(Empty request, ServerCallContext context)
         {
             try

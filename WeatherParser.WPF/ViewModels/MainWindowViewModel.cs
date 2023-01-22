@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using WeatherParser.TimerSaveDataService;
 using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
@@ -43,9 +42,9 @@ namespace WeatherParser.WPF.ViewModels
 
         #region ctor
 
-        public MainWindowViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService, ITimerSaveData timerSaveData)
+        public MainWindowViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService)
         {
-            timerSaveData.SaveData();
+            _weatherParserService = weatherParserService;
 
             Series = new ObservableCollection<ISeries>();
             XAxes = new ObservableCollection<Axis>();
@@ -57,8 +56,6 @@ namespace WeatherParser.WPF.ViewModels
             PressureCommand = new RelayCommand(Pressure);
             HumidityCommand = new RelayCommand(Humidity);
             WindSpeedCommand = new RelayCommand(WindSpeed);
-
-            _weatherParserService = weatherParserService;
 
             RestartAppCommand = new RelayCommand(Restart);
 

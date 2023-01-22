@@ -2,6 +2,6 @@
 {
     public interface ITimerSaveData
     {
-        void SaveData();
+        void SaveWeather();
     }
 }

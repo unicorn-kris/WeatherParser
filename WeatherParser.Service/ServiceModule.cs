@@ -9,7 +9,7 @@ namespace WeatherParser.Service
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Service>().As<IService>();
+            builder.RegisterType<Service>().As<IService>().SingleInstance();
 
             //register all plugins modules
             builder.RegisterModule<GismeteoServiceModule>();

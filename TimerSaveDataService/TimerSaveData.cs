@@ -18,23 +18,7 @@ namespace WeatherParser.TimerSaveDataService
             _logger = logger;
         }
 
-        public void SaveData()
-        {
-            var timer = new DispatcherTimer();
-
-            SaveWeather();
-
-            timer.Interval = TimeSpan.FromHours(1);
-            timer.Tick += timer_Tick;
-            timer.Start();
-        }
-
-        void timer_Tick(object sender, EventArgs e)
-        {
-            SaveWeather();
-        }
-
-        private void SaveWeather()
+        public void SaveWeather()
         {
             try
             {
