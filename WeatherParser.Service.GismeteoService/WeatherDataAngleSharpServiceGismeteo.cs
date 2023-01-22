@@ -1,14 +1,17 @@
 ﻿using AngleSharp;
-using Helpers;
 using System.Reflection;
+using WeatherParser.Service.Common;
 using WeatherParser.Service.Entities;
 using WeatherParser.Service.Entities.Urls;
-using WeatherParser.Service.GismeteoService.Contract;
 
 namespace WeatherParser.Service.Plugins.GismeteoService
 {
-    public class WeatherDataAngleSharpServiceGismeteo : IWeatherParserServiceGismeteo
+    public class WeatherDataAngleSharpServiceGismeteo : IWeatherPlugin
     {
+        public Guid SiteID => new Guid("ed13908a-c2dc-4edb-bb9c-1678300a3435");
+
+        public string Name => "Gismeteo";
+
         public WeatherDataService SaveWeatherData()
         {
             var weatherDataList = new List<WeatherService>();
@@ -52,7 +55,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 
                 //TODO PARSE DATE
                 var day = string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c)));
-                weatherData.Date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, int.Parse(day));
+                weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(day));
 
                 for (int i = 0; i < 8; ++i)
                 {
@@ -107,10 +110,10 @@ namespace WeatherParser.Service.Plugins.GismeteoService
             //map service entity to repository entity
             return new WeatherDataService()
             {
-                TargetDate = DateTime.UtcNow,
+                TargetDate = DateTime.Now,
                 Weather = weatherDataList,
-                SiteId = SitesHelperCollection.Gismeteo
-            }; 
+                SiteId = SiteID
+            };
         }
     }
 }

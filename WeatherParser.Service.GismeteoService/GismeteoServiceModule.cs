@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using WeatherParser.Service.GismeteoService.Contract;
+using WeatherParser.Service.Common;
 
 namespace WeatherParser.Service.Plugins.GismeteoService
 {
@@ -7,7 +7,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataAngleSharpServiceGismeteo>().As<IWeatherParserServiceGismeteo>();
+            builder.RegisterType<WeatherDataAngleSharpServiceGismeteo>().Keyed<IWeatherPlugin>("Gismeteo").As<IWeatherPlugin>();
         }
     }
 }

@@ -6,8 +6,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
     <ProjectReference Include="..\WeatherParser.Presentation.Entities\WeatherParser.Presentation.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.Common\WeatherParser.Service.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />

@@ -1,10 +1,12 @@
-﻿using WeatherParser.Service.Entities;
-using WeatherParser.Service.GismeteoService.Contract;
+﻿using WeatherParser.Service.Common;
+using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Service.Plugins.GismeteoService
 {
-    public class WeatherDataAPIServiceGismeteo : IWeatherParserServiceGismeteo
+    public class WeatherDataAPIServiceGismeteo : IWeatherPlugin
     {
+        public Guid SiteID => new Guid("ed13908a-c2dc-4edb-bb9c-1678300a3435");
+        public string Name => "Gismeteo";
         public WeatherDataService SaveWeatherData()
         {
             throw new NotImplementedException();

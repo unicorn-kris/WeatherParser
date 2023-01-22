@@ -6,10 +6,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
     <ProjectReference Include="..\WeatherParser.Presentation.Entities\WeatherParser.Presentation.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.Repository\WeatherParser.Repository.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.ForecaService\WeatherParser.Service.ForecaService.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.GismeteoService\WeatherParser.Service.GismeteoService.csproj" />
   </ItemGroup>
   <ItemGroup>

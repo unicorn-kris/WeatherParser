@@ -1,27 +1,35 @@
-﻿using Helpers;
+﻿using Autofac.Features.AttributeFilters;
+using Autofac.Features.Indexed;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
+using WeatherParser.Service.Common;
 using WeatherParser.Service.Contract;
 using WeatherParser.Service.Entities;
-using WeatherParser.Service.GismeteoService.Contract;
 
 namespace WeatherParser.Service
 {
     public class Service : IService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
-        private readonly IWeatherParserServiceGismeteo _weatherParserServiceGismeteo;
+        private readonly IWeatherPlugin _weatherParserServiceGismeteo;
+        private readonly IWeatherPlugin _weatherParserServiceForeca;
         private PeriodicTimer _timer;
+        IEnumerable<IWeatherPlugin> _plugins;
 
         public Service(IWeatherParserRepository weatherParserRepository,
-            IWeatherParserServiceGismeteo weatherParserServiceGismeteo)
+            [KeyFilter("Gismeteo")] IWeatherPlugin weatherParserServiceGismeteo,
+            [KeyFilter("Foreca")] IWeatherPlugin weatherParserServiceForeca,
+            IIndex<string, IWeatherPlugin> index,
+            IEnumerable<IWeatherPlugin> plugins)
         {
             _weatherParserRepository = weatherParserRepository;
             _weatherParserServiceGismeteo = weatherParserServiceGismeteo;
+            _weatherParserServiceForeca = weatherParserServiceForeca;
+            _plugins = plugins;
 
             _timer = new PeriodicTimer(TimeSpan.FromDays(1));
             Task timerTask = HandleTimerAsync(_timer);
@@ -42,7 +50,6 @@ namespace WeatherParser.Service
             {
                 throw new Exception("Save weather exception " + ex.Message);
             }
-
         }
 
         public async Task<List<WeatherDataService>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
@@ -85,7 +92,7 @@ namespace WeatherParser.Service
 
         public async Task<List<SiteService>> GetSitesAsync()
         {
-            var repositorySites = await _weatherParserRepository.GetSitesAsync().ConfigureAwait(false);
+            var repositorySites = await _weatherParserRepository.GetSitesAsync(_plugins).ConfigureAwait(false);
 
             //map siterepository to siteservice
             var sites = new List<SiteService>();
@@ -104,8 +111,6 @@ namespace WeatherParser.Service
 
         public async Task SaveWeatherDataAsync()
         {
-            await SitesHelper.SaveSites().ConfigureAwait(false);
-
             var weatherData = _weatherParserServiceGismeteo.SaveWeatherData();
 
             //convert weatherService to weatherRepository

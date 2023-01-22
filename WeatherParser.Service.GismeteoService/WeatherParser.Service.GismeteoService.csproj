@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.Common\WeatherParser.Service.Common.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
   </ItemGroup>
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
+using WeatherParser.Service.Common;
 
 namespace WeatherParser.Repository
 {
@@ -87,16 +88,8 @@ namespace WeatherParser.Repository
 
             if (documents.Any())
             {
-                documents.FirstOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
-                {
-                    return x.Date.CompareTo(y.Date);
-                });
-
-                documents.LastOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
-                {
-                    return x.Date.CompareTo(y.Date);
-                });
-
+                documents.FirstOrDefault().Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
+                documents.LastOrDefault().Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
 
                 return (documents.First().Weather.First().Date, documents.Last().Weather.Last().Date);
             }
@@ -192,20 +185,16 @@ namespace WeatherParser.Repository
             return resultData;
         }
 
-        public async Task<List<SiteRepository>> GetSitesAsync()
+        public async Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins)
         {
             var sites = new List<SiteRepository>();
 
             //read .json with sites names
             var fileValues = new List<SiteRepository>();
 
-            using (var file = new StreamReader("../Helpers/Sites.json"))
+            foreach(var plugin in plugins)
             {
-                string json = file.ReadToEnd().Trim();
-                foreach (var str in json.Split('\n'))
-                {
-                    fileValues.Add(JsonConvert.DeserializeObject<SiteRepository>(str));
-                }
+                fileValues.Add(new SiteRepository() { ID = plugin.SiteID, Name = plugin.Name });
             }
 
             //create collections for all sites and get if we haven't collections
@@ -237,8 +226,7 @@ namespace WeatherParser.Repository
                     sites.Add(new SiteRepository() { ID = DBsite.ID, Name = DBsite.Name, Rating = DBsite.Rating });
                 }
 
-                // /2 because we have site and his guid value
-                if (fileValues.Count / 2 > sites.Count)
+                if (fileValues.Count > sites.Count)
                 {
                     var sitesCollection = _db.GetCollection<SiteRepository>(SitesCollectionName);
 

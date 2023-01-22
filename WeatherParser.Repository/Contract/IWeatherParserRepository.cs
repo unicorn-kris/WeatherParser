@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Entities;
+using WeatherParser.Service.Common;
 
 namespace WeatherParser.Repository.Contract
 {
@@ -13,6 +14,6 @@ namespace WeatherParser.Repository.Contract
 
         Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId);
 
-        Task<List<SiteRepository>> GetSitesAsync();
+        Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins);
     }
 }

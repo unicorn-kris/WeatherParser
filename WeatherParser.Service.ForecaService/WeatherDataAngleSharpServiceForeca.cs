@@ -1,15 +1,16 @@
 ﻿using AngleSharp;
-using Helpers;
 using System.Reflection;
+using WeatherParser.Service.Common;
 using WeatherParser.Service.Entities;
 using WeatherParser.Service.Entities.Urls;
-using WeatherParser.Service.GismeteoService.Contract;
 
-namespace WeatherParser.Service.Plugins.GismeteoService
+namespace WeatherParser.Service.Plugins.ForecaService
 {
-    public class WeatherDataAngleSharpServiceForeca : IWeatherParserServiceForeca
+    public class WeatherDataAngleSharpServiceForeca : IWeatherPlugin
     {
-        public List<WeatherDataService> SaveWeatherData()
+        public Guid SiteID => new Guid("d956e5c5-a4ec-434a-bf0d-6223aaada0ed");
+        public string Name => "Foreca";
+        public WeatherDataService SaveWeatherData()
         {
             var resultListWeatherDataService = new List<WeatherDataService>();
 
@@ -49,7 +50,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 
                 for (int i = 0; i < 8; ++i)
                 {
-                    string temperature = weathers[i*3 + 1]
+                    string temperature = weathers[i * 3 + 1]
                         .GetElementsByClassName("c4")[0]
                         .QuerySelector("strong").TextContent.Trim();
 
@@ -85,12 +86,12 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 {
                     TargetDate = DateTime.UtcNow,
                     Weather = new List<WeatherService>() { weatherData },
-                    SiteId = SitesHelperCollection.Gismeteo
+                    SiteId = SiteID
                 };
 
                 resultListWeatherDataService.Add(newWeatherDataRepository);
             }
-            return resultListWeatherDataService;
+            return null;
         }
     }
 }

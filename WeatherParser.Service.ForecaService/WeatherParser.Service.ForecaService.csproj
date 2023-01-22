@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.Common\WeatherParser.Service.Common.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
   </ItemGroup>
 

@@ -1,16 +1,19 @@
-﻿using Helpers;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using WeatherParser.Service.Common;
 using WeatherParser.Service.Entities;
 using WeatherParser.Service.Entities.Urls;
-using WeatherParser.Service.GismeteoService.Contract;
 
 namespace WeatherParser.Service.Plugins.GismeteoService
 {
-    public class WeatherDataHtmlAgilityPackServiceGismeteo : IWeatherParserServiceGismeteo
+    public class WeatherDataHtmlAgilityPackServiceGismeteo : IWeatherPlugin
     {
+        public Guid SiteID => new Guid("ed13908a-c2dc-4edb-bb9c-1678300a3435");
+
+        public string Name => "Gismeteo";
+
         public WeatherDataService SaveWeatherData()
         {
             var weatherDataList = new List<WeatherService>();
@@ -203,7 +206,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
             {
                 TargetDate = DateTime.UtcNow,
                 Weather = weatherDataList,
-                SiteId = SitesHelperCollection.Gismeteo
+                SiteId = SiteID
             };
         }
 

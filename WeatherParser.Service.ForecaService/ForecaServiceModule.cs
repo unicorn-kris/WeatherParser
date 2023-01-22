@@ -1,13 +1,13 @@
 ﻿using Autofac;
-using WeatherParser.Service.GismeteoService.Contract;
+using WeatherParser.Service.Common;
 
-namespace WeatherParser.Service.Plugins.GismeteoService
+namespace WeatherParser.Service.Plugins.ForecaService
 {
     public class ForecaServiceModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataAngleSharpServiceForeca>().As<IWeatherParserServiceForeca>();
+            builder.RegisterType<WeatherDataAngleSharpServiceForeca>().Keyed<IWeatherPlugin>("Foreca").As<IWeatherPlugin>();
         }
     }
 }

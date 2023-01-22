@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
+using WeatherParser.Service.Common;
 
 namespace WeatherParser.Repository
 {
@@ -170,7 +171,7 @@ namespace WeatherParser.Repository
          DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1])));
         }
 
-        public Task<List<SiteRepository>> GetSitesAsync()
+        public Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins)
         {
             throw new NotImplementedException();
         }
