@@ -21,7 +21,7 @@ namespace WeatherParser.WPF.Commands
             _logger = logger;
         }
 
-        public async Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
+        public void Execute(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,

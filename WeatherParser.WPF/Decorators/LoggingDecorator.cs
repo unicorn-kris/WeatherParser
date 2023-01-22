@@ -3,7 +3,6 @@ using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.Commands;
@@ -16,7 +15,7 @@ namespace WeatherParser.WPF.Decorators
         public LoggingDecorator(ILogger logger, ICommand command) : base(logger, command)
         { }
 
-        public override async Task ExecuteAsync(WeatherDataGetResponse weatherDataGetResponse,
+        public override void Execute(WeatherDataGetResponse weatherDataGetResponse,
              DateTime? selectedDate,
              ObservableCollection<ISeries> series,
              SitePresentation selectedSite,
@@ -25,7 +24,7 @@ namespace WeatherParser.WPF.Decorators
         {
             _logger.Information($"{_command.GetType().Name} started");
 
-            await _command.ExecuteAsync(weatherDataGetResponse, selectedDate, series, selectedSite, times, xAxes);
+            _command.Execute(weatherDataGetResponse, selectedDate, series, selectedSite, times, xAxes);
 
             _logger.Information($"{_command.GetType().Name} finished");
         }

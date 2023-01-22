@@ -31,11 +31,11 @@ namespace WeatherParser.Service
         {
             try
             {
-                await SaveWeatherDataAsync();
+                await SaveWeatherDataAsync().ConfigureAwait(false);
 
                 while (await timer.WaitForNextTickAsync())
                 {
-                    await SaveWeatherDataAsync();
+                    await SaveWeatherDataAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -47,7 +47,7 @@ namespace WeatherParser.Service
 
         public async Task<List<WeatherDataService>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
-            var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(targetDate, siteId);
+            var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(targetDate, siteId).ConfigureAwait(false);
 
             //map weatherdatarepository to weatherdataservice
             var weatherDataList = new List<WeatherDataService>();
@@ -80,12 +80,12 @@ namespace WeatherParser.Service
 
         public async Task<(DateTime firstDate, DateTime lastDate)> GetFirstAndLastDateAsync(Guid siteId)
         {
-            return await _weatherParserRepository.GetFirstAndLastDateAsync(siteId);
+            return await _weatherParserRepository.GetFirstAndLastDateAsync(siteId).ConfigureAwait(false);
         }
 
         public async Task<List<SiteService>> GetSitesAsync()
         {
-            var repositorySites = await _weatherParserRepository.GetSitesAsync();
+            var repositorySites = await _weatherParserRepository.GetSitesAsync().ConfigureAwait(false);
 
             //map siterepository to siteservice
             var sites = new List<SiteService>();
@@ -104,7 +104,7 @@ namespace WeatherParser.Service
 
         public async Task SaveWeatherDataAsync()
         {
-            await SitesHelper.SaveSites();
+            await SitesHelper.SaveSites().ConfigureAwait(false);
 
             var weatherData = _weatherParserServiceGismeteo.SaveWeatherData();
 
@@ -129,7 +129,7 @@ namespace WeatherParser.Service
                 });
             }
 
-            await _weatherParserRepository.SaveWeatherDataAsync(weatherRepositoryList);
+            await _weatherParserRepository.SaveWeatherDataAsync(weatherRepositoryList).ConfigureAwait(false);
         }
     }
 }

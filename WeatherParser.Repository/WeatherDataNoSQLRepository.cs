@@ -1,6 +1,4 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
@@ -18,16 +16,9 @@ namespace WeatherParser.Repository
         #region Private
         private const string SitesCollectionName = "SitesCollection";
 
-        private IMongoDatabase _db;
+        private readonly IMongoDatabase _db;
 
-        private IMongoDatabase GetDatabase()
-        {
-            var dbClient = new MongoClient("mongodb://localhost:27017");
-
-            return dbClient.GetDatabase("WeatherDb");
-        }
-
-        private SiteRepository GetSiteDocument(IMongoDatabase _db, Guid siteID)
+        private async Task<SiteRepository> GetSiteDocumentAsync(IMongoDatabase _db, Guid siteID)
         {
             var collection = _db.GetCollection<SiteRepository>(SitesCollectionName);
 
@@ -36,199 +27,169 @@ namespace WeatherParser.Repository
 
             var filter = Builders<SiteRepository>.Filter.Eq(site => site.ID, siteID);
 
-            return collection.Find(filter).Project<SiteRepository>(fields).FirstOrDefault();
+            return await collection.Find(filter).Project<SiteRepository>(fields).FirstOrDefaultAsync();
+        }
+
+        private async Task<string> GetSiteCollectionNameAsync(Guid siteId)
+        {
+            var collectionNames = await _db.ListCollectionNames().ToListAsync();
+
+            if (!collectionNames.Any(col => col == SitesCollectionName))
+            {
+                throw new Exception("Sites has not yet been added to the application");
+            }
+
+            var siteDocument = await GetSiteDocumentAsync(_db, siteId);
+
+            if (siteDocument == null)
+            {
+                throw new Exception("This site has not yet been added to the application");
+            }
+
+            var siteCollectionName = siteDocument.Name + "Collection";
+
+            if (!collectionNames.Any(col => col == siteCollectionName))
+            {
+                return null;
+            }
+
+            return siteCollectionName;
         }
         #endregion
 
         public WeatherDataNoSQLRepository()
         {
-            _db = GetDatabase();
+            var dbClient = new MongoClient("mongodb://localhost:27017");
+            _db = dbClient.GetDatabase("WeatherDb");
         }
 
         public async Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)
         {
-            if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == SitesCollectionName))
+            var siteCollectionName = await GetSiteCollectionNameAsync(siteId);
+
+            if (siteCollectionName == null)
             {
-                throw new Exception("Sites has not yet been added to the application");
+                throw new Exception("This site has not yet been added to the application");
+            }
+
+            var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
+
+            var sort = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
+
+            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName)
+                .Find(new BsonDocument())
+                .Project<WeatherDataRepository>(fields)
+                .Sort(sort)
+                .ToListAsync();
+
+            if (documents.Any())
+            {
+                documents.FirstOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
+                {
+                    return x.Date.CompareTo(y.Date);
+                });
+
+                documents.LastOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
+                {
+                    return x.Date.CompareTo(y.Date);
+                });
+
+
+                return (documents.First().Weather.First().Date, documents.Last().Weather.Last().Date);
             }
             else
             {
-                var siteDocument = GetSiteDocument(_db, siteId);
-
-                if (siteDocument == null)
-                {
-                    throw new Exception("This site has not yet been added to the application");
-                }
-                else
-                {
-                    var siteCollectionName = siteDocument.Name + "Collection";
-
-                    if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == siteCollectionName))
-                    {
-                        throw new Exception("_db for this site has not yet been added to the application");
-                    }
-                    else
-                    {
-                        var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
-                        var fields = fieldsBuilder.Exclude("_id");
-
-                        var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
-
-                        var sort = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
-
-                        var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName)
-                            .Find(new BsonDocument())
-                            .Project<WeatherDataRepository>(fields)
-                            .Sort(sort)
-                            .ToListAsync();
-
-                        if (documents.Any())
-                        {
-                            documents.FirstOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
-                            {
-                                return x.Date.CompareTo(y.Date);
-                            });
-
-                            documents.LastOrDefault().Weather.Sort(delegate (WeatherRepository x, WeatherRepository y)
-                            {
-                                return x.Date.CompareTo(y.Date);
-                            });
-
-
-                            return (documents.First().Weather.First().Date, documents.Last().Weather.Last().Date);
-                        }
-                        else
-                        {
-                            throw new Exception("Data for this site has not yet been added to the application");
-                        }
-                    }
-                }
+                throw new Exception("Data for this site has not yet been added to the application");
             }
         }
 
         public async Task SaveWeatherDataAsync(WeatherDataRepository weatherData)
         {
-            if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == SitesCollectionName))
+            var siteCollectionName = await GetSiteCollectionNameAsync(weatherData.SiteID);
+
+            if (siteCollectionName == null)
             {
-                throw new Exception("Sites has not yet been added to the application");
+                await _db.CreateCollectionAsync(siteCollectionName);
             }
-            else
+
+            var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
+
+            var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
+
+            if (!documents.Any(doc => doc.TargetDate.Date == weatherData.TargetDate.Date))
             {
-                var siteDocument = GetSiteDocument(_db, weatherData.SiteID);
-
-                if (siteDocument == null)
-                {
-                    throw new Exception("This site has not yet been added to the application");
-                }
-                else
-                {
-                    var siteCollectionName = siteDocument.Name + "Collection";
-
-                    if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == siteCollectionName))
-                    {
-                        await _db.CreateCollectionAsync(siteCollectionName);
-                    }
-
-                    var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
-
-                    var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
-                    var fields = fieldsBuilder.Exclude("_id");
-
-                    var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
-
-                    if (!documents.Any(doc => doc.TargetDate.Date == weatherData.TargetDate.Date))
-                    {
-                        await collectionSite.InsertOneAsync(weatherData);
-                    }
-                }
+                await collectionSite.InsertOneAsync(weatherData);
             }
         }
 
         public async Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
-            if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == SitesCollectionName))
+            var siteCollectionName = await GetSiteCollectionNameAsync(siteId);
+
+            if (siteCollectionName == null)
             {
-                throw new Exception("Sites has not yet been added to the application");
+                throw new Exception("This site has not yet been added to the application");
             }
-            else
+
+            var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
+
+            //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
+            //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
+            Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
+
+            foreach (var document in documents)
             {
-                var siteDocument = GetSiteDocument(_db, siteId);
-
-                if (siteDocument == null)
+                //targetDate - ON this date i need a weather
+                foreach (var weather in document.Weather)
                 {
-                    throw new Exception("This site has not yet been added to the application");
-                }
-                else
-                {
-                    var siteCollectionName = siteDocument.Name + "Collection";
-
-                    if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == siteCollectionName))
+                    if (weather.Date.Date == targetDate.Date.Date)
                     {
-                        throw new Exception("_db for this site has not yet been added to the application");
-                    }
-                    else
-                    {
-                        var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
-                        var fields = fieldsBuilder.Exclude("_id");
-
-                        var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
-
-
-                        //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
-                        //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
-                        Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
-
-                        WeatherRepository weatherData = new WeatherRepository();
-
-                        foreach (var document in documents)
+                        var weatherData = new WeatherRepository()
                         {
-                            //targetDate - ON this date i need a weather
-                            foreach (var weather in document.Weather)
-                            {
-                                if (weather.Date.Date == targetDate.Date.Date)
-                                {
-                                    weatherData = new WeatherRepository()
-                                    {
-                                        Temperature = new List<double>(),
-                                        Humidity = new List<int>(),
-                                        Pressure = new List<int>(),
-                                        WindDirection = new List<string>(),
-                                        WindSpeed = new List<int>()
-                                    };
+                            Temperature = new List<double>(),
+                            Humidity = new List<int>(),
+                            Pressure = new List<int>(),
+                            WindDirection = new List<string>(),
+                            WindSpeed = new List<int>()
+                        };
 
-                                    weatherData.Date = weather.Date;
+                        weatherData.Date = weather.Date;
 
-                                    weatherData.Temperature = weather.Temperature;
+                        weatherData.Temperature = weather.Temperature;
 
-                                    weatherData.Humidity = weather.Humidity;
+                        weatherData.Humidity = weather.Humidity;
 
-                                    weatherData.Pressure = weather.Pressure;
+                        weatherData.Pressure = weather.Pressure;
 
-                                    weatherData.WindDirection = weather.WindDirection;
+                        weatherData.WindDirection = weather.WindDirection;
 
-                                    weatherData.WindSpeed = weather.WindSpeed;
+                        weatherData.WindSpeed = weather.WindSpeed;
 
-                                    if (!dataInFiles.ContainsKey(document.TargetDate.Date))
-                                    {
-                                        dataInFiles.Add(document.TargetDate.Date, weatherData);
-                                    }
-                                }
-                            }
-                        }
-
-
-                        //преобразование словаря в возвращаемый тип
-                        List<WeatherDataRepository> resultData = new List<WeatherDataRepository>();
-
-                        foreach (var weather in dataInFiles)
+                        if (!dataInFiles.ContainsKey(document.TargetDate.Date))
                         {
-                            resultData.Add(new WeatherDataRepository() { TargetDate = weather.Key, Weather = new List<WeatherRepository>() { weather.Value } });
+                            dataInFiles.Add(document.TargetDate.Date, weatherData);
                         }
-
-                        return resultData;
                     }
                 }
             }
+
+            List<WeatherDataRepository> resultData = new List<WeatherDataRepository>();
+
+            foreach (var weather in dataInFiles)
+            {
+                resultData.Add(new WeatherDataRepository() { TargetDate = weather.Key, Weather = new List<WeatherRepository>() { weather.Value } });
+            }
+
+            return resultData;
         }
 
         public async Task<List<SiteRepository>> GetSitesAsync()
@@ -248,7 +209,9 @@ namespace WeatherParser.Repository
             }
 
             //create collections for all sites and get if we haven't collections
-            if (!_db.ListCollectionNames().ToListAsync().Result.Any(col => col == SitesCollectionName))
+            var collectionNames = await _db.ListCollectionNames().ToListAsync();
+
+            if (!collectionNames.Any(col => col == SitesCollectionName))
             {
                 _db.CreateCollection(SitesCollectionName);
 

@@ -20,7 +20,7 @@ namespace Helpers
             //bring in collection
             foreach (FieldInfo field in fields)
             {
-                values.Add(new SiteService() { Name = field.Name, ID = new Guid(field.GetValue(null).ToString()) });
+                values.Add(new SiteService() { Name = field.Name, ID = (Guid)field.GetValue(null) });
                 //If the field is static, obj is ignored. For non-static fields, obj should be an instance of a class that inherits or declares the field.
             }
 
