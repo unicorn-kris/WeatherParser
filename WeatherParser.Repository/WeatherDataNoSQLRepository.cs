@@ -1,9 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
@@ -58,10 +56,9 @@ namespace WeatherParser.Repository
         }
         #endregion
 
-        public WeatherDataNoSQLRepository()
+        public WeatherDataNoSQLRepository(IMongoDatabase dbClient)
         {
-            var dbClient = new MongoClient("mongodb://localhost:27017");
-            _db = dbClient.GetDatabase("WeatherDb");
+            _db = dbClient;
         }
 
         public async Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)
@@ -192,7 +189,7 @@ namespace WeatherParser.Repository
             //read .json with sites names
             var fileValues = new List<SiteRepository>();
 
-            foreach(var plugin in plugins)
+            foreach (var plugin in plugins)
             {
                 fileValues.Add(new SiteRepository() { ID = plugin.SiteID, Name = plugin.Name });
             }

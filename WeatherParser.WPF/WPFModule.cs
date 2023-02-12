@@ -1,11 +1,11 @@
 ﻿using Autofac;
-using WeatherParser.WPF.ViewModels;
-using Grpc.Net.Client;
 using Grpc.Core;
-using WeatherParser.GrpcService.Services;
+using Grpc.Net.Client;
 using Serilog;
+using WeatherParser.GrpcService.Services;
 using WeatherParser.WPF.Commands;
 using WeatherParser.WPF.Decorators;
+using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF
 {

@@ -15,8 +15,6 @@ namespace WeatherParser.Service
     public class Service : IService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
-        private readonly IWeatherPlugin _weatherParserServiceGismeteo;
-        private readonly IWeatherPlugin _weatherParserServiceForeca;
         private PeriodicTimer _timer;
         IEnumerable<IWeatherPlugin> _plugins;
 
@@ -27,8 +25,6 @@ namespace WeatherParser.Service
             IEnumerable<IWeatherPlugin> plugins)
         {
             _weatherParserRepository = weatherParserRepository;
-            _weatherParserServiceGismeteo = weatherParserServiceGismeteo;
-            _weatherParserServiceForeca = weatherParserServiceForeca;
             _plugins = plugins;
 
             _timer = new PeriodicTimer(TimeSpan.FromDays(1));
@@ -111,30 +107,33 @@ namespace WeatherParser.Service
 
         public async Task SaveWeatherDataAsync()
         {
-            var weatherData = _weatherParserServiceGismeteo.SaveWeatherData();
-
-            //convert weatherService to weatherRepository
-            var weatherRepositoryList = new WeatherDataRepository()
+            foreach (var weatherPugin in _plugins)
             {
-                TargetDate = weatherData.TargetDate,
-                Weather = new List<WeatherRepository>(),
-                SiteID = weatherData.SiteId
-            };
+                var weatherData = await weatherPugin.SaveWeatherDataAsync();
 
-            foreach (var weather in weatherData.Weather)
-            {
-                weatherRepositoryList.Weather.Add(new WeatherRepository()
+                //convert weatherService to weatherRepository
+                var weatherRepositoryList = new WeatherDataRepository()
                 {
-                    Date = weather.Date,
-                    Pressure = weather.Pressure,
-                    Humidity = weather.Humidity,
-                    Temperature = weather.Temperature,
-                    WindDirection = weather.WindDirection,
-                    WindSpeed = weather.WindSpeed
-                });
-            }
+                    TargetDate = weatherData.TargetDate,
+                    Weather = new List<WeatherRepository>(),
+                    SiteID = weatherData.SiteId
+                };
 
-            await _weatherParserRepository.SaveWeatherDataAsync(weatherRepositoryList).ConfigureAwait(false);
+                foreach (var weather in weatherData.Weather)
+                {
+                    weatherRepositoryList.Weather.Add(new WeatherRepository()
+                    {
+                        Date = weather.Date,
+                        Pressure = weather.Pressure,
+                        Humidity = weather.Humidity,
+                        Temperature = weather.Temperature,
+                        WindDirection = weather.WindDirection,
+                        WindSpeed = weather.WindSpeed
+                    });
+                }
+
+                await _weatherParserRepository.SaveWeatherDataAsync(weatherRepositoryList).ConfigureAwait(false);
+            }
         }
     }
 }

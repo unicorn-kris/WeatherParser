@@ -12,7 +12,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 
         public string Name => "Gismeteo";
 
-        public WeatherDataService SaveWeatherData()
+        public Task<WeatherDataService> SaveWeatherDataAsync()
         {
             var weatherDataList = new List<WeatherService>();
 
@@ -108,12 +108,12 @@ namespace WeatherParser.Service.Plugins.GismeteoService
             }
 
             //map service entity to repository entity
-            return new WeatherDataService()
+            return Task.FromResult(new WeatherDataService()
             {
                 TargetDate = DateTime.Now,
                 Weather = weatherDataList,
                 SiteId = SiteID
-            };
+            });
         }
     }
 }

@@ -6,6 +6,6 @@ namespace WeatherParser.Service.Common
     {
         Guid SiteID { get; }
         string Name { get; }
-        WeatherDataService SaveWeatherData();
+        Task<WeatherDataService> SaveWeatherDataAsync();
     }
 }

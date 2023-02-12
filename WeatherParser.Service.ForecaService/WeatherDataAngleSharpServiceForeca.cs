@@ -10,7 +10,7 @@ namespace WeatherParser.Service.Plugins.ForecaService
     {
         public Guid SiteID => new Guid("d956e5c5-a4ec-434a-bf0d-6223aaada0ed");
         public string Name => "Foreca";
-        public WeatherDataService SaveWeatherData()
+        public Task<WeatherDataService> SaveWeatherDataAsync()
         {
             var resultListWeatherDataService = new List<WeatherDataService>();
 
