@@ -7,7 +7,7 @@ namespace WeatherParser.Service.Plugins.ForecaService
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataAngleSharpServiceForeca>().Keyed<IWeatherPlugin>("Foreca").As<IWeatherPlugin>();
+            builder.RegisterType<WeatherDataAngleSharpServiceForeca>().Keyed<IWeatherPlugin>("Foreca").As<IWeatherPlugin>().SingleInstance();
         }
     }
 }

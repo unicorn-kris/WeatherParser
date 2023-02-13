@@ -7,7 +7,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<WeatherDataAngleSharpServiceGismeteo>().Keyed<IWeatherPlugin>("Gismeteo").As<IWeatherPlugin>();
+            builder.RegisterType<WeatherDataAngleSharpServiceGismeteo>().Keyed<IWeatherPlugin>("Gismeteo").As<IWeatherPlugin>().SingleInstance();
         }
     }
 }

@@ -15,6 +15,8 @@ namespace WeatherParser.Repository
         #region Private
         private const string SitesCollectionName = "SitesCollection";
 
+        private const string DBName = "WeatherDb";
+
         private readonly IMongoDatabase _db;
 
         private async Task<SiteRepository> GetSiteDocumentAsync(IMongoDatabase _db, Guid siteID)
@@ -56,9 +58,9 @@ namespace WeatherParser.Repository
         }
         #endregion
 
-        public WeatherDataNoSQLRepository(IMongoDatabase dbClient)
+        public WeatherDataNoSQLRepository(IMongoClient dbClient)
         {
-            _db = dbClient;
+            _db = dbClient.GetDatabase(DBName);
         }
 
         public async Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)

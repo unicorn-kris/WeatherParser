@@ -11,6 +11,7 @@
     <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.ForecaService\WeatherParser.Service.ForecaService.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.GismeteoService\WeatherParser.Service.GismeteoService.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.17.1" />
