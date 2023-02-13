@@ -14,10 +14,9 @@
     <ProjectReference Include="..\WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.17.1" />
-    <PackageReference Include="AngleSharp.Io" Version="0.17.0" />
-    <PackageReference Include="Autofac" Version="6.4.0" />
-    <PackageReference Include="EcoCore" Version="7.0.0.14525" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.45" />
+    <PackageReference Include="AngleSharp" Version="1.0.1" />
+    <PackageReference Include="AngleSharp.Io" Version="1.0.0" />
+    <PackageReference Include="Autofac" Version="6.5.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
   </ItemGroup>
 </Project>
