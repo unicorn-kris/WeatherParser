@@ -5,23 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
              mc:Ignorable="d"
-        >
-    
-    <Grid Height="337">
+        MinHeight="360" MinWidth="800">
+
+    <Grid Height="Auto" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Margin="3,0,3,0" Background="#FFEEEEEE" >
+        <Grid Grid.Column="0" Background="#FFEEEEEE" Grid.RowSpan="4">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="5">
+            <Grid Grid.Row="0"  VerticalAlignment="Top" Margin="3 2">
                 <ComboBox SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -29,38 +36,38 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                          
+
             </Grid>
-            
-            <Grid Grid.Row="1">
+
+            <Grid Grid.Row="1" VerticalAlignment="Top" Margin="3 2">
                 <DatePicker SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}"/>
             </Grid>
-            
-            <Grid Grid.Row="2">
-                
+
+            <Grid Grid.Row="2" VerticalAlignment="Top" Margin="2">
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Margin="2" VerticalAlignment="Center">
+                <StackPanel Grid.Column="0" Margin="2" VerticalAlignment="Top">
                     <Label Content="Select data: " HorizontalAlignment="Center" FontSize="15" FontFamily="Georgia"/>
 
-                    <Button Command="{Binding TemperatureCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
+                    <Button Command="{Binding TemperatureCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Temperature
                     </Button>
-                    <Button Command="{Binding WindSpeedCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
+                    <Button Command="{Binding WindSpeedCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Wind Speed
                     </Button>
-                    <Button Command="{Binding PressureCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
+                    <Button Command="{Binding PressureCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Pressure
                     </Button>
-                    <Button Command="{Binding HumidityCommand}" Margin="2" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
+                    <Button Command="{Binding HumidityCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
                         Humidity
                     </Button>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Center">
+                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Top">
                     <Label Content="Select time: " HorizontalAlignment="Center" FontSize="15" FontFamily="Georgia"/>
 
                     <ItemsControl ItemsSource="{Binding Times}">
@@ -77,24 +84,24 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    
+
                 </StackPanel>
-                
+
             </Grid>
 
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="3" VerticalAlignment="Top" Margin="3 2">
                 <StackPanel>
-                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="10" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="10" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                 </StackPanel>
             </Grid>
-            
+
         </Grid>
 
-        
-        <Border Grid.Column="1" Background="AliceBlue" SnapsToDevicePixels="True" Margin="50">
+
+        <Border Grid.Column="1" Background="AliceBlue" SnapsToDevicePixels="True" Margin="50,50,50,50" Grid.RowSpan="4">
             <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"/>
         </Border>
-        
+
     </Grid>
 </Window>
