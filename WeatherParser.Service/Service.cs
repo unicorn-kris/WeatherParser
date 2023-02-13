@@ -15,37 +15,13 @@ namespace WeatherParser.Service
     public class Service : IService
     {
         private readonly IWeatherParserRepository _weatherParserRepository;
-        private PeriodicTimer _timer;
-        IEnumerable<IWeatherPlugin> _plugins;
+        private IEnumerable<IWeatherPlugin> _plugins;
 
         public Service(IWeatherParserRepository weatherParserRepository,
-            [KeyFilter("Gismeteo")] IWeatherPlugin weatherParserServiceGismeteo,
-            [KeyFilter("Foreca")] IWeatherPlugin weatherParserServiceForeca,
-            IIndex<string, IWeatherPlugin> index,
             IEnumerable<IWeatherPlugin> plugins)
         {
             _weatherParserRepository = weatherParserRepository;
             _plugins = plugins;
-
-            _timer = new PeriodicTimer(TimeSpan.FromDays(1));
-            Task timerTask = HandleTimerAsync(_timer);
-        }
-
-        private async Task HandleTimerAsync(PeriodicTimer timer)
-        {
-            try
-            {
-                await SaveWeatherDataAsync().ConfigureAwait(false);
-
-                while (await timer.WaitForNextTickAsync())
-                {
-                    await SaveWeatherDataAsync().ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Save weather exception " + ex.Message);
-            }
         }
 
         public async Task<List<WeatherDataService>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
@@ -105,35 +81,5 @@ namespace WeatherParser.Service
             return sites;
         }
 
-        public async Task SaveWeatherDataAsync()
-        {
-            foreach (var weatherPugin in _plugins)
-            {
-                var weatherData = await weatherPugin.SaveWeatherDataAsync();
-
-                //convert weatherService to weatherRepository
-                var weatherRepositoryList = new WeatherDataRepository()
-                {
-                    TargetDate = weatherData.TargetDate,
-                    Weather = new List<WeatherRepository>(),
-                    SiteID = weatherData.SiteId
-                };
-
-                foreach (var weather in weatherData.Weather)
-                {
-                    weatherRepositoryList.Weather.Add(new WeatherRepository()
-                    {
-                        Date = weather.Date,
-                        Pressure = weather.Pressure,
-                        Humidity = weather.Humidity,
-                        Temperature = weather.Temperature,
-                        WindDirection = weather.WindDirection,
-                        WindSpeed = weather.WindSpeed
-                    });
-                }
-
-                await _weatherParserRepository.SaveWeatherDataAsync(weatherRepositoryList).ConfigureAwait(false);
-            }
-        }
     }
 }

@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.Entit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.ForecaService", "WeatherParser.Service.ForecaService\WeatherParser.Service.ForecaService.csproj", "{37BABCEA-C835-4B11-9E75-09E2107FB556}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.Service.Common", "WeatherParser.Service.Common\WeatherParser.Service.Common.csproj", "{12A0752F-D2FD-4703-9F6C-64BED5E80496}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.Common", "WeatherParser.Service.Common\WeatherParser.Service.Common.csproj", "{12A0752F-D2FD-4703-9F6C-64BED5E80496}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.OpenWeatherMapService", "WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj", "{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.WinService", "WeatherParser.WinService\WeatherParser.WinService.csproj", "{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +111,8 @@ Global
 		{1074F572-7445-484C-94C2-87FE7F6F79FE} = {5384F156-3757-40B6-8450-38BA5CEC8185}
 		{37BABCEA-C835-4B11-9E75-09E2107FB556} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
+		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
+		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2572A8D4-8954-49A1-A1FB-F0C141F742B9}

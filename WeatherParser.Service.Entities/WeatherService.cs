@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WeatherParser.Service.Entities
+﻿namespace WeatherParser.Service.Entities
 {
     public class WeatherService
     {
