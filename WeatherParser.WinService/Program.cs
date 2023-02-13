@@ -9,6 +9,7 @@
                 {
                     s.AddHostedService<SaveWeatherWorker>();
                 })
+                .UseWindowsService()
                 .Build();
         }
     }
