@@ -20,7 +20,7 @@ namespace WeatherParser.WinService
 
             _plugins = plugins;
 
-            _timer = new CronTimer("1 * * * *", TimeZoneInfo.Local);
+            _timer = new CronTimer("*/1 * * * *", TimeZoneInfo.Local);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
