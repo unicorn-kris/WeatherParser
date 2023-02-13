@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeatherParser.Repository\WeatherParser.Repository.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.GismeteoService\WeatherParser.Service.GismeteoService.csproj" />
+    <ProjectReference Include="..\WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj" />
   </ItemGroup>
 
 </Project>

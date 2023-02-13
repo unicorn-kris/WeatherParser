@@ -14,9 +14,6 @@ namespace WeatherParser.WinService
         IEnumerable<IWeatherPlugin> _plugins;
 
         public SaveWeatherWorker(IWeatherParserRepository weatherParserRepository,
-            [KeyFilter("Gismeteo")] IWeatherPlugin weatherParserServiceGismeteo,
-            [KeyFilter("Foreca")] IWeatherPlugin weatherParserServiceForeca,
-            IIndex<string, IWeatherPlugin> index,
             IEnumerable<IWeatherPlugin> plugins)
         {
             _weatherParserRepository = weatherParserRepository;
