@@ -11,7 +11,7 @@ namespace WeatherParser.WinService
     {
         private IWeatherParserRepository _weatherParserRepository;
         private CronTimer _timer;
-        IEnumerable<IWeatherPlugin> _plugins;
+        private IEnumerable<IWeatherPlugin> _plugins;
 
         public SaveWeatherWorker(IWeatherParserRepository weatherParserRepository,
             IEnumerable<IWeatherPlugin> plugins)

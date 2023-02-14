@@ -13,8 +13,8 @@ namespace WeatherParser.Service.OpenWeatherMapService
 
         private HttpClient _httpClient;
 
-        private static string _openWeatherMapToken = "3c4d61f32c0c6ebfe830af8d86c96a9a";
-        private static string _saratovID = "498677";
+        private readonly string _openWeatherMapToken = "3c4d61f32c0c6ebfe830af8d86c96a9a";
+        private readonly string _saratovID = "498677";
 
         public WeatherDataAPIServiceOpenWeatherMap(HttpClient httpClient)
         {

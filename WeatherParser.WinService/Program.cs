@@ -18,7 +18,6 @@ namespace WeatherParser.WinService
                     var builder = new ContainerBuilder();
 
                     //register all plugins modules
-
                     s.AddTransient<IMongoClient>(с => new MongoClient("mongodb://localhost:27017"));
                     s.AddTransient<HttpClient>(с => new HttpClient());
 
