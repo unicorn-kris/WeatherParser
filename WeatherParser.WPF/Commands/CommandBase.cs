@@ -19,13 +19,12 @@ namespace WeatherParser.WPF.Commands
         {
             if (selectedDate != null)
             {
-                XAxes.Clear();
+                XAxes[0].Labels.Clear();
 
-                XAxes.Add(new Axis()
+                foreach (var date in weatherDataGetResponse.WeatherData.Select(s => s.TargetDate.ToDateTime().ToString("dd.MM.yyyy")))
                 {
-                    Labels = weatherDataGetResponse.WeatherData.Select(s => s.TargetDate.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
-                    LabelsPaint = new SolidColorPaintTask(SKColors.Black)
-                });
+                    XAxes[0].Labels.Add(date);
+                }
             }
 
             var result = new List<WeatherDataPresentation>();
