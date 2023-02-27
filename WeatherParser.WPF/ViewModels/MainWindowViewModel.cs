@@ -2,8 +2,9 @@
 using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -48,7 +49,14 @@ namespace WeatherParser.WPF.ViewModels
             _weatherParserService = weatherParserService;
 
             Series = new ObservableCollection<ISeries>();
-            XAxes = new ObservableCollection<Axis>();
+            XAxes = new ObservableCollection<Axis>()
+            {
+                new Axis()
+                {
+                    LabelsPaint = new SolidColorPaint(SKColors.Black)
+                    //Labeler = x => new DateTime((long)x).ToString("dd MM yyyy")
+                }
+            };
             YAxes = new ObservableCollection<Axis>() { new Axis() };
             Times = new ObservableCollection<TimeViewModel>();
             Sites = new ObservableCollection<SitePresentation>();
@@ -249,11 +257,10 @@ namespace WeatherParser.WPF.ViewModels
                 Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
             }
 
-            if (XAxes.Any())
-            {
-                XAxes[0].Labels = new List<string>() { string.Empty };
-            }
-            YAxes[0] = new Axis();
+            //if (XAxes.Any())
+            //{
+            //    XAxes[0].Labels = new List<string>() { string.Empty };
+            //}
         }
 
         private void DisableButtonsAndCheckBoxes()

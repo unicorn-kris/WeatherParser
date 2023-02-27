@@ -13,21 +13,8 @@ namespace WeatherParser.WPF.Commands
     internal abstract class CommandBase
     {
         public List<WeatherDataPresentation> GetLabelsAndResponse(
-            WeatherDataGetResponse weatherDataGetResponse,
-            ObservableCollection<Axis> XAxes,
-            DateTime selectedDate)
+            WeatherDataGetResponse weatherDataGetResponse)
         {
-            if (selectedDate != null)
-            {
-                XAxes.Clear();
-
-                XAxes.Add(new Axis()
-                {
-                    Labels = weatherDataGetResponse.WeatherData.Select(s => s.TargetDate.ToDateTime().ToString("dd.MM.yyyy")).ToList(),
-                    LabelsPaint = new SolidColorPaintTask(SKColors.Black)
-                });
-            }
-
             var result = new List<WeatherDataPresentation>();
 
             foreach (var item in weatherDataGetResponse.WeatherData)

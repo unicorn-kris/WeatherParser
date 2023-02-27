@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
@@ -34,9 +35,7 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                     weatherDataGetResponse,
-                     xAxes,
-                     (DateTime)selectedDate);
+                     weatherDataGetResponse);
             }
             catch (Exception ex)
             {
@@ -49,16 +48,16 @@ namespace WeatherParser.WPF.Commands
                 {
                     if (times[i].IsChecked)
                     {
-                        var tempValues = new List<double>();
+                        var tempValues = new List<DateTimePoint>();
 
                         foreach (var weather in weatherData)
                         {
                             foreach (var temp in weather.Weather)
                             {
-                                tempValues.Add(temp.Temperature[i]);
+                                tempValues.Add(new DateTimePoint() { DateTime = temp.Date, Value = temp.Temperature[i] });
                             }
                         }
-                        series.Add(new LineSeries<double> { Values = tempValues, Name = $"{times[i].CurrentTime}.00" });
+                        series.Add(new LineSeries<DateTimePoint> { Values = tempValues, Name = $"{times[i].CurrentTime}.00" });
                     }
                 }
             }

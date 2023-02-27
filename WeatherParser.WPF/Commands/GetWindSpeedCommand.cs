@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
@@ -34,9 +35,7 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                    weatherDataGetResponse,
-                    xAxes,
-                    (DateTime)selectedDate);
+                    weatherDataGetResponse);
             }
             catch (Exception ex)
             {
@@ -49,16 +48,17 @@ namespace WeatherParser.WPF.Commands
                 {
                     if (times[i].IsChecked)
                     {
-                        var windSpeedValues = new List<double>();
+                        var windSpeedValues = new List<ObservablePoint>();
 
                         foreach (var weather in weatherData)
                         {
                             foreach (var windSpeed in weather.Weather)
                             {
-                                windSpeedValues.Add(windSpeed.WindSpeed[i]);
+                                windSpeedValues.Add(new ObservablePoint() { X = windSpeed.Date.Ticks, Y = windSpeed.WindSpeed[i] });
                             }
                         }
-                        series.Add(new LineSeries<double> { Values = windSpeedValues, Name = $"{times[i].CurrentTime}.00" });
+                        series.Add(new LineSeries<ObservablePoint> {
+                            Values = windSpeedValues, Name = $"{times[i].CurrentTime}.00" });
                     }
                 }
             }

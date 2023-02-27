@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
@@ -35,9 +36,7 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                    weatherDataGetResponse, 
-                    xAxes, 
-                    (DateTime)selectedDate);
+                    weatherDataGetResponse);
             }
             catch (Exception ex)
             {
@@ -50,16 +49,16 @@ namespace WeatherParser.WPF.Commands
                 {
                     if (times[i].IsChecked)
                     {
-                        var humValues = new List<double>();
+                        var humValues = new List<DateTimePoint>();
 
                         foreach (var weather in weatherData)
                         {
                             foreach (var hum in weather.Weather)
                             {
-                                humValues.Add(hum.Humidity[i]);
+                                humValues.Add(new DateTimePoint() { DateTime = hum.Date, Value = hum.Humidity[i] });
                             }
                         }
-                        series.Add(new LineSeries<double> { Values = humValues, Name = $"{times[i].CurrentTime}.00" });
+                        series.Add(new LineSeries<DateTimePoint> { Values = humValues, Name = $"{times[i].CurrentTime}.00" });
                     }
                 }
             }
