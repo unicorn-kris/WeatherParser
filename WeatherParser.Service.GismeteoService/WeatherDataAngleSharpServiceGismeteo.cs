@@ -53,8 +53,15 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     WindSpeed = new List<double>()
                 };
 
-                var day = string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c)));
-                weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(day));
+                var day = int.Parse(string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c))));
+                if (day < DateTime.Now.Day)
+                {
+                    weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month < 12 ? DateTime.Now.Month + 1 : 1, day);
+                }
+                else
+                {
+                    weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, day);
+                }
 
                 for (int i = 0; i < 8; ++i)
                 {
