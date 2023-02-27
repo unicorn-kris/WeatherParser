@@ -60,7 +60,7 @@ namespace WeatherParser.WPF.Commands
                         windDirs.Add(windDir);
                     }
 
-                    var windSpeeds = new List<int>();
+                    var windSpeeds = new List<double>();
                     foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
                     {
                         windSpeeds.Add(windSpeed);

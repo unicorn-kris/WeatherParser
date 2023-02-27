@@ -11,6 +11,11 @@ namespace WeatherParser.Repository
 {
     public class WeatherDataFileRepository : IWeatherParserRepository
     {
+        public Task AddSitesAsync(IEnumerable<IWeatherPlugin> plugins)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId)
         {
             Dictionary<DateTime, List<WeatherRepository>> dataInFiles = new Dictionary<DateTime, List<WeatherRepository>>();
@@ -38,7 +43,7 @@ namespace WeatherParser.Repository
                             Humidity = new List<int>(),
                             Pressure = new List<int>(),
                             WindDirection = new List<string>(),
-                            WindSpeed = new List<int>()
+                            WindSpeed = new List<double>()
                         };
 
                         weatherData.Date = targetDate;
@@ -91,7 +96,7 @@ namespace WeatherParser.Repository
 
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
-                        var windSpeed = new List<int>();
+                        var windSpeed = new List<double>();
 
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
@@ -171,7 +176,7 @@ namespace WeatherParser.Repository
          DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").LastOrDefault().Trim().Split(' ')[1])));
         }
 
-        public Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins)
+        public Task<List<SiteRepository>> GetSitesAsync()
         {
             throw new NotImplementedException();
         }

@@ -50,10 +50,9 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     Humidity = new List<int>(),
                     Pressure = new List<int>(),
                     WindDirection = new List<string>(),
-                    WindSpeed = new List<int>()
+                    WindSpeed = new List<double>()
                 };
 
-                //TODO PARSE DATE
                 var day = string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c)));
                 weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, int.Parse(day));
 

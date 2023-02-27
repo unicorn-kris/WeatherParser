@@ -37,7 +37,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     Humidity = new List<int>(),
                     Pressure = new List<int>(),
                     WindDirection = new List<string>(),
-                    WindSpeed = new List<int>()
+                    WindSpeed = new List<double>()
                 };
 
                 //TODO PARSE DATE

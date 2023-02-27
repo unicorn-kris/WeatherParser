@@ -64,7 +64,7 @@ namespace WeatherParser.Service
 
         public async Task<List<SiteService>> GetSitesAsync()
         {
-            var repositorySites = await _weatherParserRepository.GetSitesAsync(_plugins).ConfigureAwait(false);
+            var repositorySites = await _weatherParserRepository.GetSitesAsync().ConfigureAwait(false);
 
             //map siterepository to siteservice
             var sites = new List<SiteService>();

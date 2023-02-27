@@ -104,7 +104,7 @@ namespace WeatherParser.Repository
 
             if (siteCollectionName == null)
             {
-                await _db.CreateCollectionAsync(siteCollectionName);
+                throw new Exception("This site has not yet been added to the application");
             }
 
             var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
@@ -151,7 +151,7 @@ namespace WeatherParser.Repository
                             Humidity = new List<int>(),
                             Pressure = new List<int>(),
                             WindDirection = new List<string>(),
-                            WindSpeed = new List<int>()
+                            WindSpeed = new List<double>()
                         };
 
                         weatherData.Date = weather.Date;
@@ -184,11 +184,25 @@ namespace WeatherParser.Repository
             return resultData;
         }
 
-        public async Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins)
+        public async Task<List<SiteRepository>> GetSitesAsync()
         {
             var sites = new List<SiteRepository>();
 
-            //read .json with sites names
+            var fieldsBuilder = Builders<SiteRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var DBsites = _db.GetCollection<SiteRepository>(SitesCollectionName).Find(new BsonDocument()).Project<SiteRepository>(fields).ToList();
+
+            foreach (var DBsite in DBsites)
+            {
+                sites.Add(new SiteRepository() { ID = DBsite.ID, Name = DBsite.Name, Rating = DBsite.Rating });
+            }
+
+            return sites;
+        }
+
+        public async Task AddSitesAsync(IEnumerable<IWeatherPlugin> plugins)
+        {
             var fileValues = new List<SiteRepository>();
 
             foreach (var plugin in plugins)
@@ -206,11 +220,6 @@ namespace WeatherParser.Repository
                 var sitesCollection = _db.GetCollection<SiteRepository>(SitesCollectionName);
 
                 await sitesCollection.InsertManyAsync(fileValues);
-
-                foreach (var site in fileValues)
-                {
-                    sites.Add(site);
-                }
             }
             //if we have some collections but in process was added some sites
             else
@@ -220,27 +229,23 @@ namespace WeatherParser.Repository
 
                 var DBsites = _db.GetCollection<SiteRepository>(SitesCollectionName).Find(new BsonDocument()).Project<SiteRepository>(fields).ToList();
 
-                foreach (var DBsite in DBsites)
-                {
-                    sites.Add(new SiteRepository() { ID = DBsite.ID, Name = DBsite.Name, Rating = DBsite.Rating });
-                }
+                var sitesCollection = _db.GetCollection<SiteRepository>(SitesCollectionName);
 
-                if (fileValues.Count > sites.Count)
+                foreach (var site in fileValues)
                 {
-                    var sitesCollection = _db.GetCollection<SiteRepository>(SitesCollectionName);
-
-                    foreach (var site in fileValues)
+                    if (sitesCollection.Find(Builders<SiteRepository>.Filter.Eq(siteFromCol => siteFromCol.ID, site.ID)).Project<SiteRepository>(fields).FirstOrDefault() == null)
                     {
-                        if (sitesCollection.Find(Builders<SiteRepository>.Filter.Eq(siteFromCol => siteFromCol.ID, site.ID)).FirstOrDefault() == null)
-                        {
-                            await sitesCollection.InsertOneAsync(site);
-                            sites.Add(site);
-                        }
+                        await sitesCollection.InsertOneAsync(site);
+                    }
+                    var siteCollectionName = site.Name + "Collection";
+
+                    if (!collectionNames.Any(col => col == siteCollectionName))
+                    {
+                        _db.CreateCollection(siteCollectionName);
                     }
                 }
             }
-
-            return sites;
         }
+
     }
 }

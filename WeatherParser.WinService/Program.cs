@@ -19,13 +19,11 @@ namespace WeatherParser.WinService
 
                     //register all plugins modules
                     s.AddTransient<IMongoClient>(с => new MongoClient("mongodb://localhost:27017"));
-                    s.AddTransient<HttpClient>(с => new HttpClient());
+                    s.AddTransient(с => new HttpClient());
 
                     s.AddTransient<IWeatherParserRepository, WeatherDataNoSQLRepository>();
                     s.AddTransient<IWeatherPlugin, WeatherDataAngleSharpServiceGismeteo>();
                     s.AddTransient<IWeatherPlugin, WeatherDataAPIServiceOpenWeatherMap>();
-
-                    //s.AddTransient<RepositoryModule>();
 
                     s.AddHostedService<SaveWeatherWorker>();
                 })

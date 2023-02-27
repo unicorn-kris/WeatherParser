@@ -14,6 +14,8 @@ namespace WeatherParser.Repository.Contract
 
         Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId);
 
-        Task<List<SiteRepository>> GetSitesAsync(IEnumerable<IWeatherPlugin> plugins);
+        Task<List<SiteRepository>> GetSitesAsync();
+
+        Task AddSitesAsync(IEnumerable<IWeatherPlugin> plugins);
     }
 }

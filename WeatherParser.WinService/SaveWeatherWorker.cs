@@ -1,6 +1,4 @@
-﻿using Autofac.Features.AttributeFilters;
-using Autofac.Features.Indexed;
-using Sgbj.Cron;
+﻿using Sgbj.Cron;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Common;
@@ -33,6 +31,8 @@ namespace WeatherParser.WinService
 
         private async Task SaveWeatherDataAsync()
         {
+            await _weatherParserRepository.AddSitesAsync(_plugins);
+
             foreach (var weatherPugin in _plugins)
             {
                 var weatherData = await weatherPugin.SaveWeatherDataAsync();

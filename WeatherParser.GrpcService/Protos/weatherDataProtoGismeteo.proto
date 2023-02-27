@@ -60,7 +60,7 @@ message Humidities{
 }
 
 message WindSpeeds{
-	repeated int32 WindSpeed = 1;
+	repeated double WindSpeed = 1;
 }
 
 message WindDirections{

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using WeatherParser.Service.Common;
 using WeatherParser.Service.Entities;
 using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
@@ -26,20 +27,43 @@ namespace WeatherParser.Service.OpenWeatherMapService
 
             var weatherDataList = new List<WeatherService>();
 
-            foreach (var weather in weatherData.WeatherData) {
-                //TODO add weather data
-                    }
+            foreach (var weather in weatherData.List)
+            {
+                var targetDate = DateTime.Parse(weather.Dt_txt).Date;
 
-            return null;
+                if (!weatherDataList.Any(x => x.Date == targetDate))
+                {
+                    weatherDataList.Add(new WeatherService()
+                    {
+                        Date = targetDate,
+                        Humidity = new List<int>(),
+                        Pressure = new List<int>(),
+                        Temperature = new List<double>(),
+                        WindDirection = new List<string>(),
+                        WindSpeed = new List<double>()
+                    });
+                }
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Pressure.Add(weather.Main.Pressure);
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Humidity.Add(weather.Main.Humidity);
+                //from K to C
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Temperature.Add(weather.Main.Temp - 273.15);
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).WindSpeed.Add(weather.Wind.Speed);
+            }
+
+            return new WeatherDataService() { SiteId = SiteID, TargetDate = DateTime.Now, Weather = weatherDataList };
         }
 
         private async Task<OpenWeatherResponse> GetWeatherAsync(string cityId)
         {
-                var response = await _httpClient.GetAsync($"api.openweathermap.org/data/2.5/forecast?id={cityId}&appid={_openWeatherMapToken}");
+            var response = await _httpClient.GetAsync($"http://api.openweathermap.org/data/2.5/forecast?id={cityId}&appid={_openWeatherMapToken}");
 
-                var responseContent = await response.Content.ReadAsStringAsync();
+            var serializer = new JsonSerializer() { ContractResolver = new DefaultContractResolver() { NamingStrategy = new CamelCaseNamingStrategy() } };
 
-                return JsonConvert.DeserializeObject<OpenWeatherResponse>(responseContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            using var responseStringReader = new StringReader(responseContent);
+            using var responseJsonReader = new JsonTextReader(responseStringReader);
+
+            return serializer.Deserialize<OpenWeatherResponse>(responseJsonReader);
         }
     }
 }
