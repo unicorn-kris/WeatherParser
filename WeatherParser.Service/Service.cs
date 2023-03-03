@@ -2,6 +2,7 @@
 using Autofac.Features.Indexed;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
@@ -79,6 +80,62 @@ namespace WeatherParser.Service
                 });
             }
             return sites;
+        }
+
+        //deviations of real from forecast weather data
+        public async Task<List<WeatherDataService>> GetDeviationsOfRealFromForecast(DateTime targetDate, Guid siteId)
+        {
+            var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(targetDate, siteId).ConfigureAwait(false);
+
+            if (data.Any(x => x.TargetDate.Date.Equals(targetDate.Date)))
+            {
+                //map weatherdatarepository to weatherdataservice
+                var weatherDataList = new List<WeatherDataService>();
+
+                foreach (var weatherData in data)
+                {
+                    var weathers = new List<WeatherService>();
+                    var targetData = weatherData.Weather.Where(x => x.Date.Date.Equals(targetDate.Date)).FirstOrDefault();
+
+                    foreach (var weather in weatherData.Weather)
+                    {
+                        var humidities = new List<int>();
+                        var temperatures = new List<double>();
+                        var pressures = new List<int>();
+                        var windSpeeds = new List<double>();
+
+                        //all arrays of weather have a one size for one site
+                        for (int i = 0; i < targetData.Temperature.Count; i++)
+                        {
+                            temperatures.Add(targetData.Temperature[i] - weather.Temperature[i]);
+                            humidities.Add(targetData.Humidity[i] - weather.Humidity[i]);
+                            pressures.Add(targetData.Pressure[i] - weather.Pressure[i]);
+                            windSpeeds.Add(targetData.WindSpeed[i] - weather.WindSpeed[i]);
+                        }
+
+                        weathers.Add(new WeatherService()
+                        {
+                            Date = weather.Date,
+                            Humidity = humidities,
+                            Pressure = pressures,
+                            Temperature = temperatures,
+                            WindSpeed = windSpeeds
+                        });
+                    }
+                    weatherDataList.Add(new WeatherDataService()
+                    {
+                        SiteId = weatherData.SiteID,
+                        TargetDate = weatherData.TargetDate,
+                        Weather = weathers
+                    });
+                }
+
+                return weatherDataList;
+            }
+            else
+            {
+                throw new Exception($"Have no real weather on {targetDate.Date.ToShortDateString()}");
+            }
         }
 
     }
