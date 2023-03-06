@@ -94,7 +94,7 @@ namespace WeatherParser.Service
             }
         }
 
-        public async Task<List<WeatherDataService>> GetDeviationsOfRealForecast(Guid siteId, int days)
+        public async Task<List<WeatherDataService>> GetMeanDeviationsOfRealForecast(Guid siteId, int days)
         {
             var data1 = await _weatherParserRepository.GetAllWeatherDataByDayAsync(DateTime.Now, siteId).ConfigureAwait(false);
             //map weatherdatarepository to weatherdataservice
@@ -106,7 +106,7 @@ namespace WeatherParser.Service
 
             foreach (var dateInGraph in data1.Select(x => x.TargetDate.Date))
             {
-               if ( data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
+                if (data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
                 {
                     dates.Add(dateInGraph);
                 }
@@ -131,20 +131,39 @@ namespace WeatherParser.Service
                     }
                     else
                     {
-                        for (var weather in weatherData.Weather)
+                        for (int i = 0; i < weatherData.Weather.Count; ++i)
                         {
-                            weathers.Add(weather);
+                            for (int j = 0; j < weatherData.Weather[i].Temperature.Count; ++j)
+                            {
+                                weathers[i].Temperature[j] += weatherData.Weather[i].Temperature[j];
+                                weathers[i].Pressure[j] += weatherData.Weather[i].Pressure[j];
+                                weathers[i].Humidity[j] += weatherData.Weather[i].Humidity[j];
+                                weathers[i].WindSpeed[j] += weatherData.Weather[i].WindSpeed[j];
+                            }
+                        }
+                    }
+
+                    if (weatherDataList.Count < days)
+                    {
+                        weatherDataList.Add(new WeatherDataService()
+                        {
+                            SiteId = siteId,
+                            TargetDate = new DateTime(0, 0, countOfDates),
+                            Weather = weathers
+                        });
+                    }
+                    else
+                    {
+                        for (int i = 0; i < weatherDataList.Count; ++i)
+                        {
+                            weatherDataList[i].Weather = weathers;
                         }
                     }
                 }
 
             }
-            weatherDataList.Add(new WeatherDataService()
-            {
-                SiteId = siteId,
-                TargetDate = new DateTime(0, 0, countOfDates),
-                Weather = weathers
-            });
+
+            return weatherDataList;
         }
 
         private List<WeatherDataService> GetDeviations(List<WeatherDataRepository> data, DateTime targetDate)
