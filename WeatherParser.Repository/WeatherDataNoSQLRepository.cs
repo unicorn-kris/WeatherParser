@@ -77,20 +77,29 @@ namespace WeatherParser.Repository
 
             var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
 
-            var sort = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
+            var sortUp = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
+            var sortDown = Builders<WeatherDataRepository>.Sort.Descending(data => data.TargetDate);
 
-            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName)
+            var firstDate = _db.GetCollection<WeatherDataRepository>(siteCollectionName)
                 .Find(new BsonDocument())
                 .Project<WeatherDataRepository>(fields)
-                .Sort(sort)
-                .ToListAsync();
+                .Sort(sortUp)
+                .FirstOrDefault()
+                ;
 
-            if (documents.Any())
+            var lastDate = _db.GetCollection<WeatherDataRepository>(siteCollectionName)
+                .Find(new BsonDocument())
+                .Project<WeatherDataRepository>(fields)
+                .Sort(sortDown)
+                .FirstOrDefault()
+                ;
+
+            if (firstDate != null && lastDate != null)
             {
-                documents.FirstOrDefault().Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
-                documents.LastOrDefault().Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
+                firstDate.Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
+                lastDate.Weather.Sort((x, y) => x.Date.CompareTo(y.Date));
 
-                return (documents.First().Weather.First().Date, documents.Last().Weather.Last().Date);
+                return (firstDate.Weather.First().Date, lastDate.Weather.Last().Date);
             }
             else
             {
@@ -112,9 +121,7 @@ namespace WeatherParser.Repository
             var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
-
-            if (!documents.Any(doc => doc.TargetDate.Date == weatherData.TargetDate.Date))
+            if (_db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(w => w.TargetDate.Date.Equals(weatherData.TargetDate.Date)).Project<WeatherDataRepository>(fields) == null)
             {
                 await collectionSite.InsertOneAsync(weatherData);
             }
@@ -132,8 +139,9 @@ namespace WeatherParser.Repository
             var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
-
+            //datetime have no locality and we need to have this parameter in utc for find date, because expression in "find" will go to database, where data saved in utc => datetime.pase(datetime.tostring())
+            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(w => w.Weather.Any(wd => wd.Date.Equals(DateTime.Parse(targetDate.ToString())))).Project<WeatherDataRepository>(fields).ToListAsync();
+            
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
             //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
             Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
@@ -170,6 +178,67 @@ namespace WeatherParser.Repository
                         {
                             dataInFiles.Add(document.TargetDate.Date, weatherData);
                         }
+                    }
+                }
+            }
+
+            List<WeatherDataRepository> resultData = new List<WeatherDataRepository>();
+
+            foreach (var weather in dataInFiles)
+            {
+                resultData.Add(new WeatherDataRepository() { TargetDate = weather.Key, Weather = new List<WeatherRepository>() { weather.Value } });
+            }
+
+            return resultData;
+        }
+
+        public async Task<List<WeatherDataRepository>> GetAllWeatherDataBySitrAsync(Guid siteId)
+        {
+            var siteCollectionName = await GetSiteCollectionNameAsync(siteId);
+
+            if (siteCollectionName == null)
+            {
+                throw new Exception("This site has not yet been added to the application");
+            }
+
+            var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
+
+            //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
+            //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
+            Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
+
+            foreach (var document in documents)
+            {
+                //targetDate - ON this date i need a weather
+                foreach (var weather in document.Weather)
+                {
+                    var weatherData = new WeatherRepository()
+                    {
+                        Temperature = new List<double>(),
+                        Humidity = new List<double>(),
+                        Pressure = new List<double>(),
+                        WindDirection = new List<string>(),
+                        WindSpeed = new List<double>()
+                    };
+
+                    weatherData.Date = weather.Date;
+
+                    weatherData.Temperature = weather.Temperature;
+
+                    weatherData.Humidity = weather.Humidity;
+
+                    weatherData.Pressure = weather.Pressure;
+
+                    weatherData.WindDirection = weather.WindDirection;
+
+                    weatherData.WindSpeed = weather.WindSpeed;
+
+                    if (!dataInFiles.ContainsKey(document.TargetDate.Date))
+                    {
+                        dataInFiles.Add(document.TargetDate.Date, weatherData);
                     }
                 }
             }

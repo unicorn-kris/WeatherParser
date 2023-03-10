@@ -165,22 +165,23 @@ namespace WeatherParser.Service
                                 weathers[i].WindSpeed[j] += weatherData.Weather[i].WindSpeed[j];
                             }
                         }
-                    }
 
-                    if (weatherDataList.Count < days)
-                    {
-                        weatherDataList.Add(new WeatherDataService()
+
+                        if (weatherDataList.Count < days)
                         {
-                            SiteId = siteId,
-                            TargetDate = new DateTime(0, 0, countOfDates),
-                            Weather = weathers
-                        });
-                    }
-                    else
-                    {
-                        for (int i = 0; i < weatherDataList.Count; ++i)
+                            weatherDataList.Add(new WeatherDataService()
+                            {
+                                SiteId = siteId,
+                                TargetDate = new DateTime(0, 0, countOfDates),
+                                Weather = weathers
+                            });
+                        }
+                        else
                         {
-                            weatherDataList[i].Weather = weathers;
+                            for (int i = 0; i < weatherDataList.Count; ++i)
+                            {
+                                weatherDataList[i].Weather = weathers;
+                            }
                         }
                     }
                 }
