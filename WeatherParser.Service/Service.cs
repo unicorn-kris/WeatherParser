@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
-using WeatherParser.Service.Common;
 using WeatherParser.Service.Contract;
 using WeatherParser.Service.Entities;
 
@@ -92,7 +91,7 @@ namespace WeatherParser.Service
         }
 
         //средние отклонения по числу дней прогноза для сайта
-        public async Task<List<WeatherDataService>> GetDeviationsOfRealForecast(Guid siteId, int days)
+        public async Task<List<WeatherDataService>> GetMeanDeviationsOfRealForecast(Guid siteId, int days)
         {
             var data1 = await _weatherParserRepository.GetAllWeatherDataByDayAsync(DateTime.Now, siteId).ConfigureAwait(false);
             //map weatherdatarepository to weatherdataservice
@@ -109,48 +108,61 @@ namespace WeatherParser.Service
                 {
                     if (data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
                     {
-                        dates.Add(dateInGraph);
-                    }
-                }
-            }
-
-            foreach (var date in dates)
-            {
-                countOfDates = 0;
-
-                var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(date, siteId).ConfigureAwait(false);
-
-                //для каждой подошедшей даты вычисляю отклонения прогнозов от фактов
-                var weatherDataListDeviations = GetDeviations(data, date);
-
-                foreach (var weatherData in weatherDataListDeviations)
-                {
-                    ++countOfDates;
-
-                    //если данные добавляются первый раз, то просто заношу их в список
-                    if (!weathers.Any())
-                    {
-                        foreach (var weather in weatherData.Weather)
+                        if (data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
                         {
-                            weathers.Add(weather);
+                            dates.Add(dateInGraph);
                         }
                     }
-                    else
-                    {
-                        for (int i = 0; i < weatherData.Weather.Count; i++)
-                        {
-                            var humidities = new List<double>();
-                            var temperatures = new List<double>();
-                            var pressures = new List<double>();
-                            var windSpeeds = new List<double>();
+                }
 
-                            //all arrays of weather have a one size for one site
-                            for (int j = 0; j < weatherData.Weather[i].Temperature.Count; j++)
+                foreach (var date in dates)
+                {
+                    countOfDates = 0;
+
+                    var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(date, siteId).ConfigureAwait(false);
+
+                    //для каждой подошедшей даты вычисляю отклонения прогнозов от фактов
+                    var weatherDataListDeviations = GetDeviations(data, date);
+
+                    foreach (var weatherData in weatherDataListDeviations)
+                    {
+                        ++countOfDates;
+
+                        //если данные добавляются первый раз, то просто заношу их в список
+                        if (!weathers.Any())
+                        {
+                            foreach (var weather in weatherData.Weather)
                             {
-                                temperatures.Add(weathers[i].Temperature[j] + weatherData.Weather[i].Temperature[i]);
-                                humidities.Add(weathers[i].Humidity[j] + weatherData.Weather[i].Humidity[i]);
-                                pressures.Add(weathers[i].Pressure[j] + weatherData.Weather[i].Pressure[i]);
-                                windSpeeds.Add(weathers[i].WindSpeed[j] + weatherData.Weather[i].WindSpeed[i]);
+                                weathers.Add(weather);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < weatherData.Weather.Count; i++)
+                            {
+                                var humidities = new List<double>();
+                                var temperatures = new List<double>();
+                                var pressures = new List<double>();
+                                var windSpeeds = new List<double>();
+
+                                //all arrays of weather have a one size for one site
+                                for (int j = 0; j < weatherData.Weather[i].Temperature.Count; j++)
+                                {
+                                    temperatures.Add(weathers[i].Temperature[j] + weatherData.Weather[i].Temperature[i]);
+                                    humidities.Add(weathers[i].Humidity[j] + weatherData.Weather[i].Humidity[i]);
+                                    pressures.Add(weathers[i].Pressure[j] + weatherData.Weather[i].Pressure[i]);
+                                    windSpeeds.Add(weathers[i].WindSpeed[j] + weatherData.Weather[i].WindSpeed[i]);
+                                }
+                            }
+                        }
+                        for (int i = 0; i < weatherData.Weather.Count; ++i)
+                        {
+                            for (int j = 0; j < weatherData.Weather[i].Temperature.Count; ++j)
+                            {
+                                weathers[i].Temperature[j] += weatherData.Weather[i].Temperature[j];
+                                weathers[i].Pressure[j] += weatherData.Weather[i].Pressure[j];
+                                weathers[i].Humidity[j] += weatherData.Weather[i].Humidity[j];
+                                weathers[i].WindSpeed[j] += weatherData.Weather[i].WindSpeed[j];
                             }
                         }
                     }
@@ -166,10 +178,28 @@ namespace WeatherParser.Service
                     }
                     else
                     {
-                        weatherDataList[countOfDates].Weather = weathers;
+                        for (int i = 0; i < weatherDataList.Count; ++i)
+                        {
+                            weatherDataList[i].Weather = weathers;
+                        }
                     }
                 }
+
+                if (weatherDataList.Count < days)
+                {
+                    weatherDataList.Add(new WeatherDataService()
+                    {
+                        SiteId = siteId,
+                        TargetDate = new DateTime(0, 0, countOfDates),
+                        Weather = weathers
+                    });
+                }
+                else
+                {
+                    weatherDataList[countOfDates].Weather = weathers;
+                }
             }
+
             foreach (var weatherData in weatherDataList)
             {
                 foreach (var weather in weatherData.Weather)
@@ -182,6 +212,7 @@ namespace WeatherParser.Service
             }
             return weatherDataList;
         }
+
 
         private List<WeatherDataService> GetDeviations(List<WeatherDataRepository> data, DateTime targetDate)
         {
