@@ -36,8 +36,8 @@ namespace WeatherParser.Service.OpenWeatherMapService
                     weatherDataList.Add(new WeatherService()
                     {
                         Date = targetDate,
-                        Humidity = new List<int>(),
-                        Pressure = new List<int>(),
+                        Humidity = new List<double>(),
+                        Pressure = new List<double>(),
                         Temperature = new List<double>(),
                         WindDirection = new List<string>(),
                         WindSpeed = new List<double>()

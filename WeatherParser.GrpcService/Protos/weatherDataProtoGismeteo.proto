@@ -52,11 +52,11 @@ message Temperatures{
 }
 
 message Pressures{
-	repeated int32 Pressure = 1;
+	repeated double Pressure = 1;
 }
 
 message Humidities{
-	repeated int32 Humidity = 1;
+	repeated double Humidity = 1;
 }
 
 message WindSpeeds{

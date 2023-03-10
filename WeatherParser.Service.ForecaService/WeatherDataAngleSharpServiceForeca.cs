@@ -39,8 +39,8 @@ namespace WeatherParser.Service.Plugins.ForecaService
                 WeatherService weatherData = new WeatherService()
                 {
                     Temperature = new List<double>(),
-                    Humidity = new List<int>(),
-                    Pressure = new List<int>(),
+                    Humidity = new List<double>(),
+                    Pressure = new List<double>(),
                     WindDirection = new List<string>(),
                     WindSpeed = new List<double>()
                 };

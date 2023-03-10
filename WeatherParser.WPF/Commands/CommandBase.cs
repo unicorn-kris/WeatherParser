@@ -41,13 +41,13 @@ namespace WeatherParser.WPF.Commands
                         temps.Add(temp);
                     }
 
-                    var hums = new List<int>();
+                    var hums = new List<double>();
                     foreach (var hum in weatherData.Humidities.Humidity)
                     {
                         hums.Add(hum);
                     }
 
-                    var press = new List<int>();
+                    var press = new List<double>();
                     foreach (var pres in weatherData.Pressures.Pressure)
                     {
                         press.Add(pres);

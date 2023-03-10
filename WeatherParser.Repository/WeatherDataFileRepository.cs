@@ -40,8 +40,8 @@ namespace WeatherParser.Repository
                         weatherData = new WeatherRepository()
                         {
                             Temperature = new List<double>(),
-                            Humidity = new List<int>(),
-                            Pressure = new List<int>(),
+                            Humidity = new List<double>(),
+                            Pressure = new List<double>(),
                             WindDirection = new List<string>(),
                             WindSpeed = new List<double>()
                         };
@@ -74,7 +74,7 @@ namespace WeatherParser.Repository
 
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
-                        var pressure = new List<int>();
+                        var pressure = new List<double>();
 
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
@@ -147,7 +147,7 @@ namespace WeatherParser.Repository
 
                     if (DateTime.Parse(tempStr[1]) == targetDate.Date)
                     {
-                        var hum = new List<int>();
+                        var hum = new List<double>();
 
                         for (int i = 2; i < tempStr.Length; ++i)
                         {
