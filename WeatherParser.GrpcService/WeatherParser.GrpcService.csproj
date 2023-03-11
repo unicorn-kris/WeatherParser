@@ -10,6 +10,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.51.0" />
     <PackageReference Include="Grpc.AspNetCore.Server" Version="2.51.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.51.0" />
   </ItemGroup>
 
   <ItemGroup>

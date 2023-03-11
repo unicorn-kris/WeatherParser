@@ -56,7 +56,7 @@ namespace WeatherParser.WPF.Commands
                             {
                                 if (temp.Hours.Count > i)
                                 {
-                                    tempValues.Add(temp.Temperature[i]);
+                                    tempValues.Add(Math.Round(temp.Temperature[i]));
                                 }
                             }
                         }
