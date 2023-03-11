@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
@@ -38,7 +37,7 @@ namespace WeatherParser.WPF.ViewModels
 
         private bool _haveDates = false;
 
-        private Task<WeatherDataGetResponse> _weatherDataGetResponse;
+        private WeatherDataGetResponse _weatherDataGetResponse;
 
         #endregion
 
@@ -114,20 +113,30 @@ namespace WeatherParser.WPF.ViewModels
             {
                 OnPropertyChanged(value, ref _selectedDate);
 
-                for (int i = 0; i < Times.Count; ++i)
-                {
-                    Times[i].IsDateChecked = true;
-                }
-
                 if (SelectedSite != null && SelectedDate != null)
                 {
                     _weatherDataGetResponse = _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
                     {
                         Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
                         SiteID = SelectedSite.ID.ToString()
-                    }).ResponseAsync;
+                    }).ResponseAsync.Result;
+
+                    Times.Clear();
+                    IsTimeSelected = false;
+
+                    for (int i = 0; i < _weatherDataGetResponse.WeatherData[0].Weather.WeatherList[0].Hours.Hour.Count; ++i)
+                    {
+                        Times.Add(new TimeViewModel { CurrentTime = _weatherDataGetResponse.WeatherData[0].Weather.WeatherList[0].Hours.Hour[i] });
+
+                        Times[i].IsChecked = false;
+                        Times[i].IsDateChecked = true;
+
+                        //subscribe mainViewModel on ischecked property change for change _isTimeSelected
+                        PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
+                    }
                 }
             }
+
         }
 
         public DateTime? FirstDate
@@ -190,28 +199,28 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.Execute(_weatherDataGetResponse.Result, _selectedDate, Series, _selectedSite, Times, XAxes);
+            temperatureCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void Pressure(object? parameter)
         {
             Series.Clear();
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.Execute(_weatherDataGetResponse.Result, _selectedDate, Series, _selectedSite, Times, XAxes);
+            pressureCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void WindSpeed(object? parameter)
         {
             Series.Clear();
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.Execute(_weatherDataGetResponse.Result, _selectedDate, Series, _selectedSite, Times, XAxes);
+            windSpeedCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
         public void Humidity(object? parameter)
         {
             Series.Clear();
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.Execute(_weatherDataGetResponse.Result, _selectedDate, Series, _selectedSite, Times, XAxes);
+            humidityCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
         }
 
 
@@ -229,24 +238,6 @@ namespace WeatherParser.WPF.ViewModels
             HaveDates = false;
 
             Times.Clear();
-
-            for (int i = 0; i < 8; ++i)
-            {
-                if (i == 0)
-                {
-                    Times.Add(new TimeViewModel { CurrentTime = 1 });
-                }
-                else
-                {
-                    Times.Add(new TimeViewModel { CurrentTime = Times[i - 1].CurrentTime + 3 });
-                }
-
-                Times[i].IsChecked = false;
-                Times[i].IsDateChecked = false;
-
-                //subscribe mainViewModel on ischecked property change for change _isTimeSelected
-                PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
-            }
 
             Series.Clear();
             Sites.Clear();

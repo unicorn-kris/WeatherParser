@@ -50,7 +50,8 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     Humidity = new List<double>(),
                     Pressure = new List<double>(),
                     WindDirection = new List<string>(),
-                    WindSpeed = new List<double>()
+                    WindSpeed = new List<double>(),
+                    Hours = new List<int>()
                 };
 
                 var day = int.Parse(string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c))));
@@ -65,6 +66,8 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 
                 for (int i = 0; i < 8; ++i)
                 {
+                    weatherData.Hours.Add(i * 3 + 1);
+
                     string temperature = temperatures[0]
                         .GetElementsByClassName("chart")[0]
                         .GetElementsByClassName("values")[0]

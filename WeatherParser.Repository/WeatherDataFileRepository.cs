@@ -170,6 +170,11 @@ namespace WeatherParser.Repository
             return Task.FromResult(resultData);
         }
 
+        public Task<List<WeatherDataRepository>> GetAllWeatherDataBySiteAsync(Guid siteId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)
         {
             return Task.FromResult((DateTime.Parse(File.ReadLines("../WeatherParser.Repository/SaveFiles/Temperature.txt").FirstOrDefault().Trim().Split(' ')[1]),

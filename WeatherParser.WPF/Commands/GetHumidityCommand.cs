@@ -1,11 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.ViewModels;
@@ -35,8 +33,8 @@ namespace WeatherParser.WPF.Commands
             try
             {
                 weatherData = GetLabelsAndResponse(
-                    weatherDataGetResponse, 
-                    xAxes, 
+                    weatherDataGetResponse,
+                    xAxes,
                     (DateTime)selectedDate);
             }
             catch (Exception ex)
@@ -56,7 +54,10 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var hum in weather.Weather)
                             {
-                                humValues.Add(hum.Humidity[i]);
+                                if (hum.Hours.Count > i)
+                                {
+                                    humValues.Add(hum.Humidity[i]);
+                                }
                             }
                         }
                         series.Add(new LineSeries<double> { Values = humValues, Name = $"{times[i].CurrentTime}.00" });

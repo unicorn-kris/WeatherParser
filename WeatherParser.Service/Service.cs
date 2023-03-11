@@ -33,6 +33,7 @@ namespace WeatherParser.Service
                 {
                     weathers.Add(new WeatherService()
                     {
+                        Hours = weather.Hours,
                         Date = weather.Date,
                         Humidity = weather.Humidity,
                         Pressure = weather.Pressure,
@@ -243,6 +244,7 @@ namespace WeatherParser.Service
 
                     weathers.Add(new WeatherService()
                     {
+                        Hours = weather.Hours,
                         Date = weather.Date,
                         Humidity = humidities,
                         Pressure = pressures,

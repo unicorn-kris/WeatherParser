@@ -12,6 +12,8 @@ namespace WeatherParser.Repository.Contract
 
         Task<List<WeatherDataRepository>> GetAllWeatherDataByDayAsync(DateTime targetDate, Guid siteId);
 
+        Task<List<WeatherDataRepository>> GetAllWeatherDataBySiteAsync(Guid siteId);
+
         Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId);
 
         Task<List<SiteRepository>> GetSitesAsync();

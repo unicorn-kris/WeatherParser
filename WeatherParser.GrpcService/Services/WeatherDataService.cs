@@ -59,6 +59,12 @@ namespace WeatherParser.GrpcService.Services
                             windSpeeds.WindSpeed.Add(windSpeed);
                         }
 
+                        var hours = new Hours();
+                        foreach (var hour in item.Hours)
+                        {
+                            hours.Hour.Add(hour);
+                        }
+
                         newList.WeatherList.Add(new WeatherDataProto()
                         {
                             Date = DateTime.SpecifyKind(item.Date, DateTimeKind.Utc).ToTimestamp(),
@@ -66,7 +72,8 @@ namespace WeatherParser.GrpcService.Services
                             Humidities = hums,
                             Pressures = press,
                             WindDirections = windDirs,
-                            WindSpeeds = windSpeeds
+                            WindSpeeds = windSpeeds,
+                            Hours =  hours
                         });
 
                     }

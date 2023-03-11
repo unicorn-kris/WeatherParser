@@ -40,14 +40,17 @@ namespace WeatherParser.Service.OpenWeatherMapService
                         Pressure = new List<double>(),
                         Temperature = new List<double>(),
                         WindDirection = new List<string>(),
-                        WindSpeed = new List<double>()
+                        WindSpeed = new List<double>(),
+                        Hours = new List<int>()
                     });
                 }
+
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).Pressure.Add(weather.Main.Pressure);
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).Humidity.Add(weather.Main.Humidity);
                 //from K to C
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).Temperature.Add(weather.Main.Temp - 273.15);
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).WindSpeed.Add(weather.Wind.Speed);
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Hours.Add(DateTime.Parse(weather.Dt_txt).Date.Hour);
             }
 
             return new WeatherDataService() { SiteId = SiteID, TargetDate = DateTime.Now, Weather = weatherDataList };

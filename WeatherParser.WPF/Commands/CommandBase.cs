@@ -1,6 +1,4 @@
 ﻿using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -65,6 +63,12 @@ namespace WeatherParser.WPF.Commands
                         windSpeeds.Add(windSpeed);
                     }
 
+                    var hours = new List<int>();
+                    foreach (var hour in weatherData.Hours.Hour)
+                    {
+                        hours.Add(hour);
+                    }
+
                     weatherDataList.Add(new WeatherPresentation()
                     {
                         Date = weatherData.Date.ToDateTime(),
@@ -72,7 +76,8 @@ namespace WeatherParser.WPF.Commands
                         Humidity = hums,
                         Pressure = press,
                         WindDirection = windDirs,
-                        WindSpeed = windSpeeds
+                        WindSpeed = windSpeeds,
+                        Hours = hours
                     });
                 }
 

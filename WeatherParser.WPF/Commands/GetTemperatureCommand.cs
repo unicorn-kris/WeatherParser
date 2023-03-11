@@ -4,7 +4,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.ViewModels;
@@ -55,7 +54,10 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var temp in weather.Weather)
                             {
-                                tempValues.Add(temp.Temperature[i]);
+                                if (temp.Hours.Count > i)
+                                {
+                                    tempValues.Add(temp.Temperature[i]);
+                                }
                             }
                         }
                         series.Add(new LineSeries<double> { Values = tempValues, Name = $"{times[i].CurrentTime}.00" });

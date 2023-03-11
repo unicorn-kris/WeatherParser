@@ -1,11 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.ViewModels;
@@ -55,7 +53,10 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var windSpeed in weather.Weather)
                             {
-                                windSpeedValues.Add(windSpeed.WindSpeed[i]);
+                                if (windSpeed.Hours.Count > i)
+                                {
+                                    windSpeedValues.Add(windSpeed.WindSpeed[i]);
+                                }
                             }
                         }
                         series.Add(new LineSeries<double> { Values = windSpeedValues, Name = $"{times[i].CurrentTime}.00" });

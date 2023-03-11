@@ -155,6 +155,7 @@ namespace WeatherParser.Repository
                     {
                         var weatherData = new WeatherRepository()
                         {
+                            Hours = new List<int>(),
                             Temperature = new List<double>(),
                             Humidity = new List<double>(),
                             Pressure = new List<double>(),
@@ -174,6 +175,8 @@ namespace WeatherParser.Repository
 
                         weatherData.WindSpeed = weather.WindSpeed;
 
+                        weatherData.Hours = weather.Hours;
+
                         if (!dataInFiles.ContainsKey(document.TargetDate.Date))
                         {
                             dataInFiles.Add(document.TargetDate.Date, weatherData);
@@ -192,7 +195,7 @@ namespace WeatherParser.Repository
             return resultData;
         }
 
-        public async Task<List<WeatherDataRepository>> GetAllWeatherDataBySitrAsync(Guid siteId)
+        public async Task<List<WeatherDataRepository>> GetAllWeatherDataBySiteAsync(Guid siteId)
         {
             var siteCollectionName = await GetSiteCollectionNameAsync(siteId);
 
@@ -217,6 +220,7 @@ namespace WeatherParser.Repository
                 {
                     var weatherData = new WeatherRepository()
                     {
+                        Hours = new List<int>(),
                         Temperature = new List<double>(),
                         Humidity = new List<double>(),
                         Pressure = new List<double>(),
@@ -235,6 +239,8 @@ namespace WeatherParser.Repository
                     weatherData.WindDirection = weather.WindDirection;
 
                     weatherData.WindSpeed = weather.WindSpeed;
+
+                    weatherData.Hours = weather.Hours;
 
                     if (!dataInFiles.ContainsKey(document.TargetDate.Date))
                     {

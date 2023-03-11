@@ -40,15 +40,20 @@ message SitesList{
 
 message WeatherDataProto{
 	google.protobuf.Timestamp Date = 1;
-	Temperatures Temperatures = 2;
-	Pressures Pressures = 3;
-	Humidities Humidities = 4;
-	WindSpeeds WindSpeeds = 5;
-	WindDirections WindDirections = 6;
+	Hours Hours = 2; 
+	Temperatures Temperatures = 3;
+	Pressures Pressures = 4;
+	Humidities Humidities = 5;
+	WindSpeeds WindSpeeds = 6;
+	WindDirections WindDirections = 7;
 }
 
 message Temperatures{
 	repeated double Temperature = 1;
+}
+
+message Hours{
+	repeated int32 Hour = 1;
 }
 
 message Pressures{
