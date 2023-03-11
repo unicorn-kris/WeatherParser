@@ -13,11 +13,18 @@ service WeatherDataProtoGismeteo {
   rpc GetAllWeatherDataByDay (WeatherDataRequest) returns (WeatherDataGetResponse) {}
   rpc GetFirstAndLastDate(SiteID) returns (FirstLastDates) {}
   rpc GetSites(google.protobuf.Empty) returns (SitesList) {}
+  rpc GetDeviationsOfRealFromForecast(WeatherDataRequest) returns (WeatherDataGetResponse) {}
+  rpc GetMeanDeviationsOfRealForecast(GetMeanDeviationsRequest) returns (WeatherDataGetResponse) {}
 }
 
 message WeatherDataRequest{
   string siteID = 1;
   google.protobuf.Timestamp date = 2;
+}
+
+message GetMeanDeviationsRequest{
+  string siteID = 1;
+  int32 days = 2;
 }
 
 message SiteID{

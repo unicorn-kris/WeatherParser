@@ -17,7 +17,7 @@ using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
 {
-    internal class MainWindowViewModel : NotifyPropertyChangedBase
+    internal class MainWindowViewModel : NotifyPropertyChangedBase, IDataErrorInfo
     {
         #region fields
 
@@ -30,6 +30,8 @@ namespace WeatherParser.WPF.ViewModels
         private DateTime? _firstDate;
 
         private DateTime? _lastDate;
+
+        private int _day;
 
         private IContainer _container;
 
@@ -190,6 +192,28 @@ namespace WeatherParser.WPF.ViewModels
         public ICommand RestartAppCommand { get; }
 
         public ICommand RefreshDataCommand { get; }
+
+        public string Error => throw new NotImplementedException();
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    //TODO: error for days count!
+
+                    //case Days:
+                    //    if ((Age < 0) || (Age > 100))
+                    //    {
+                    //        error = "Возраст должен быть больше 0 и меньше 100";
+                    //    }
+                    //    break;
+                }
+                return error;
+            }
+        }
 
 
         #endregion

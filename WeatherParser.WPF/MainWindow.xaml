@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
              mc:Ignorable="d"
-        MinHeight="360" MinWidth="800">
+        MinHeight="500" MinWidth="800">
 
     <Grid Height="Auto" >
         <Grid.RowDefinitions>
@@ -22,6 +22,7 @@
         <Grid Grid.Column="0" Background="#FFEEEEEE" Grid.RowSpan="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -89,8 +90,31 @@
 
             </Grid>
 
-            <Grid Grid.Row="3" VerticalAlignment="Top" Margin="3 2">
+            <Grid Grid.Row="3" VerticalAlignment="Top" Margin="3 3">
                 <StackPanel>
+                    <Label Content="Deviations: " HorizontalAlignment="Left" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding DeviationsByDayCommand}" Content="Deviations by selected day" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+                    
+                    <Label Content="Set the count of days to get &#xA;a mean deviations by site:" HorizontalAlignment="Center" FontSize="12"/>
+                    
+                    <TextBox Margin="0 5" HorizontalAlignment="Center" Width="100">
+                        <TextBox.Text>
+                            <Binding Path="Age">
+                                <Binding.ValidationRules>
+                                    <ExceptionValidationRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    
+                    <Button Command="{Binding MeanDeviationsCommand}" Content="Mean deviations by site" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="4" VerticalAlignment="Top" Margin="3 5">
+                <StackPanel>
+                    <Label Content="Restart and refresh: " HorizontalAlignment="Left" FontSize="15" FontFamily="Georgia"/>
                     <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                     <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                 </StackPanel>

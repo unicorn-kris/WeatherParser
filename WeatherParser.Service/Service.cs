@@ -94,7 +94,7 @@ namespace WeatherParser.Service
         //средние отклонения по числу дней прогноза для сайта
         public async Task<List<WeatherDataService>> GetMeanDeviationsOfRealForecast(Guid siteId, int days)
         {
-            var data1 = await _weatherParserRepository.GetAllWeatherDataByDayAsync(DateTime.Now, siteId).ConfigureAwait(false);
+            var data = await _weatherParserRepository.GetAllWeatherDataBySiteAsync(siteId).ConfigureAwait(false);
             //map weatherdatarepository to weatherdataservice
             var weatherDataList = new List<WeatherDataService>();
             var countOfDates = 0;
@@ -102,14 +102,14 @@ namespace WeatherParser.Service
             var weathers = new List<WeatherService>();
             var dates = new List<DateTime>();
 
-            foreach (var dateInGraph in data1.Select(x => x.TargetDate.Date))
+            foreach (var dateInGraph in data.Select(x => x.TargetDate.Date))
             {
                 //собирались ли фактические данные на этот день
-                if (data1.Any(x => x.TargetDate.Date.Equals(dateInGraph.Date)))
+                if (data.Any(x => x.TargetDate.Date.Equals(dateInGraph.Date)))
                 {
-                    if (data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
+                    if (data.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
                     {
-                        if (data1.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
+                        if (data.Where(x => x.Weather.Where(y => y.Date.Date.Equals(dateInGraph)).Count() == days).Count() > 0)
                         {
                             dates.Add(dateInGraph);
                         }
@@ -120,10 +120,10 @@ namespace WeatherParser.Service
                 {
                     countOfDates = 0;
 
-                    var data = await _weatherParserRepository.GetAllWeatherDataByDayAsync(date, siteId).ConfigureAwait(false);
+                    var weatherByDay = await _weatherParserRepository.GetAllWeatherDataByDayAsync(date, siteId).ConfigureAwait(false);
 
                     //для каждой подошедшей даты вычисляю отклонения прогнозов от фактов
-                    var weatherDataListDeviations = GetDeviations(data, date);
+                    var weatherDataListDeviations = GetDeviations(weatherByDay, date);
 
                     foreach (var weatherData in weatherDataListDeviations)
                     {
