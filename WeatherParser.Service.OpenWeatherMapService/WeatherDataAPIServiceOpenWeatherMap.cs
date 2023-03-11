@@ -50,7 +50,7 @@ namespace WeatherParser.Service.OpenWeatherMapService
                 //from K to C
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).Temperature.Add(weather.Main.Temp - 273.15);
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).WindSpeed.Add(weather.Wind.Speed);
-                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Hours.Add(DateTime.Parse(weather.Dt_txt).Date.Hour);
+                weatherDataList.FirstOrDefault(x => x.Date == targetDate).Hours.Add(DateTime.Parse(weather.Dt_txt).Hour);
             }
 
             return new WeatherDataService() { SiteId = SiteID, TargetDate = DateTime.Now.Date, Weather = weatherDataList };
