@@ -54,7 +54,8 @@ namespace WeatherParser.WinService
                         Humidity = weather.Humidity,
                         Temperature = weather.Temperature,
                         WindDirection = weather.WindDirection,
-                        WindSpeed = weather.WindSpeed
+                        WindSpeed = weather.WindSpeed,
+                        Hours = weather.Hours
                     });
                 }
 

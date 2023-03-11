@@ -119,7 +119,7 @@ namespace WeatherParser.Service.Plugins.GismeteoService
             //map service entity to repository entity
             return Task.FromResult(new WeatherDataService()
             {
-                TargetDate = DateTime.Now,
+                TargetDate = DateTime.Now.Date,
                 Weather = weatherDataList,
                 SiteId = SiteID
             });

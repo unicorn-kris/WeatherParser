@@ -121,7 +121,7 @@ namespace WeatherParser.Repository
             var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            if (_db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(w => w.TargetDate.Date.Equals(weatherData.TargetDate.Date)).Project<WeatherDataRepository>(fields) == null)
+            if (_db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(w => w.TargetDate.Equals(weatherData.TargetDate)).Project<WeatherDataRepository>(fields).Count() == 0)
             {
                 await collectionSite.InsertOneAsync(weatherData);
             }

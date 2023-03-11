@@ -53,7 +53,7 @@ namespace WeatherParser.Service.OpenWeatherMapService
                 weatherDataList.FirstOrDefault(x => x.Date == targetDate).Hours.Add(DateTime.Parse(weather.Dt_txt).Date.Hour);
             }
 
-            return new WeatherDataService() { SiteId = SiteID, TargetDate = DateTime.Now, Weather = weatherDataList };
+            return new WeatherDataService() { SiteId = SiteID, TargetDate = DateTime.Now.Date, Weather = weatherDataList };
         }
 
         private async Task<OpenWeatherResponse> GetWeatherAsync(string cityId)
