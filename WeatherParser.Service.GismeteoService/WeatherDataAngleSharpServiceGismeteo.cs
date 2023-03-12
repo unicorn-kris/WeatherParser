@@ -55,7 +55,8 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 };
 
                 var day = int.Parse(string.Join("", date[1].GetElementsByClassName("date")[0].TextContent.Trim().Where(c => char.IsDigit(c))));
-                if (day < DateTime.Now.Day)
+               
+                if (day < DateTime.Now.ToUniversalTime().Day)
                 {
                     weatherData.Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month < 12 ? DateTime.Now.Month + 1 : 1, day);
                 }
