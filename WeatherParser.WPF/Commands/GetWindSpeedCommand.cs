@@ -23,8 +23,6 @@ namespace WeatherParser.WPF.Commands
              ObservableCollection<TimeViewModel> times,
              ObservableCollection<Axis> xAxes)
         {
-            series.Clear();
-
             try
             {
                 CreateSeries(weatherDataList,
