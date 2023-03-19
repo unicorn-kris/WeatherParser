@@ -2,8 +2,8 @@
 using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.Commands;
 using WeatherParser.WPF.ViewModels;
@@ -20,11 +20,12 @@ namespace WeatherParser.WPF.Decorators
             _command = command;
             _logger = logger;
         }
-        public abstract void Execute(WeatherDataGetResponse weatherDataGetResponse,
-             DateTime? selectedDate,
-             ObservableCollection<ISeries> series,
-             SitePresentation selectedSite,
-             ObservableCollection<TimeViewModel> times,
-             ObservableCollection<Axis> xAxes);
+
+        public abstract void Execute(List<WeatherDataPresentation> weatherDataList,
+            DateTime? selectedDate,
+            ObservableCollection<ISeries> series,
+            ObservableCollection<TimeViewModel> times,
+            ObservableCollection<Axis> xAxes);
+
     }
 }

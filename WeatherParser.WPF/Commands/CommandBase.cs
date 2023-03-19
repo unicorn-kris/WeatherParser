@@ -1,90 +1,71 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
+using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
     internal abstract class CommandBase
     {
-        public List<WeatherDataPresentation> GetLabelsAndResponse(
-            WeatherDataGetResponse weatherDataGetResponse,
-            ObservableCollection<Axis> XAxes,
-            DateTime selectedDate)
+        public void CreateSeries(List<WeatherDataPresentation> weatherDataList,
+            ObservableCollection<TimeViewModel> times,
+            ObservableCollection<ISeries> series,
+            ObservableCollection<Axis> xAxes,
+            DateTime? selectedDate)
         {
             if (selectedDate != null)
             {
-                XAxes[0].Labels.Clear();
+                xAxes[0].Labels.Clear();
 
-                foreach (var date in weatherDataGetResponse.WeatherData.Select(s => s.TargetDate.ToDateTime().ToString("dd.MM.yyyy")))
+                foreach (var date in weatherDataList.Select(s => s.TargetDate.ToShortDateString()))
                 {
-                    XAxes[0].Labels.Add(date);
+                    xAxes[0].Labels.Add(date);
                 }
             }
 
-            var result = new List<WeatherDataPresentation>();
+            var dates = xAxes[0].Labels.ToList();
 
-            foreach (var item in weatherDataGetResponse.WeatherData)
+            if (weatherDataList != null)
             {
-                var weatherDataList = new List<WeatherPresentation>();
-
-                foreach (var weatherData in item.Weather.WeatherList)
+                for (int i = 0; i < times.Count; ++i)
                 {
-                    var temps = new List<double>();
-                    foreach (var temp in weatherData.Temperatures.Temperature)
-                    {
-                        temps.Add(temp);
-                    }
+                    int j = 0;
 
-                    var hums = new List<double>();
-                    foreach (var hum in weatherData.Humidities.Humidity)
+                    if (times[i].IsChecked)
                     {
-                        hums.Add(hum);
-                    }
+                        var values = new List<double?>();
 
-                    var press = new List<double>();
-                    foreach (var pres in weatherData.Pressures.Pressure)
-                    {
-                        press.Add(pres);
+                        foreach (var weatherData in weatherDataList)
+                        {
+                            foreach (var weather in weatherData.Weather)
+                            {
+                                if (weather.Hours.Count > i && weather.Hours.Contains(times[i].CurrentTime))
+                                {
+                                    if (weatherData.TargetDate.Date == DateTime.Parse(dates[j]).Date)
+                                    {
+                                        values.Add(Math.Round(AddData(weather, i)));
+                                    }
+                                }
+                                else
+                                {
+                                    values.Add(null);
+                                }
+                                ++j;
+                            }
+                        }
+                        series.Add(new LineSeries<double?> { Values = values, Name = $"{times[i].CurrentTime}.00" });
                     }
-
-                    var windDirs = new List<string>();
-                    foreach (var windDir in weatherData.WindDirections.WindDirection)
-                    {
-                        windDirs.Add(windDir);
-                    }
-
-                    var windSpeeds = new List<double>();
-                    foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
-                    {
-                        windSpeeds.Add(windSpeed);
-                    }
-
-                    var hours = new List<int>();
-                    foreach (var hour in weatherData.Hours.Hour)
-                    {
-                        hours.Add(hour);
-                    }
-
-                    weatherDataList.Add(new WeatherPresentation()
-                    {
-                        Date = weatherData.Date.ToDateTime(),
-                        Temperature = temps,
-                        Humidity = hums,
-                        Pressure = press,
-                        WindDirection = windDirs,
-                        WindSpeed = windSpeeds,
-                        Hours = hours
-                    });
                 }
-
-                result.Add(new WeatherDataPresentation() { TargetDate = item.TargetDate.ToDateTime(), Weather = weatherDataList });
             }
-            return result;
+        }
+
+        public virtual double AddData(WeatherPresentation weatherPresentation, int index)
+        {
+            return double.NaN;
         }
     }
 }

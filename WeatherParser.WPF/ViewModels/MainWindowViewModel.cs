@@ -5,6 +5,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,7 +14,6 @@ using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
 using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
@@ -40,7 +40,7 @@ namespace WeatherParser.WPF.ViewModels
 
         private bool _haveDates = false;
 
-        private WeatherDataGetResponse _weatherDataGetResponse;
+        private List<WeatherDataPresentation> _weatherDataPresentationList;
 
         #endregion
 
@@ -118,29 +118,7 @@ namespace WeatherParser.WPF.ViewModels
 
                 if (SelectedSite != null && SelectedDate != null)
                 {
-                    _weatherDataGetResponse = _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
-                    {
-                        Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
-                        SiteID = SelectedSite.ID.ToString()
-                    }).ResponseAsync.Result;
-
-                    Times.Clear();
-                    IsTimeSelected = false;
-
-                    var maxTimes = _weatherDataGetResponse.WeatherData.Select(x => x.Weather.WeatherList[0].Hours.Hour.Count).Max();
-
-                    var times = _weatherDataGetResponse.WeatherData.FirstOrDefault(x => x.Weather.WeatherList[0].Hours.Hour.Count == maxTimes).Weather.WeatherList[0].Hours.Hour;
-
-                    for (int i = 0; i < times.Count; ++i)
-                    {
-                        Times.Add(new TimeViewModel { CurrentTime = times[i] });
-
-                        Times[i].IsChecked = false;
-                        Times[i].IsDateChecked = true;
-
-                        //subscribe mainViewModel on ischecked property change for change _isTimeSelected
-                        PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
-                    }
+                    EnterTimes();
                 }
             }
 
@@ -228,28 +206,28 @@ namespace WeatherParser.WPF.ViewModels
         {
             Series.Clear();
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
+            temperatureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
         }
 
         public void Pressure(object? parameter)
         {
             Series.Clear();
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
+            pressureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
         }
 
         public void WindSpeed(object? parameter)
         {
             Series.Clear();
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
+            windSpeedCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
         }
 
         public void Humidity(object? parameter)
         {
             Series.Clear();
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.Execute(_weatherDataGetResponse, _selectedDate, Series, _selectedSite, Times, XAxes);
+            humidityCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
         }
 
 
@@ -297,6 +275,96 @@ namespace WeatherParser.WPF.ViewModels
 
             FirstDate = null;
             LastDate = null;
+        }
+
+        private List<WeatherDataPresentation> CastToPresentationEntity(WeatherDataGetResponse weatherDataGetResponse)
+        {
+            var result = new List<WeatherDataPresentation>();
+
+            foreach (var item in weatherDataGetResponse.WeatherData)
+            {
+                var weatherDataList = new List<WeatherPresentation>();
+
+                foreach (var weatherData in item.Weather.WeatherList)
+                {
+                    var temps = new List<double>();
+                    foreach (var temp in weatherData.Temperatures.Temperature)
+                    {
+                        temps.Add(temp);
+                    }
+
+                    var hums = new List<double>();
+                    foreach (var hum in weatherData.Humidities.Humidity)
+                    {
+                        hums.Add(hum);
+                    }
+
+                    var press = new List<double>();
+                    foreach (var pres in weatherData.Pressures.Pressure)
+                    {
+                        press.Add(pres);
+                    }
+
+                    var windDirs = new List<string>();
+                    foreach (var windDir in weatherData.WindDirections.WindDirection)
+                    {
+                        windDirs.Add(windDir);
+                    }
+
+                    var windSpeeds = new List<double>();
+                    foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
+                    {
+                        windSpeeds.Add(windSpeed);
+                    }
+
+                    var hours = new List<int>();
+                    foreach (var hour in weatherData.Hours.Hour)
+                    {
+                        hours.Add(hour);
+                    }
+
+                    weatherDataList.Add(new WeatherPresentation()
+                    {
+                        Date = weatherData.Date.ToDateTime(),
+                        Temperature = temps,
+                        Humidity = hums,
+                        Pressure = press,
+                        WindDirection = windDirs,
+                        WindSpeed = windSpeeds,
+                        Hours = hours
+                    });
+                }
+
+                result.Add(new WeatherDataPresentation() { TargetDate = item.TargetDate.ToDateTime(), Weather = weatherDataList });
+            }
+            return result;
+        }
+
+        private void EnterTimes()
+        {
+            _weatherDataPresentationList = CastToPresentationEntity(_weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
+            {
+                Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
+                SiteID = SelectedSite.ID.ToString()
+            }).ResponseAsync.Result);
+
+            Times.Clear();
+            IsTimeSelected = false;
+
+            var maxTimes = _weatherDataPresentationList.Select(x => x.Weather[0].Hours.Count).Max();
+
+            var times = _weatherDataPresentationList.FirstOrDefault(x => x.Weather[0].Hours.Count == maxTimes).Weather[0].Hours;
+
+            for (int i = 0; i < times.Count; ++i)
+            {
+                Times.Add(new TimeViewModel { CurrentTime = times[i] });
+
+                Times[i].IsChecked = false;
+                Times[i].IsDateChecked = true;
+
+                //subscribe mainViewModel on ischecked property change for change _isTimeSelected
+                PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
+            }
         }
         #endregion
 
