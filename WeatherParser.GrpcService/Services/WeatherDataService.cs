@@ -129,12 +129,6 @@ namespace WeatherParser.GrpcService.Services
                         press.Pressure.Add(pres);
                     }
 
-                    var windDirs = new WindDirections();
-                    foreach (var windDir in item.WindDirection)
-                    {
-                        windDirs.WindDirection.Add(windDir);
-                    }
-
                     var windSpeeds = new WindSpeeds();
                     foreach (var windSpeed in item.WindSpeed)
                     {
@@ -153,7 +147,6 @@ namespace WeatherParser.GrpcService.Services
                         Temperatures = temps,
                         Humidities = hums,
                         Pressures = press,
-                        WindDirections = windDirs,
                         WindSpeeds = windSpeeds,
                         Hours = hours
                     });
