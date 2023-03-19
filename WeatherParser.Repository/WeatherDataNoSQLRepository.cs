@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Common;
+using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Repository
 {
@@ -153,33 +154,9 @@ namespace WeatherParser.Repository
                 {
                     if (weather.Date.Date == targetDate.Date.Date)
                     {
-                        var weatherData = new WeatherRepository()
-                        {
-                            Hours = new List<int>(),
-                            Temperature = new List<double>(),
-                            Humidity = new List<double>(),
-                            Pressure = new List<double>(),
-                            WindDirection = new List<string>(),
-                            WindSpeed = new List<double>()
-                        };
-
-                        weatherData.Date = weather.Date;
-
-                        weatherData.Temperature = weather.Temperature;
-
-                        weatherData.Humidity = weather.Humidity;
-
-                        weatherData.Pressure = weather.Pressure;
-
-                        weatherData.WindDirection = weather.WindDirection;
-
-                        weatherData.WindSpeed = weather.WindSpeed;
-
-                        weatherData.Hours = weather.Hours;
-
                         if (!dataInFiles.ContainsKey(document.TargetDate.Date))
                         {
-                            dataInFiles.Add(document.TargetDate.Date, weatherData);
+                            dataInFiles.Add(document.TargetDate.Date, weather);
                         }
                     }
                 }
@@ -207,56 +184,7 @@ namespace WeatherParser.Repository
             var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
-
-            //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
-            //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
-            Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
-
-            foreach (var document in documents)
-            {
-                //targetDate - ON this date i need a weather
-                foreach (var weather in document.Weather)
-                {
-                    var weatherData = new WeatherRepository()
-                    {
-                        Hours = new List<int>(),
-                        Temperature = new List<double>(),
-                        Humidity = new List<double>(),
-                        Pressure = new List<double>(),
-                        WindDirection = new List<string>(),
-                        WindSpeed = new List<double>()
-                    };
-
-                    weatherData.Date = weather.Date;
-
-                    weatherData.Temperature = weather.Temperature;
-
-                    weatherData.Humidity = weather.Humidity;
-
-                    weatherData.Pressure = weather.Pressure;
-
-                    weatherData.WindDirection = weather.WindDirection;
-
-                    weatherData.WindSpeed = weather.WindSpeed;
-
-                    weatherData.Hours = weather.Hours;
-
-                    if (!dataInFiles.ContainsKey(document.TargetDate.Date))
-                    {
-                        dataInFiles.Add(document.TargetDate.Date, weatherData);
-                    }
-                }
-            }
-
-            List<WeatherDataRepository> resultData = new List<WeatherDataRepository>();
-
-            foreach (var weather in dataInFiles)
-            {
-                resultData.Add(new WeatherDataRepository() { TargetDate = weather.Key, Weather = new List<WeatherRepository>() { weather.Value } });
-            }
-
-            return resultData;
+            return await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(new BsonDocument()).Project<WeatherDataRepository>(fields).ToListAsync();
         }
 
         public async Task<List<SiteRepository>> GetSitesAsync()

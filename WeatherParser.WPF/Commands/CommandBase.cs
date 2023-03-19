@@ -47,7 +47,7 @@ namespace WeatherParser.WPF.Commands
                                 {
                                     if (weatherData.TargetDate.Date == DateTime.Parse(dates[j]).Date)
                                     {
-                                        values.Add(Math.Round(AddData(weather, i)));
+                                        values.Add(Math.Round(AddData(weather, i), 2));
                                     }
                                 }
                                 else
