@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
@@ -32,8 +33,6 @@ namespace WeatherParser.WPF.ViewModels
 
         private DateTime? _lastDate;
 
-        private int _day;
-
         private IContainer _container;
 
         private SitePresentation _selectedSite;
@@ -41,6 +40,16 @@ namespace WeatherParser.WPF.ViewModels
         private bool _haveDates = false;
 
         private List<WeatherDataPresentation> _weatherDataPresentationList;
+
+        //private List<WeatherDataPresentation> _weatherMeanDeviationsList;
+
+        //private List<WeatherDataPresentation> _weatherDeviationsList;
+
+        //private bool _meanDeviationsData;
+
+        //private bool _deviationsData;
+
+        //private int _day;
 
         #endregion
 
@@ -67,6 +76,8 @@ namespace WeatherParser.WPF.ViewModels
             PressureCommand = new RelayCommand(Pressure);
             HumidityCommand = new RelayCommand(Humidity);
             WindSpeedCommand = new RelayCommand(WindSpeed);
+            //DeviationsByDayCommand = new RelayCommand(DeviationsByDay);
+            //MeanDeviationsCommand = new RelayCommand(MeanDeviations);
 
             RestartAppCommand = new RelayCommand(Restart);
 
@@ -78,11 +89,6 @@ namespace WeatherParser.WPF.ViewModels
             builder.RegisterModule<WPFModule>();
 
             _container = builder.Build();
-        }
-
-        private void OnTimeChecked(object? sender, PropertyChangedEventArgs e)
-        {
-            IsTimeSelected = Times.Any(t => t.IsChecked);
         }
 
         #endregion
@@ -176,28 +182,40 @@ namespace WeatherParser.WPF.ViewModels
 
         public ICommand RefreshDataCommand { get; }
 
+        public ICommand DeviationsByDayCommand { get; }
+
+        public ICommand MeanDeviationsCommand { get; }
+
+        //public int Day
+        //{
+        //    get => _day;
+        //    set => OnPropertyChanged(value, ref _day);
+        //}
+
         public string Error => throw new NotImplementedException();
 
         public string this[string columnName]
         {
             get
             {
-                string error = String.Empty;
-                switch (columnName)
-                {
-                    //TODO: error for days count!
+                string error = string.Empty;
 
-                    //case Days:
-                    //    if ((Age < 0) || (Age > 100))
-                    //    {
-                    //        error = "Возраст должен быть больше 0 и меньше 100";
-                    //    }
-                    //    break;
-                }
+                //switch (columnName)
+                //{
+                //    //TODO: error for days count!
+
+                //    case "Day":
+                //        var days = (LastDate - FirstDate).Value.Days;
+
+                //        if ((Day < 0) || (Day > days))
+                //        {
+                //            error = $"Количество дней должно быть больше 0 и не меньше {days}";
+                //        }
+                //        break;
+                //}
                 return error;
             }
         }
-
 
         #endregion
 
@@ -230,6 +248,33 @@ namespace WeatherParser.WPF.ViewModels
             humidityCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
         }
 
+        //private async void MeanDeviations(object? obj)
+        //{
+        //    Series.Clear();
+
+        //    //_meanData = true;
+
+        //    //_weatherDataPresentationList = CastToPresentationEntity(await _weatherParserService.GetMeanDeviationsOfRealForecastAsync(new GetMeanDeviationsRequest()
+        //    //{
+        //    //    Days = Day,
+        //    //    SiteID = SelectedSite.ID.ToString()
+        //    //}).ResponseAsync);
+
+
+        //}
+
+        //private async void DeviationsByDay(object? obj)
+        //{
+        //    Series.Clear();
+
+        //    _weatherDataPresentationList = CastToPresentationEntity(await _weatherParserService.GetDeviationsOfRealFromForecastAsync(new WeatherDataRequest()
+        //    {
+        //        Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
+        //        SiteID = SelectedSite.ID.ToString()
+        //    }).ResponseAsync);
+
+
+        //}
 
         private void Restart(object? parameter)
         {
@@ -250,6 +295,7 @@ namespace WeatherParser.WPF.ViewModels
             Sites.Clear();
 
             var sitesService = _weatherParserService.GetSites(new Empty());
+
             foreach (var site in sitesService.Sites)
             {
                 Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
@@ -275,6 +321,13 @@ namespace WeatherParser.WPF.ViewModels
 
             FirstDate = null;
             LastDate = null;
+        }
+        #endregion
+
+        #region private
+        private void OnTimeChecked(object? sender, PropertyChangedEventArgs e)
+        {
+            IsTimeSelected = Times.Any(t => t.IsChecked);
         }
 
         private List<WeatherDataPresentation> CastToPresentationEntity(WeatherDataGetResponse weatherDataGetResponse)
@@ -305,12 +358,6 @@ namespace WeatherParser.WPF.ViewModels
                         press.Add(pres);
                     }
 
-                    var windDirs = new List<string>();
-                    foreach (var windDir in weatherData.WindDirections.WindDirection)
-                    {
-                        windDirs.Add(windDir);
-                    }
-
                     var windSpeeds = new List<double>();
                     foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
                     {
@@ -329,7 +376,6 @@ namespace WeatherParser.WPF.ViewModels
                         Temperature = temps,
                         Humidity = hums,
                         Pressure = press,
-                        WindDirection = windDirs,
                         WindSpeed = windSpeeds,
                         Hours = hours
                     });
@@ -340,13 +386,9 @@ namespace WeatherParser.WPF.ViewModels
             return result;
         }
 
-        private void EnterTimes()
+        private async Task EnterTimes()
         {
-            _weatherDataPresentationList = CastToPresentationEntity(_weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
-            {
-                Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
-                SiteID = SelectedSite.ID.ToString()
-            }).ResponseAsync.Result);
+            await GetNormalWeatherAsync();
 
             Times.Clear();
             IsTimeSelected = false;
@@ -365,6 +407,16 @@ namespace WeatherParser.WPF.ViewModels
                 //subscribe mainViewModel on ischecked property change for change _isTimeSelected
                 PropertyChangedEventManager.AddHandler(Times[i], OnTimeChecked, nameof(TimeViewModel.IsChecked));
             }
+        }
+
+        private async Task GetNormalWeatherAsync()
+        {
+            _weatherDataPresentationList = CastToPresentationEntity(await _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
+            {
+                Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
+                SiteID = SelectedSite.ID.ToString()
+            }));
+
         }
         #endregion
 
