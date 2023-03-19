@@ -6,6 +6,7 @@ using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Contract;
 using WeatherParser.Service.Entities;
+using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
 
 namespace WeatherParser.Service
 {
@@ -224,11 +225,17 @@ namespace WeatherParser.Service
             //map weatherdatarepository to weatherdataservice
             var weatherDataList = new List<WeatherDataService>();
 
+            var targetData = data
+                .Where(x => x.TargetDate.Date.Equals(targetDate.Date))
+                .FirstOrDefault()
+                    .Weather
+                    .Where(x => x.Date.Date.Equals(targetDate.Date))
+                    .FirstOrDefault();
+
             foreach (var weatherData in data)
             {
                 var weathers = new List<WeatherService>();
-                var targetData = weatherData.Weather.Where(x => x.Date.Date.Equals(targetDate.Date)).FirstOrDefault();
-
+                
                 foreach (var weather in weatherData.Weather)
                 {
                     var humidities = new List<double>();
