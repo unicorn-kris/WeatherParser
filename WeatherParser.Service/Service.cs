@@ -49,6 +49,9 @@ namespace WeatherParser.Service
                     Weather = weathers
                 });
             }
+
+            weatherDataList.Sort((x, y) => x.TargetDate.CompareTo(y.TargetDate));
+
             return weatherDataList;
         }
 

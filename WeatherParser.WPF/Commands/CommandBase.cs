@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
+using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
 
 namespace WeatherParser.WPF.Commands
 {

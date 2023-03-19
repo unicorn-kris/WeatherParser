@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
+using WeatherParser.Service.OpenWeatherMapService.ResponseEntity;
 using IContainer = Autofac.IContainer;
 
 namespace WeatherParser.WPF.ViewModels
@@ -126,9 +127,13 @@ namespace WeatherParser.WPF.ViewModels
                     Times.Clear();
                     IsTimeSelected = false;
 
-                    for (int i = 0; i < _weatherDataGetResponse.WeatherData[0].Weather.WeatherList[0].Hours.Hour.Count; ++i)
+                    var maxTimes = _weatherDataGetResponse.WeatherData.Select(x => x.Weather.WeatherList[0].Hours.Hour.Count).Max();
+
+                    var times = _weatherDataGetResponse.WeatherData.FirstOrDefault(x => x.Weather.WeatherList[0].Hours.Hour.Count == maxTimes).Weather.WeatherList[0].Hours.Hour;
+
+                    for (int i = 0; i < times.Count; ++i)
                     {
-                        Times.Add(new TimeViewModel { CurrentTime = _weatherDataGetResponse.WeatherData[0].Weather.WeatherList[0].Hours.Hour[i] });
+                        Times.Add(new TimeViewModel { CurrentTime = times[i] });
 
                         Times[i].IsChecked = false;
                         Times[i].IsDateChecked = true;
