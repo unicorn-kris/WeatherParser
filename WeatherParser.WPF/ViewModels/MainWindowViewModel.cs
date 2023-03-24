@@ -95,6 +95,8 @@ namespace WeatherParser.WPF.ViewModels
 
         #region props
 
+        public MeanDeviationsWindowViewModel MeanDeviationsViewModel {get;}
+
         public SitePresentation SelectedSite
         {
             get => _selectedSite;

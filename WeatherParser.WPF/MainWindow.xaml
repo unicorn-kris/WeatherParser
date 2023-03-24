@@ -4,128 +4,144 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
-             mc:Ignorable="d"
-        MinHeight="500" MinWidth="800">
+        xmlns:views="clr-namespace:WeatherParser.WPF.Views"     
+        mc:Ignorable="d"
+        Width="1000" Height="800">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="./Views/Styles/CalendarStyles.xaml"/>
+                <ResourceDictionary Source="./Views/Styles/DataButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
-    <Grid Height="Auto" >
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#93a397"/>
+                <GradientStop Color="#c7cbbe" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1.3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="#FFEEEEEE" Grid.RowSpan="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#86988c">
 
-            <Grid Grid.Row="0"  VerticalAlignment="Top" Margin="3 2">
-                <ComboBox SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-
-            </Grid>
-
-            <Grid Grid.Row="1" VerticalAlignment="Top" Margin="3 2">
-                <DatePicker SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}"/>
-            </Grid>
-
-            <Grid Grid.Row="2" VerticalAlignment="Top" Margin="2">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="0" Margin="2" VerticalAlignment="Top">
-                    <Label Content="Select data: " HorizontalAlignment="Center" FontSize="15" FontFamily="Georgia"/>
-
-                    <Button Command="{Binding TemperatureCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
-                        Temperature
-                    </Button>
-                    <Button Command="{Binding WindSpeedCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
-                        Wind Speed
-                    </Button>
-                    <Button Command="{Binding PressureCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
-                        Pressure
-                    </Button>
-                    <Button Command="{Binding HumidityCommand}" Margin="2" Padding="2 3" FontSize="15" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}">
-                        Humidity
-                    </Button>
+            <ComboBox HorizontalAlignment="Left" Text="Restart">
+                <StackPanel>
+                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                 </StackPanel>
+            </ComboBox>
 
-                <StackPanel Grid.Column="1" Margin="2" VerticalAlignment="Top">
-                    <Label Content="Select time: " HorizontalAlignment="Center" FontSize="15" FontFamily="Georgia"/>
 
-                    <ItemsControl ItemsSource="{Binding Times}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Margin="2" 
+            <ComboBox  SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}" HorizontalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70*"/>
+                <ColumnDefinition Width="30*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" SnapsToDevicePixels="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Row="0" Content="Real Data" HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
+                <lvc:CartesianChart Grid.Row="1" Margin="60 30" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Background="AliceBlue"/>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="10" VerticalAlignment="Center" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Calendar Grid.Column="0" Margin="2" CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" Style="{DynamicResource CalendarStyle1}" SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}" Background="#FF8A9C92" BorderBrush="#FF8A9C92" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="1" Margin="5">
+                        <Label Content="Time: "  FontSize="18" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
+
+                        <ItemsControl ItemsSource="{Binding Times}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox 
+                                    Margin="3 0" 
                                     FontFamily="Georgia" 
                                     Content="{Binding CurrentTime}"
                                     IsChecked="{Binding IsChecked}"
                                     IsEnabled="{Binding IsDateChecked}"
                                     ContentStringFormat="{}{0}.00"
+                                    Foreground="Black"
                                     />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Grid>
 
-                </StackPanel>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                    <Label Content="Data: " HorizontalAlignment="Center" FontSize="18" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" >
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding TemperatureCommand}" Margin="2,2,2,2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" >
+                            T
+                        </Button>
 
-            </Grid>
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding WindSpeedCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35" >
+                            WS
+                        </Button>
 
-            <Grid Grid.Row="3" VerticalAlignment="Top" Margin="3 3">
-                <StackPanel>
-                    <Label Content="Deviations: " HorizontalAlignment="Left" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding DeviationsByDayCommand}" Content="Deviations by selected day" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                    
-                    <Label Content="Set the count of days to get &#xA;a mean deviations by site:" HorizontalAlignment="Center" FontSize="12"/>
-                    
-                    <TextBox Margin="0 5" HorizontalAlignment="Center" Width="100">
-                        <TextBox.Text>
-                            <Binding Path="Age">
-                                <Binding.ValidationRules>
-                                    <ExceptionValidationRule />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-                    
-                    <Button Command="{Binding MeanDeviationsCommand}" Content="Mean deviations by site" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding PressureCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35">
+                            P
+                        </Button>
 
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding HumidityCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35" >
+                            H
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
+            
+        </Grid>
+        
+        
 
-            <Grid Grid.Row="4" VerticalAlignment="Top" Margin="3 5">
-                <StackPanel>
-                    <Label Content="Restart and refresh: " HorizontalAlignment="Left" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                </StackPanel>
-            </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Content="Deviations by site: " HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
+            <views:MeanDeviationsView DataContext="{Binding MeanDeviationsViewModel}" Grid.Row="2"/>
+
 
         </Grid>
-
-
-        <Border Grid.Column="1" Background="AliceBlue" SnapsToDevicePixels="True" Margin="50,50,50,50" Grid.RowSpan="4">
-            <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"/>
-        </Border>
-
     </Grid>
+
 </Window>

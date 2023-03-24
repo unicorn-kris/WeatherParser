@@ -25,5 +25,9 @@
     <ProjectReference Include="..\WeatherParser.GrpcService\WeatherParser.GrpcService.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Templates\" />
+  </ItemGroup>
+
 
 </Project>
