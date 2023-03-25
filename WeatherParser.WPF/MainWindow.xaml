@@ -6,7 +6,7 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
         xmlns:views="clr-namespace:WeatherParser.WPF.Views"     
         mc:Ignorable="d"
-        Width="1000" Height="800">
+        Width="1200" Height="800">
     
     <Window.Resources>
         <ResourceDictionary>
@@ -138,7 +138,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Content="Deviations by site: " HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
-            <views:MeanDeviationsView DataContext="{Binding MeanDeviationsViewModel}" Grid.Row="2"/>
+            <views:MeanDeviationsView DataContext="{Binding MeanDeviationsViewModel}" Grid.Row="1"/>
 
 
         </Grid>

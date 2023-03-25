@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -41,14 +42,6 @@ namespace WeatherParser.WPF.ViewModels
 
         private List<WeatherDataPresentation> _weatherDataPresentationList;
 
-        //private List<WeatherDataPresentation> _weatherMeanDeviationsList;
-
-        //private List<WeatherDataPresentation> _weatherDeviationsList;
-
-        //private bool _meanDeviationsData;
-
-        //private bool _deviationsData;
-
         //private int _day;
 
         #endregion
@@ -58,6 +51,7 @@ namespace WeatherParser.WPF.ViewModels
         public MainWindowViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService)
         {
             _weatherParserService = weatherParserService;
+            MeanDeviationsViewModel = new MeanDeviationsWindowViewModel();
 
             Series = new ObservableCollection<ISeries>();
             XAxes = new ObservableCollection<Axis>()
@@ -76,8 +70,6 @@ namespace WeatherParser.WPF.ViewModels
             PressureCommand = new RelayCommand(Pressure);
             HumidityCommand = new RelayCommand(Humidity);
             WindSpeedCommand = new RelayCommand(WindSpeed);
-            //DeviationsByDayCommand = new RelayCommand(DeviationsByDay);
-            //MeanDeviationsCommand = new RelayCommand(MeanDeviations);
 
             RestartAppCommand = new RelayCommand(Restart);
 
@@ -227,6 +219,7 @@ namespace WeatherParser.WPF.ViewModels
             Series.Clear();
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
             temperatureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
+            MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, _selectedDate, Times);
         }
 
         public void Pressure(object? parameter)
@@ -234,6 +227,7 @@ namespace WeatherParser.WPF.ViewModels
             Series.Clear();
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
             pressureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
+            MeanDeviationsViewModel.ExecuteCommand(pressureCommand, _selectedDate, Times);
         }
 
         public void WindSpeed(object? parameter)
@@ -241,6 +235,7 @@ namespace WeatherParser.WPF.ViewModels
             Series.Clear();
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
             windSpeedCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
+            MeanDeviationsViewModel.ExecuteCommand(windSpeedCommand, _selectedDate, Times);
         }
 
         public void Humidity(object? parameter)
@@ -248,6 +243,7 @@ namespace WeatherParser.WPF.ViewModels
             Series.Clear();
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
             humidityCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
+            MeanDeviationsViewModel.ExecuteCommand(humidityCommand, _selectedDate, Times);
         }
 
         //private async void MeanDeviations(object? obj)
@@ -391,6 +387,7 @@ namespace WeatherParser.WPF.ViewModels
         private async Task EnterTimes()
         {
             await GetNormalWeatherAsync();
+            await GetMeanDeviationsWeatherAsync();
 
             Times.Clear();
             IsTimeSelected = false;
@@ -417,6 +414,16 @@ namespace WeatherParser.WPF.ViewModels
             {
                 Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
                 SiteID = SelectedSite.ID.ToString()
+            }));
+
+        }
+
+        private async Task GetMeanDeviationsWeatherAsync()
+        {
+            MeanDeviationsViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetMeanDeviationsOfRealForecastAsync(new GetMeanDeviationsRequest()
+            {
+                SiteID = SelectedSite.ID.ToString(),
+                Days = 3
             }));
 
         }
