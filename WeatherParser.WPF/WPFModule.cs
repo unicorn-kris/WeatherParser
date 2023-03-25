@@ -25,8 +25,8 @@ namespace WeatherParser.WPF
 
             builder.RegisterType<WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient>();
 
-            builder.RegisterType<MainWindowViewModel>().AsSelf();
-            builder.RegisterType<MeanDeviationsWindowViewModel>().AsSelf();
+            builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<DeviationsViewModel>().AsSelf();
 
 
             builder.Register<ILogger>(log =>

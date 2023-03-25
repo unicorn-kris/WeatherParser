@@ -19,7 +19,7 @@ namespace WeatherParser.WPF
             builder.RegisterModule<WPFModule>();
             _container = builder.Build();
 
-            DataContext = _container.Resolve<MainWindowViewModel>();
+            DataContext = _container.Resolve<MainViewModel>();
         }
     }
 }

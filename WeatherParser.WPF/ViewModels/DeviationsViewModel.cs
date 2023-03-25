@@ -12,15 +12,15 @@ using WeatherParser.WPF.Commands;
 
 namespace WeatherParser.WPF.ViewModels
 {
-    internal class MeanDeviationsWindowViewModel : NotifyPropertyChangedBase
+    internal class DeviationsViewModel : NotifyPropertyChangedBase
     {
 
         #region ctor
-        public MeanDeviationsWindowViewModel()
+        public DeviationsViewModel()
         {
-            SeriesMean = new ObservableCollection<ISeries>();
+            Series = new ObservableCollection<ISeries>();
 
-            XAxesMean = new ObservableCollection<Axis>()
+            XAxes = new ObservableCollection<Axis>()
             {
                 new Axis()
                 {
@@ -28,16 +28,16 @@ namespace WeatherParser.WPF.ViewModels
                     Labels = new ObservableCollection<string>()
                 }
             };
-            YAxesMean = new ObservableCollection<Axis>() { new Axis() };
+            YAxes = new ObservableCollection<Axis>() { new Axis() };
         }
 
         #endregion
 
         #region props
-        public ObservableCollection<Axis> XAxesMean { get; set; }
-        public ObservableCollection<Axis> YAxesMean { get; set; }
+        public ObservableCollection<Axis> XAxes { get; set; }
+        public ObservableCollection<Axis> YAxes { get; set; }
 
-        public ObservableCollection<ISeries> SeriesMean { get; }
+        public ObservableCollection<ISeries> Series { get; }
 
         public List<WeatherDataPresentation> WeatherDataPresentations { get; set; }
 
@@ -47,8 +47,8 @@ namespace WeatherParser.WPF.ViewModels
 
         public void ExecuteCommand(ICommand command, DateTime? selectedDate, ObservableCollection<TimeViewModel> times)
         {
-            SeriesMean.Clear();
-            command.Execute(WeatherDataPresentations, selectedDate, SeriesMean, times, XAxesMean);
+            Series.Clear();
+            command.Execute(WeatherDataPresentations, selectedDate, Series, times, XAxes);
         }
 
         #endregion

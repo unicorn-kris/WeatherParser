@@ -231,19 +231,24 @@ namespace WeatherParser.Service
                     var temperatures = new List<double>();
                     var pressures = new List<double>();
                     var windSpeeds = new List<double>();
+                    var hours = new List<int>();
 
                     //all arrays of weather have a one size for one site
-                    for (int i = 0; i < targetData.Temperature.Count; i++)
+                    for (int i = 0; i < (weather.Temperature.Count < targetData.Temperature.Count ? weather.Temperature.Count : targetData.Temperature.Count); i++)
                     {
-                        temperatures.Add(targetData.Temperature[i] - weather.Temperature[i]);
-                        humidities.Add(targetData.Humidity[i] - weather.Humidity[i]);
-                        pressures.Add(targetData.Pressure[i] - weather.Pressure[i]);
-                        windSpeeds.Add(targetData.WindSpeed[i] - weather.WindSpeed[i]);
+                        if (targetData.Hours.Contains(weather.Hours[i]))
+                        {
+                            temperatures.Add(targetData.Temperature[i] - weather.Temperature[i]);
+                            humidities.Add(targetData.Humidity[i] - weather.Humidity[i]);
+                            pressures.Add(targetData.Pressure[i] - weather.Pressure[i]);
+                            windSpeeds.Add(targetData.WindSpeed[i] - weather.WindSpeed[i]);
+                            hours.Add(weather.Hours[i]);
+                        }
                     }
 
                     weathers.Add(new WeatherService()
                     {
-                        Hours = weather.Hours,
+                        Hours = hours,
                         Date = weather.Date,
                         Humidity = humidities,
                         Pressure = pressures,

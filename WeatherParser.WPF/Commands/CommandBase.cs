@@ -43,7 +43,7 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var weather in weatherData.Weather)
                             {
-                                if (weather.Hours.Count > i && weather.Hours.Contains(times[i].CurrentTime))
+                                if (weather.Hours.Count > i && weather.Hours.Contains(times[i].CurrentTime) && weather.Temperature.Any())
                                 {
                                     if (weatherData.TargetDate.Date == DateTime.Parse(dates[j]).Date)
                                     {
