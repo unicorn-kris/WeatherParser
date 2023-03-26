@@ -9,6 +9,7 @@ using WeatherParser.GrpcService.Services;
 using WeatherParser.WPF.Commands;
 using WeatherParser.WPF.Decorators;
 using WeatherParser.WPF.ViewModels;
+using WeatherParser.WPF.ViewModels.Contract;
 
 namespace WeatherParser.WPF
 {
@@ -25,8 +26,8 @@ namespace WeatherParser.WPF
 
             builder.RegisterType<WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient>();
 
-            builder.RegisterType<MainViewModel>().AsSelf();
-            builder.RegisterType<DeviationsViewModel>().AsSelf();
+            builder.RegisterType<MainWindowViewModel>().AsSelf();
+            //builder.RegisterType<DeviationsViewModel>().As<IDeviationsViewModel>();
 
 
             builder.Register<ILogger>(log =>

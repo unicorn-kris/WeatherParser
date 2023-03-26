@@ -22,10 +22,8 @@ namespace WeatherParser.WPF.Decorators
         }
 
         public abstract void Execute(List<WeatherDataPresentation> weatherDataList,
-            DateTime? selectedDate,
             ObservableCollection<ISeries> series,
-            ObservableCollection<TimeViewModel> times,
-            ObservableCollection<Axis> xAxes);
+            ObservableCollection<TimeViewModel> times);
 
     }
 }

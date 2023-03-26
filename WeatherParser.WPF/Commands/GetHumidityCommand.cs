@@ -19,18 +19,14 @@ namespace WeatherParser.WPF.Commands
         }
 
         public void Execute(List<WeatherDataPresentation> weatherDataList,
-             DateTime? selectedDate,
              ObservableCollection<ISeries> series,
-             ObservableCollection<TimeViewModel> times,
-             ObservableCollection<Axis> xAxes)
+             ObservableCollection<TimeViewModel> times)
         {
             try
             {
                 CreateSeries(weatherDataList,
                     times,
-                    series,
-                    xAxes,
-                    selectedDate);
+                    series);
             }
             catch (Exception ex)
             {

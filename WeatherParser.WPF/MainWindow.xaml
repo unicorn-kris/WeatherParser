@@ -66,7 +66,7 @@
                 </Grid.RowDefinitions>
                 
                 <Label Grid.Row="0" Content="Real Data" HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
-                <lvc:CartesianChart Grid.Row="1" Margin="60 30" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Background="AliceBlue"/>
+                <views:MeanDeviationsView  Grid.Row="1" DataContext="{Binding ForecastViewModel}"/>
             </Grid>
 
             <Grid Grid.Column="1" Margin="10" VerticalAlignment="Center" >
@@ -138,8 +138,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Content="Deviations by site: " HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
-            <views:MeanDeviationsView DataContext="{Binding DayDeviationsViewModel}" Grid.Row="1"/>
-
+            <views:MeanDeviationsView Grid.Row="1" DataContext="{Binding DayDeviationsViewModel}"/>
 
         </Grid>
     </Grid>

@@ -1,6 +1,4 @@
-﻿
-using Autofac;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -10,12 +8,13 @@ using System.Collections.ObjectModel;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.Commands;
 
-namespace WeatherParser.WPF.ViewModels
+namespace WeatherParser.WPF.ViewModels.Contract
 {
-    internal class DeviationsViewModel : NotifyPropertyChangedBase
+    internal abstract class DeviationsViewModel : NotifyPropertyChangedBase, IDeviationsViewModel
     {
 
         #region ctor
+
         public DeviationsViewModel()
         {
             Series = new ObservableCollection<ISeries>();
@@ -25,15 +24,18 @@ namespace WeatherParser.WPF.ViewModels
                 new Axis()
                 {
                     LabelsPaint = new SolidColorPaintTask(SKColors.Black),
-                    Labels = new ObservableCollection<string>()
+                    Labels = new ObservableCollection<string>(),
+                    Labeler = x => new DateTime((long)x).ToString("dd/MM/yyyy"),
                 }
             };
+
             YAxes = new ObservableCollection<Axis>() { new Axis() };
         }
 
         #endregion
 
         #region props
+
         public ObservableCollection<Axis> XAxes { get; set; }
         public ObservableCollection<Axis> YAxes { get; set; }
 
@@ -45,10 +47,10 @@ namespace WeatherParser.WPF.ViewModels
 
         #region public
 
-        public void ExecuteCommand(ICommand command, DateTime? selectedDate, ObservableCollection<TimeViewModel> times)
+        public void ExecuteCommand(ICommand command, ObservableCollection<TimeViewModel> times)
         {
             Series.Clear();
-            command.Execute(WeatherDataPresentations, selectedDate, Series, times, XAxes);
+            command.Execute(WeatherDataPresentations, Series, times);
         }
 
         #endregion

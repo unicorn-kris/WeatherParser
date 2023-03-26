@@ -1,9 +1,5 @@
 ﻿using Autofac;
 using Google.Protobuf.WellKnownTypes;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,11 +11,11 @@ using System.Windows;
 using System.Windows.Input;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using IContainer = Autofac.IContainer;
+using WeatherParser.WPF.ViewModels.Contract;
 
 namespace WeatherParser.WPF.ViewModels
 {
-    internal class MainViewModel : NotifyPropertyChangedBase, IDataErrorInfo
+    internal class MainWindowViewModel : NotifyPropertyChangedBase, IDataErrorInfo
     {
         #region fields
 
@@ -33,13 +29,14 @@ namespace WeatherParser.WPF.ViewModels
 
         private DateTime? _lastDate;
 
-        private IContainer _container;
+        //resolve slow layer container like main container from mainwindow.xaml.cs
+        private ILifetimeScope _container;
 
         private SitePresentation _selectedSite;
 
         private bool _haveDates = false;
 
-        private List<WeatherDataPresentation> _weatherDataPresentationList;
+        //private List<WeatherDataPresentation> _weatherDataPresentationList;
 
         //private int _day;
 
@@ -47,23 +44,14 @@ namespace WeatherParser.WPF.ViewModels
 
         #region ctor
 
-        public MainViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService)
+        public MainWindowViewModel(WeatherDataProtoGismeteo.WeatherDataProtoGismeteoClient weatherParserService, ILifetimeScope container)
         {
             _weatherParserService = weatherParserService;
-            MeanDeviationsViewModel = new DeviationsViewModel();
-            DayDeviationsViewModel = new DeviationsViewModel();
 
+            MeanDeviationsViewModel = new MeanDeviationsViewModel();
+            DayDeviationsViewModel = new DayDeviationsViewModel();
+            ForecastViewModel = new ForecastViewModel();
 
-            Series = new ObservableCollection<ISeries>();
-            XAxes = new ObservableCollection<Axis>()
-            {
-                new Axis()
-                {
-                    LabelsPaint = new SolidColorPaintTask(SKColors.Black),
-                    Labels = new ObservableCollection<string>()
-                }
-            };
-            YAxes = new ObservableCollection<Axis>() { new Axis() };
             Times = new ObservableCollection<TimeViewModel>();
             Sites = new ObservableCollection<SitePresentation>();
 
@@ -77,11 +65,7 @@ namespace WeatherParser.WPF.ViewModels
             RefreshDataCommand = new RelayCommand(RefreshData);
 
             RefreshData(null);
-
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<WPFModule>();
-
-            _container = builder.Build();
+            _container = container;
         }
 
         #endregion
@@ -91,6 +75,8 @@ namespace WeatherParser.WPF.ViewModels
         public DeviationsViewModel MeanDeviationsViewModel { get; }
 
         public DeviationsViewModel DayDeviationsViewModel { get; }
+
+        public DeviationsViewModel ForecastViewModel { get; }
 
 
         public SitePresentation SelectedSite
@@ -168,12 +154,6 @@ namespace WeatherParser.WPF.ViewModels
             get;
         } = new ObservableCollection<SitePresentation>();
 
-        public ObservableCollection<Axis> XAxes { get; set; }
-
-        public ObservableCollection<Axis> YAxes { get; set; }
-
-        public ObservableCollection<ISeries> Series { get; }
-
         public ICommand TemperatureCommand { get; }
 
         public ICommand PressureCommand { get; }
@@ -226,43 +206,40 @@ namespace WeatherParser.WPF.ViewModels
         #region buttons
         public void Temperature(object? parameter)
         {
-            Series.Clear();
             var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
-            temperatureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
 
-            MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, _selectedDate, Times);
-            DayDeviationsViewModel.ExecuteCommand(temperatureCommand, _selectedDate, Times);
+            MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
+            DayDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
+            ForecastViewModel.ExecuteCommand(temperatureCommand, Times);
+
         }
 
         public void Pressure(object? parameter)
         {
-            Series.Clear();
             var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
-            pressureCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
 
-            MeanDeviationsViewModel.ExecuteCommand(pressureCommand, _selectedDate, Times);
-            DayDeviationsViewModel.ExecuteCommand(pressureCommand, _selectedDate, Times); MeanDeviationsViewModel.ExecuteCommand(pressureCommand, _selectedDate, Times);
+            ForecastViewModel.ExecuteCommand(pressureCommand, Times);
+            MeanDeviationsViewModel.ExecuteCommand(pressureCommand, Times);
+            DayDeviationsViewModel.ExecuteCommand(pressureCommand, Times);
         }
-        
+
 
         public void WindSpeed(object? parameter)
         {
-            Series.Clear();
             var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
-            windSpeedCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
 
-            MeanDeviationsViewModel.ExecuteCommand(windSpeedCommand, _selectedDate, Times);
-            DayDeviationsViewModel.ExecuteCommand(windSpeedCommand, _selectedDate, Times); MeanDeviationsViewModel.ExecuteCommand(windSpeedCommand, _selectedDate, Times);
+            ForecastViewModel.ExecuteCommand(windSpeedCommand, Times);
+            MeanDeviationsViewModel.ExecuteCommand(windSpeedCommand, Times);
+            DayDeviationsViewModel.ExecuteCommand(windSpeedCommand, Times);
         }
 
         public void Humidity(object? parameter)
         {
-            Series.Clear();
             var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
-            humidityCommand.Execute(_weatherDataPresentationList, _selectedDate, Series, Times, XAxes);
 
-            MeanDeviationsViewModel.ExecuteCommand(humidityCommand, _selectedDate, Times);
-            DayDeviationsViewModel.ExecuteCommand(humidityCommand, _selectedDate, Times); MeanDeviationsViewModel.ExecuteCommand(humidityCommand, _selectedDate, Times);
+            ForecastViewModel.ExecuteCommand(humidityCommand, Times);
+            MeanDeviationsViewModel.ExecuteCommand(humidityCommand, Times);
+            DayDeviationsViewModel.ExecuteCommand(humidityCommand, Times);
         }
         #endregion
 
@@ -283,7 +260,6 @@ namespace WeatherParser.WPF.ViewModels
 
             Times.Clear();
 
-            Series.Clear();
             Sites.Clear();
 
             var sitesService = _weatherParserService.GetSites(new Empty());
@@ -291,11 +267,6 @@ namespace WeatherParser.WPF.ViewModels
             foreach (var site in sitesService.Sites)
             {
                 Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
-            }
-
-            if (XAxes.Any())
-            {
-                XAxes[0].Labels.Clear();
             }
         }
 
@@ -381,9 +352,9 @@ namespace WeatherParser.WPF.ViewModels
             Times.Clear();
             IsTimeSelected = false;
 
-            var maxTimes = _weatherDataPresentationList.Select(x => x.Weather[0].Hours.Count).Max();
+            var maxTimes = ForecastViewModel.WeatherDataPresentations.Select(x => x.Weather[0].Hours.Count).Max();
 
-            var times = _weatherDataPresentationList.FirstOrDefault(x => x.Weather[0].Hours.Count == maxTimes).Weather[0].Hours;
+            var times = ForecastViewModel.WeatherDataPresentations.FirstOrDefault(x => x.Weather[0].Hours.Count == maxTimes).Weather[0].Hours;
 
             for (int i = 0; i < times.Count; ++i)
             {
@@ -399,14 +370,12 @@ namespace WeatherParser.WPF.ViewModels
 
         private async Task GetWeatherAsync()
         {
-            _weatherDataPresentationList = CastToPresentationEntity(await _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
+            ForecastViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
             {
                 Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
                 SiteID = SelectedSite.ID.ToString()
             }));
 
-            MeanDeviationsViewModel.Series.Clear();
-            DayDeviationsViewModel.Series.Clear();
 
             MeanDeviationsViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetMeanDeviationsOfRealForecastAsync(new GetMeanDeviationsRequest()
             {

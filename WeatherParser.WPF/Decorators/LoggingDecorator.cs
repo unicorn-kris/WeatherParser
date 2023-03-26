@@ -16,14 +16,12 @@ namespace WeatherParser.WPF.Decorators
         { }
 
         public override void Execute(List<WeatherDataPresentation> weatherDataList,
-             DateTime? selectedDate,
              ObservableCollection<ISeries> series,
-             ObservableCollection<TimeViewModel> times,
-             ObservableCollection<Axis> xAxes)
+             ObservableCollection<TimeViewModel> times)
         {
             _logger.Information($"{_command.GetType().Name} started");
 
-            _command.Execute(weatherDataList, selectedDate, series, times, xAxes);
+            _command.Execute(weatherDataList, series, times);
 
             _logger.Information($"{_command.GetType().Name} finished");
         }
