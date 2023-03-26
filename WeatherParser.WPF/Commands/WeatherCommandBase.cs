@@ -9,7 +9,7 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
-    internal abstract class CommandBase
+    internal abstract class WeatherCommandBase
     {
         public void CreateSeries(List<WeatherDataPresentation> weatherDataList,
             ObservableCollection<TimeViewModel> times,
@@ -31,11 +31,11 @@ namespace WeatherParser.WPF.Commands
                             {
                                 if (weather.Hours.Count > i && weather.Hours.Contains(times[i].CurrentTime) && weather.Temperature.Any())
                                 {
-                                        values.Add(new WeatherSample()
-                                        {
-                                            Value = Math.Round(AddData(weather, i), 2),
-                                            Ticks = weatherData.TargetDate.Ticks
-                                        });
+                                    values.Add(new WeatherSample()
+                                    {
+                                        Value = Math.Round(AddData(weather, i), 2),
+                                        Ticks = weatherData.TargetDate.Ticks
+                                    });
                                 }
                                 else
                                 {
@@ -50,7 +50,8 @@ namespace WeatherParser.WPF.Commands
                         }
                         series.Add(new LineSeries<WeatherSample>
                         {
-                            Mapping = (x, y) => {
+                            Mapping = (x, y) =>
+                            {
                                 if (x.Value == null)
                                 {
                                     y.IsNull = true;

@@ -37,12 +37,12 @@ namespace WeatherParser.WPF
                     .CreateLogger();
             }).SingleInstance();
 
-            builder.RegisterType<GetHumidityCommand>().As<ICommand>().Named<ICommand>("HumidityCommand");
-            builder.RegisterType<GetPressureCommand>().As<ICommand>().Named<ICommand>("PressureCommand");
-            builder.RegisterType<GetTemperatureCommand>().As<ICommand>().Named<ICommand>("TemperatureCommand");
-            builder.RegisterType<GetWindSpeedCommand>().As<ICommand>().Named<ICommand>("WindSpeedCommand");
+            builder.RegisterType<GetHumidityCommand>().As<IWeatherCommand>().Named<IWeatherCommand>("HumidityCommand");
+            builder.RegisterType<GetPressureCommand>().As<IWeatherCommand>().Named<IWeatherCommand>("PressureCommand");
+            builder.RegisterType<GetTemperatureCommand>().As<IWeatherCommand>().Named<IWeatherCommand>("TemperatureCommand");
+            builder.RegisterType<GetWindSpeedCommand>().As<IWeatherCommand>().Named<IWeatherCommand>("WindSpeedCommand");
 
-            builder.RegisterDecorator<LoggingDecorator, ICommand>();
+            builder.RegisterDecorator<LoggingDecorator, IWeatherCommand>();
         }
     }
 }

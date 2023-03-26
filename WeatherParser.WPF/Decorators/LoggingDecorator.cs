@@ -12,7 +12,7 @@ namespace WeatherParser.WPF.Decorators
 {
     internal class LoggingDecorator : BaseCommandDecorator
     {
-        public LoggingDecorator(ILogger logger, ICommand command) : base(logger, command)
+        public LoggingDecorator(ILogger logger, IWeatherCommand command) : base(logger, command)
         { }
 
         public override void Execute(List<WeatherDataPresentation> weatherDataList,

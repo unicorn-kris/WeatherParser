@@ -206,7 +206,7 @@ namespace WeatherParser.WPF.ViewModels
         #region buttons
         public void Temperature(object? parameter)
         {
-            var temperatureCommand = _container.ResolveNamed<Commands.ICommand>("TemperatureCommand");
+            var temperatureCommand = _container.ResolveNamed<Commands.IWeatherCommand>("TemperatureCommand");
 
             MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
             DayDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
@@ -216,7 +216,7 @@ namespace WeatherParser.WPF.ViewModels
 
         public void Pressure(object? parameter)
         {
-            var pressureCommand = _container.ResolveNamed<Commands.ICommand>("PressureCommand");
+            var pressureCommand = _container.ResolveNamed<Commands.IWeatherCommand>("PressureCommand");
 
             ForecastViewModel.ExecuteCommand(pressureCommand, Times);
             MeanDeviationsViewModel.ExecuteCommand(pressureCommand, Times);
@@ -226,7 +226,7 @@ namespace WeatherParser.WPF.ViewModels
 
         public void WindSpeed(object? parameter)
         {
-            var windSpeedCommand = _container.ResolveNamed<Commands.ICommand>("WindSpeedCommand");
+            var windSpeedCommand = _container.ResolveNamed<Commands.IWeatherCommand>("WindSpeedCommand");
 
             ForecastViewModel.ExecuteCommand(windSpeedCommand, Times);
             MeanDeviationsViewModel.ExecuteCommand(windSpeedCommand, Times);
@@ -235,7 +235,7 @@ namespace WeatherParser.WPF.ViewModels
 
         public void Humidity(object? parameter)
         {
-            var humidityCommand = _container.ResolveNamed<Commands.ICommand>("HumidityCommand");
+            var humidityCommand = _container.ResolveNamed<Commands.IWeatherCommand>("HumidityCommand");
 
             ForecastViewModel.ExecuteCommand(humidityCommand, Times);
             MeanDeviationsViewModel.ExecuteCommand(humidityCommand, Times);
@@ -289,61 +289,6 @@ namespace WeatherParser.WPF.ViewModels
             IsTimeSelected = Times.Any(t => t.IsChecked);
         }
 
-        private List<WeatherDataPresentation> CastToPresentationEntity(WeatherDataGetResponse weatherDataGetResponse)
-        {
-            var result = new List<WeatherDataPresentation>();
-
-            foreach (var item in weatherDataGetResponse.WeatherData)
-            {
-                var weatherDataList = new List<WeatherPresentation>();
-
-                foreach (var weatherData in item.Weather.WeatherList)
-                {
-                    var temps = new List<double>();
-                    foreach (var temp in weatherData.Temperatures.Temperature)
-                    {
-                        temps.Add(temp);
-                    }
-
-                    var hums = new List<double>();
-                    foreach (var hum in weatherData.Humidities.Humidity)
-                    {
-                        hums.Add(hum);
-                    }
-
-                    var press = new List<double>();
-                    foreach (var pres in weatherData.Pressures.Pressure)
-                    {
-                        press.Add(pres);
-                    }
-
-                    var windSpeeds = new List<double>();
-                    foreach (var windSpeed in weatherData.WindSpeeds.WindSpeed)
-                    {
-                        windSpeeds.Add(windSpeed);
-                    }
-
-                    var hours = new List<int>();
-                    foreach (var hour in weatherData.Hours.Hour)
-                    {
-                        hours.Add(hour);
-                    }
-
-                    weatherDataList.Add(new WeatherPresentation()
-                    {
-                        Date = weatherData.Date.ToDateTime(),
-                        Temperature = temps,
-                        Humidity = hums,
-                        Pressure = press,
-                        WindSpeed = windSpeeds,
-                        Hours = hours
-                    });
-                }
-
-                result.Add(new WeatherDataPresentation() { TargetDate = item.TargetDate.ToDateTime(), Weather = weatherDataList });
-            }
-            return result;
-        }
 
         private async Task EnterTimes()
         {
@@ -370,24 +315,9 @@ namespace WeatherParser.WPF.ViewModels
 
         private async Task GetWeatherAsync()
         {
-            ForecastViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetAllWeatherDataByDayAsync(new WeatherDataRequest()
-            {
-                Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
-                SiteID = SelectedSite.ID.ToString()
-            }));
-
-
-            MeanDeviationsViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetMeanDeviationsOfRealForecastAsync(new GetMeanDeviationsRequest()
-            {
-                SiteID = SelectedSite.ID.ToString(),
-                Days = 3
-            }));
-
-            DayDeviationsViewModel.WeatherDataPresentations = CastToPresentationEntity(await _weatherParserService.GetDeviationsOfRealFromForecastAsync(new WeatherDataRequest()
-            {
-                Date = DateTime.SpecifyKind((DateTime)SelectedDate, DateTimeKind.Utc).ToTimestamp(),
-                SiteID = SelectedSite.ID.ToString()
-            }));
+            await ForecastViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+            await DayDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+            await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
         }
         #endregion
 

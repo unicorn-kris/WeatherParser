@@ -10,12 +10,12 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Decorators
 {
-    internal abstract class BaseCommandDecorator : ICommand
+    internal abstract class BaseCommandDecorator : IWeatherCommand
     {
-        protected ICommand _command;
+        protected IWeatherCommand _command;
         protected ILogger _logger;
 
-        public BaseCommandDecorator(ILogger logger, ICommand command)
+        public BaseCommandDecorator(ILogger logger, IWeatherCommand command)
         {
             _command = command;
             _logger = logger;

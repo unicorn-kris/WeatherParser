@@ -9,7 +9,7 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
-    internal class GetPressureCommand : CommandBase, ICommand
+    internal class GetPressureCommand : WeatherCommandBase, IWeatherCommand
     {
         ILogger _logger;
 

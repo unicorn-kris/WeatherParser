@@ -7,6 +7,6 @@ namespace WeatherParser.WPF.ViewModels.Contract
 {
     internal interface IDeviationsViewModel : INotifyPropertyChanged
     {
-        void ExecuteCommand(ICommand command, ObservableCollection<TimeViewModel> times);
+        void ExecuteCommand(IWeatherCommand command, ObservableCollection<TimeViewModel> times);
     }
 }
