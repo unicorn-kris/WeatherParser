@@ -19,8 +19,6 @@ namespace WeatherParser.WPF.Commands
             {
                 for (int i = 0; i < times.Count; ++i)
                 {
-                    int j = 0;
-
                     if (times[i].IsChecked)
                     {
                         var values = new List<WeatherSample>();
@@ -29,7 +27,7 @@ namespace WeatherParser.WPF.Commands
                         {
                             foreach (var weather in weatherData.Weather)
                             {
-                                if (weather.Hours.Count > i && weather.Hours.Contains(times[i].CurrentTime) && weather.Temperature.Any())
+                                if (weather.Hours.Contains(times[i].CurrentTime) && weather.Temperature.Any())
                                 {
                                     values.Add(new WeatherSample()
                                     {
@@ -45,7 +43,6 @@ namespace WeatherParser.WPF.Commands
                                         Ticks = weatherData.TargetDate.Ticks
                                     });
                                 }
-                                ++j;
                             }
                         }
                         series.Add(new LineSeries<WeatherSample>

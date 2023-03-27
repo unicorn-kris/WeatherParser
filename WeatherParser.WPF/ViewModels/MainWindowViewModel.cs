@@ -48,7 +48,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             _weatherParserService = weatherParserService;
 
-            MeanDeviationsViewModel = new MeanDeviationsViewModel();
+            //MeanDeviationsViewModel = new MeanDeviationsViewModel();
             DayDeviationsViewModel = new DayDeviationsViewModel();
             ForecastViewModel = new ForecastViewModel();
 
@@ -208,7 +208,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             var temperatureCommand = _container.ResolveNamed<Commands.IWeatherCommand>("TemperatureCommand");
 
-            MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
+            //MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
             DayDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
             ForecastViewModel.ExecuteCommand(temperatureCommand, Times);
 
@@ -317,7 +317,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             await ForecastViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
             await DayDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
-            await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+            //await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
         }
         #endregion
 
