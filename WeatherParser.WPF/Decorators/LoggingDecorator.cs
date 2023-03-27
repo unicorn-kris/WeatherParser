@@ -1,5 +1,4 @@
 ﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -10,18 +9,31 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Decorators
 {
-    internal class LoggingDecorator : BaseCommandDecorator
+    internal class LoggingDecorator : IWeatherCommand
     {
-        public LoggingDecorator(ILogger logger, IWeatherCommand command) : base(logger, command)
-        { }
+        protected IWeatherCommand _command;
+        protected ILogger _logger;
 
-        public override void Execute(List<WeatherDataPresentation> weatherDataList,
+        public LoggingDecorator(ILogger logger, IWeatherCommand command)
+        {
+            _command = command;
+            _logger = logger;
+        }
+
+        public void Execute(List<WeatherDataPresentation> weatherDataList,
              ObservableCollection<ISeries> series,
              ObservableCollection<TimeViewModel> times)
         {
             _logger.Information($"{_command.GetType().Name} started");
 
-            _command.Execute(weatherDataList, series, times);
+            try
+            {
+                _command.Execute(weatherDataList, series, times);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{_command.GetType().Name} have an exception with message: {ex.Message}");
+            }
 
             _logger.Information($"{_command.GetType().Name} finished");
         }

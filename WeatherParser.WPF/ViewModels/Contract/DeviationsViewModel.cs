@@ -5,6 +5,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
@@ -14,34 +15,12 @@ namespace WeatherParser.WPF.ViewModels.Contract
 {
     internal abstract class DeviationsViewModel : NotifyPropertyChangedBase, IDeviationsViewModel
     {
-
-        #region ctor
-
-        public DeviationsViewModel()
-        {
-            Series = new ObservableCollection<ISeries>();
-
-            XAxes = new ObservableCollection<Axis>()
-            {
-                new Axis()
-                {
-                    LabelsPaint = new SolidColorPaintTask(SKColors.Black),
-                    Labels = new ObservableCollection<string>(),
-                    Labeler = x => new DateTime((long)x).ToString("dd/MM/yyyy")
-                }
-            };
-
-            YAxes = new ObservableCollection<Axis>() { new Axis() };
-        }
-
-        #endregion
-
         #region props
 
-        public ObservableCollection<Axis> XAxes { get; set; }
-        public ObservableCollection<Axis> YAxes { get; set; }
+        public ObservableCollection<Axis> XAxes { get; } = new();
+        public ObservableCollection<Axis> YAxes { get; } = new();
 
-        public ObservableCollection<ISeries> Series { get; }
+        public ObservableCollection<ISeries> Series { get; } = new();
 
         public List<WeatherDataPresentation> WeatherDataPresentations { get; set; }
 
@@ -52,6 +31,23 @@ namespace WeatherParser.WPF.ViewModels.Contract
         public void ExecuteCommand(IWeatherCommand command, ObservableCollection<TimeViewModel> times)
         {
             Series.Clear();
+
+            if (!XAxes.Any())
+            {
+                XAxes.Add(new Axis()
+                {
+                    LabelsPaint = new SolidColorPaintTask(SKColors.Black),
+                    Labeler = x => new DateTime((long)x).ToString("dd/MM/yyyy"),
+                    UnitWidth = TimeSpan.FromDays(1).Ticks,
+                    MinStep = TimeSpan.FromDays(1).Ticks
+                });
+            }
+
+            if (!YAxes.Any())
+            {
+                YAxes.Add(new Axis());
+            }
+
             command.Execute(WeatherDataPresentations, Series, times);
         }
 

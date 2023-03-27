@@ -9,11 +9,11 @@ using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF.Commands
 {
-    internal abstract class WeatherCommandBase
+    internal abstract class WeatherCommandBase: IWeatherCommand
     {
-        public void CreateSeries(List<WeatherDataPresentation> weatherDataList,
-            ObservableCollection<TimeViewModel> times,
-            ObservableCollection<ISeries> series)
+        public void Execute(List<WeatherDataPresentation> weatherDataList,
+            ObservableCollection<ISeries> series,
+            ObservableCollection<TimeViewModel> times)
         {
             if (weatherDataList != null)
             {

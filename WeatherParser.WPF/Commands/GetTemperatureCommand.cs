@@ -1,40 +1,9 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using WeatherParser.Presentation.Entities;
-using WeatherParser.WPF.ViewModels;
+﻿using WeatherParser.Presentation.Entities;
 
 namespace WeatherParser.WPF.Commands
 {
-    internal class GetTemperatureCommand : WeatherCommandBase, IWeatherCommand
+    internal class GetTemperatureCommand : WeatherCommandBase
     {
-        ILogger _logger;
-
-        public GetTemperatureCommand(ILogger logger)
-        {
-            _logger = logger;
-        }
-
-        public void Execute(List<WeatherDataPresentation> weatherDataList,
-             ObservableCollection<ISeries> series,
-             ObservableCollection<TimeViewModel> times)
-        {
-            try
-            {
-                CreateSeries(weatherDataList,
-                    times,
-                    series);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{this.GetType().Name} have an exception with message: {ex.Message}");
-            }
-
-        }
-
         public override double AddData(WeatherPresentation weatherPresentation, int index)
         {
             return weatherPresentation.Temperature[index];

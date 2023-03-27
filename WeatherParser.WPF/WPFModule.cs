@@ -9,7 +9,6 @@ using WeatherParser.GrpcService.Services;
 using WeatherParser.WPF.Commands;
 using WeatherParser.WPF.Decorators;
 using WeatherParser.WPF.ViewModels;
-using WeatherParser.WPF.ViewModels.Contract;
 
 namespace WeatherParser.WPF
 {
@@ -20,7 +19,7 @@ namespace WeatherParser.WPF
             builder.Register(c => GrpcChannel.ForAddress(
                 "http://localhost:5004", new GrpcChannelOptions
                 {
-                    HttpHandler = new GrpcWebHandler( new HttpClientHandler()) { HttpVersion = new Version(1, 1) }
+                    HttpHandler = new GrpcWebHandler(new HttpClientHandler()) { HttpVersion = new Version(1, 1) }
                 }))
                 .As<ChannelBase>().SingleInstance();
 
