@@ -267,5 +267,9 @@ namespace WeatherParser.Service
             return weatherDataList;
         }
 
+        public Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId)
+        {
+           return _weatherParserRepository.HaveRealDataOnDay(targetDate, siteId);
+        }
     }
 }

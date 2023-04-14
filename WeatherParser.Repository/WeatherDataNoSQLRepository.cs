@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Common;
-using WeatherParser.Service.Entities;
 
 namespace WeatherParser.Repository
 {
     public class WeatherDataNoSQLRepository : IWeatherParserRepository
     {
-        #region Private
+
         private const string SitesCollectionName = "SitesCollection";
 
         private const string DBName = "WeatherDb";
@@ -25,44 +24,6 @@ namespace WeatherParser.Repository
             _db = dbClient.GetDatabase(DBName);
         }
 
-        private async Task<SiteRepository> GetSiteDocumentAsync(IMongoDatabase _db, Guid siteID)
-        {
-            var collection = _db.GetCollection<SiteRepository>(SitesCollectionName);
-
-            var fieldsBuilder = Builders<SiteRepository>.Projection;
-            var fields = fieldsBuilder.Exclude("_id");
-
-            var filter = Builders<SiteRepository>.Filter.Eq(site => site.ID, siteID);
-
-            return await collection.Find(filter).Project<SiteRepository>(fields).FirstOrDefaultAsync();
-        }
-
-        private async Task<string> GetSiteCollectionNameAsync(Guid siteId)
-        {
-            var collectionNames = await _db.ListCollectionNames().ToListAsync();
-
-            if (!collectionNames.Any(col => col == SitesCollectionName))
-            {
-                throw new Exception("Sites has not yet been added to the application");
-            }
-
-            var siteDocument = await GetSiteDocumentAsync(_db, siteId);
-
-            if (siteDocument == null)
-            {
-                throw new Exception("This site has not yet been added to the application");
-            }
-
-            var siteCollectionName = siteDocument.Name + "Collection";
-
-            if (!collectionNames.Any(col => col == siteCollectionName))
-            {
-                return null;
-            }
-
-            return siteCollectionName;
-        }
-        #endregion
 
         public async Task<(DateTime, DateTime)> GetFirstAndLastDateAsync(Guid siteId)
         {
@@ -142,7 +103,7 @@ namespace WeatherParser.Repository
 
             //datetime have no locality and we need to have this parameter in utc for find date, because expression in "find" will go to database, where data saved in utc => datetime.pase(datetime.tostring())
             var documents = await _db.GetCollection<WeatherDataRepository>(siteCollectionName).Find(w => w.Weather.Any(wd => wd.Date.Equals(DateTime.Parse(targetDate.ToString())))).Project<WeatherDataRepository>(fields).ToListAsync();
-            
+
             //когда был составлен прогноз + список, где каждый список это weatherData на каждый из 8 часов
             //проще и быстрее проводить работу с поиском и сравнением данных с помощью словаря, где ключ - дата сбора данных
             Dictionary<DateTime, WeatherRepository> dataInFiles = new Dictionary<DateTime, WeatherRepository>();
@@ -250,5 +211,68 @@ namespace WeatherParser.Repository
             }
         }
 
+        public async Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId)
+        {
+            var siteCollectionName = await GetSiteCollectionNameAsync(siteId);
+
+            if (siteCollectionName == null)
+            {
+                throw new Exception("This site has not yet been added to the application");
+            }
+
+            var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var sortUp = Builders<WeatherDataRepository>.Sort.Descending(data => data.TargetDate);
+
+            var lastDate = _db.GetCollection<WeatherDataRepository>(siteCollectionName)
+                .Find(w => w.Weather.Any(wd => wd.Date.Equals(DateTime.Parse(targetDate.ToString()))))
+                .Project<WeatherDataRepository>(fields)
+                .Sort(sortUp)
+                .FirstOrDefault()
+                ;
+
+            return lastDate.TargetDate.Date.Equals(targetDate.Date);
+        }
+
+        #region Private
+        private async Task<SiteRepository> GetSiteDocumentAsync(IMongoDatabase _db, Guid siteID)
+        {
+            var collection = _db.GetCollection<SiteRepository>(SitesCollectionName);
+
+            var fieldsBuilder = Builders<SiteRepository>.Projection;
+            var fields = fieldsBuilder.Exclude("_id");
+
+            var filter = Builders<SiteRepository>.Filter.Eq(site => site.ID, siteID);
+
+            return await collection.Find(filter).Project<SiteRepository>(fields).FirstOrDefaultAsync();
+        }
+
+        private async Task<string> GetSiteCollectionNameAsync(Guid siteId)
+        {
+            var collectionNames = await _db.ListCollectionNames().ToListAsync();
+
+            if (!collectionNames.Any(col => col == SitesCollectionName))
+            {
+                throw new Exception("Sites has not yet been added to the application");
+            }
+
+            var siteDocument = await GetSiteDocumentAsync(_db, siteId);
+
+            if (siteDocument == null)
+            {
+                throw new Exception("This site has not yet been added to the application");
+            }
+
+            var siteCollectionName = siteDocument.Name + "Collection";
+
+            if (!collectionNames.Any(col => col == siteCollectionName))
+            {
+                return null;
+            }
+
+            return siteCollectionName;
+        }
+        #endregion
     }
 }

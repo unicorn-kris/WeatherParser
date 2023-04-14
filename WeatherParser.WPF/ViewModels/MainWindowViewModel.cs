@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Google.Protobuf.WellKnownTypes;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -36,8 +35,11 @@ namespace WeatherParser.WPF.ViewModels
 
         private bool _haveDates = false;
 
-        //private List<WeatherDataPresentation> _weatherDataPresentationList;
+        private bool _serverHaveRealDataOnDay;
 
+        private bool _pressButtonReal;
+
+        private bool _pressButtonDeviations;
         //private int _day;
 
         #endregion
@@ -48,7 +50,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             _weatherParserService = weatherParserService;
 
-            //MeanDeviationsViewModel = new MeanDeviationsViewModel();
+            MeanDeviationsViewModel = new MeanDeviationsViewModel();
             DayDeviationsViewModel = new DayDeviationsViewModel();
             ForecastViewModel = new ForecastViewModel();
 
@@ -59,6 +61,9 @@ namespace WeatherParser.WPF.ViewModels
             PressureCommand = new RelayCommand(Pressure);
             HumidityCommand = new RelayCommand(Humidity);
             WindSpeedCommand = new RelayCommand(WindSpeed);
+
+            RealDataCommand = new RelayCommand(ShowRealDataCommand, x => _pressButtonReal);
+            DeviationsDataCommand = new RelayCommand(ShowDeviationsDataCommand, x => _pressButtonDeviations);
 
             RestartAppCommand = new RelayCommand(Restart);
 
@@ -77,7 +82,6 @@ namespace WeatherParser.WPF.ViewModels
         public DeviationsViewModel DayDeviationsViewModel { get; }
 
         public DeviationsViewModel ForecastViewModel { get; }
-
 
         public SitePresentation SelectedSite
         {
@@ -135,7 +139,16 @@ namespace WeatherParser.WPF.ViewModels
         public bool IsTimeSelected
         {
             get => _isTimeSelected;
-            set => OnPropertyChanged(value, ref _isTimeSelected);
+            set
+            {
+                OnPropertyChanged(value, ref _isTimeSelected);
+
+                if (SelectedDate != null && SelectedSite != null)
+                {
+                    ForecastViewModel.VisibilityProp = Visibility.Visible;
+                    DayDeviationsViewModel.VisibilityProp = Visibility.Collapsed;
+                }
+            }
         }
 
         public bool HaveDates
@@ -154,21 +167,21 @@ namespace WeatherParser.WPF.ViewModels
             get;
         } = new ObservableCollection<SitePresentation>();
 
-        public ICommand TemperatureCommand { get; }
+        public RelayCommand TemperatureCommand { get; }
 
-        public ICommand PressureCommand { get; }
+        public RelayCommand PressureCommand { get; }
 
-        public ICommand WindSpeedCommand { get; }
+        public RelayCommand WindSpeedCommand { get; }
 
-        public ICommand HumidityCommand { get; }
+        public RelayCommand HumidityCommand { get; }
 
         public ICommand RestartAppCommand { get; }
 
         public ICommand RefreshDataCommand { get; }
 
-        public ICommand DeviationsByDayCommand { get; }
+        public RelayCommand DeviationsDataCommand { get; }
 
-        public ICommand MeanDeviationsCommand { get; }
+        public RelayCommand RealDataCommand { get; }
 
         //public int Day
         //{
@@ -206,9 +219,11 @@ namespace WeatherParser.WPF.ViewModels
         #region buttons
         public void Temperature(object? parameter)
         {
+            SetPressButtonsProps();
+
             var temperatureCommand = _container.ResolveNamed<Commands.IWeatherCommand>("TemperatureCommand");
 
-            //MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
+            MeanDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
             DayDeviationsViewModel.ExecuteCommand(temperatureCommand, Times);
             ForecastViewModel.ExecuteCommand(temperatureCommand, Times);
 
@@ -216,6 +231,8 @@ namespace WeatherParser.WPF.ViewModels
 
         public void Pressure(object? parameter)
         {
+            SetPressButtonsProps();
+
             var pressureCommand = _container.ResolveNamed<Commands.IWeatherCommand>("PressureCommand");
 
             ForecastViewModel.ExecuteCommand(pressureCommand, Times);
@@ -226,6 +243,8 @@ namespace WeatherParser.WPF.ViewModels
 
         public void WindSpeed(object? parameter)
         {
+            SetPressButtonsProps();
+
             var windSpeedCommand = _container.ResolveNamed<Commands.IWeatherCommand>("WindSpeedCommand");
 
             ForecastViewModel.ExecuteCommand(windSpeedCommand, Times);
@@ -235,11 +254,26 @@ namespace WeatherParser.WPF.ViewModels
 
         public void Humidity(object? parameter)
         {
+            SetPressButtonsProps();
+
             var humidityCommand = _container.ResolveNamed<Commands.IWeatherCommand>("HumidityCommand");
 
             ForecastViewModel.ExecuteCommand(humidityCommand, Times);
             MeanDeviationsViewModel.ExecuteCommand(humidityCommand, Times);
             DayDeviationsViewModel.ExecuteCommand(humidityCommand, Times);
+        }
+
+
+        private void ShowRealDataCommand(object? obj)
+        {
+            ForecastViewModel.VisibilityProp = Visibility.Visible;
+            DayDeviationsViewModel.VisibilityProp = Visibility.Collapsed;
+        }
+
+        private void ShowDeviationsDataCommand(object? obj)
+        {
+            ForecastViewModel.VisibilityProp = Visibility.Collapsed;
+            DayDeviationsViewModel.VisibilityProp = Visibility.Visible;
         }
         #endregion
 
@@ -253,6 +287,11 @@ namespace WeatherParser.WPF.ViewModels
 
         private void RefreshData(object? parameter)
         {
+            _pressButtonReal = false;
+            _pressButtonDeviations = false;
+            RealDataCommand.NotifyCanExecuteChanged();
+            DeviationsDataCommand.NotifyCanExecuteChanged();
+
             IsTimeSelected = false;
             SelectedDate = null;
             SelectedSite = null;
@@ -268,6 +307,10 @@ namespace WeatherParser.WPF.ViewModels
             {
                 Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
             }
+
+            ForecastViewModel.RefreshChart();
+            DayDeviationsViewModel.RefreshChart();
+            MeanDeviationsViewModel.RefreshChart();
         }
 
         private void DisableButtonsAndCheckBoxes()
@@ -280,8 +323,14 @@ namespace WeatherParser.WPF.ViewModels
                 Times[i].IsChecked = false;
             }
 
-            FirstDate = null;
-            LastDate = null;
+            _pressButtonReal = false;
+            _pressButtonDeviations = false;
+            RealDataCommand.NotifyCanExecuteChanged();
+            DeviationsDataCommand.NotifyCanExecuteChanged();
+
+            ForecastViewModel.RefreshChart();
+            DayDeviationsViewModel.RefreshChart();
+            MeanDeviationsViewModel.RefreshChart();
         }
 
         private void OnTimeChecked(object? sender, PropertyChangedEventArgs e)
@@ -292,7 +341,7 @@ namespace WeatherParser.WPF.ViewModels
 
         private async Task EnterTimes()
         {
-            await GetWeatherAsync();
+            await GetWeather();
 
             Times.Clear();
             IsTimeSelected = false;
@@ -313,11 +362,31 @@ namespace WeatherParser.WPF.ViewModels
             }
         }
 
-        private async Task GetWeatherAsync()
+        private async Task GetWeather()
         {
             await ForecastViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
-            await DayDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
-            //await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+
+            _serverHaveRealDataOnDay = _weatherParserService.HaveRealDataOnDate(new WeatherDataRequest()
+            {
+                Date = DateTime.SpecifyKind(_selectedDate.Value.Date, DateTimeKind.Utc).ToTimestamp(),
+                SiteID = _selectedSite.ID.ToString()
+            }).HaveData;
+
+
+            if (_serverHaveRealDataOnDay)
+            {
+                await DayDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+            }
+
+            await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+        }
+
+        private void SetPressButtonsProps()
+        {
+            _pressButtonReal = true;
+            _pressButtonDeviations = _serverHaveRealDataOnDay && IsTimeSelected;
+            RealDataCommand.NotifyCanExecuteChanged();
+            DeviationsDataCommand.NotifyCanExecuteChanged();
         }
         #endregion
 

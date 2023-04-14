@@ -162,5 +162,21 @@ namespace WeatherParser.GrpcService.Services
 
             return returnWeatherData;
         }
+
+        public override async Task<BoolResponse> HaveRealDataOnDate(WeatherDataRequest request, ServerCallContext context)
+        {
+            try
+            {
+                return new BoolResponse() { 
+                    HaveData = await _weatherParserService.HaveRealDataOnDay(request.Date.ToDateTime(), new Guid(request.SiteID)) 
+                };
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "HaveRealDataOnDate failed");
+                throw new RpcException(new Status(StatusCode.Internal, ex.Message));
+            }
+        }
     }
 }

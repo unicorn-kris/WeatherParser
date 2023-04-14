@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
 using WeatherParser.WPF.Commands;
@@ -15,14 +16,21 @@ namespace WeatherParser.WPF.ViewModels.Contract
 {
     internal abstract class DeviationsViewModel : NotifyPropertyChangedBase, IDeviationsViewModel
     {
+        private Visibility _visibility;
         #region props
 
         public ObservableCollection<Axis> XAxes { get; } = new();
         public ObservableCollection<Axis> YAxes { get; } = new();
 
-        public ObservableCollection<ISeries> Series { get; } = new();
+        public ObservableCollection<ISeries> Series { get; private set; } = new();
 
         public List<WeatherDataPresentation> WeatherDataPresentations { get; set; }
+
+        public Visibility VisibilityProp
+        {
+            get => _visibility;
+            set => OnPropertyChanged(value, ref _visibility);
+        }
 
         #endregion
 
@@ -113,5 +121,10 @@ namespace WeatherParser.WPF.ViewModels.Contract
             }
             return result;
         }
+
+        public void RefreshChart()
+        {
+            Series.Clear();
+        } 
     }
 }

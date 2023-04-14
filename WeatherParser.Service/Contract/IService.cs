@@ -16,5 +16,7 @@ namespace WeatherParser.Service.Contract
         Task<List<WeatherDataService>> GetDeviationsOfRealFromForecast(DateTime targetDate, Guid siteId);
 
         Task<List<WeatherDataService>> GetMeanDeviationsOfRealForecast(Guid siteId, int days);
+
+        public Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId);
     }
 }

@@ -6,7 +6,7 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
         xmlns:views="clr-namespace:WeatherParser.WPF.Views"     
         mc:Ignorable="d"
-        Width="1400" Height="800">
+        Width="1400" Height="1000">
     
     <Window.Resources>
         <ResourceDictionary>
@@ -27,7 +27,7 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1.3*"/>
+            <RowDefinition Height="1.1*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -62,11 +62,23 @@
             <Grid Grid.Column="0" SnapsToDevicePixels="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 
                 <Label Grid.Row="0" Content="Real Data" HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
-                <views:MeanDeviationsView  Grid.Row="1" DataContext="{Binding ForecastViewModel}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding RealDataCommand}" Margin="0 12 100 2" Padding="5 5" FontSize="22" FontFamily="Georgia">
+                        Real Data
+                    </Button>
+
+                    <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding DeviationsDataCommand}" Margin="100 12 0 2" Padding="5 5" FontSize="22" FontFamily="Georgia" >
+                       Deviations by day
+                    </Button>
+                </StackPanel>
+                <views:MeanDeviationsView Visibility="{Binding VisibilityProp}" Grid.Row="2" DataContext="{Binding ForecastViewModel}"/>
+                <views:MeanDeviationsView Visibility="{Binding VisibilityProp}"  Grid.Row="2" DataContext="{Binding DayDeviationsViewModel}"/>
+
             </Grid>
 
             <Grid Grid.Column="1" Margin="10" VerticalAlignment="Center" >
@@ -77,26 +89,27 @@
 
                 <Grid Grid.Row="0" Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="70*"/>
+                        <ColumnDefinition Width="30*" />
                     </Grid.ColumnDefinitions>
 
-                    <Calendar Grid.Column="0" Margin="2" CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" Style="{DynamicResource CalendarStyle1}" SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}" Background="#FF8A9C92" BorderBrush="#FF8A9C92" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Calendar Grid.Column="0" Margin="5 0" CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" Style="{DynamicResource CalendarStyle1}" SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}" Background="#FF8A9C92" BorderBrush="#FF8A9C92" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <StackPanel Grid.Column="1" Margin="5">
-                        <Label Content="Time: "  FontSize="18" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
+                    <StackPanel Grid.Column="1" Margin="10 0">
+                        <Label Content="Time: " FontSize="16" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
 
                         <ItemsControl ItemsSource="{Binding Times}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox 
-                                    Margin="3 0" 
+                                    Margin="0 2" 
                                     FontFamily="Georgia" 
                                     Content="{Binding CurrentTime}"
-                                    IsChecked="{Binding IsChecked}"
+                                    IsChecked="{Binding IsChecked}" 
                                     IsEnabled="{Binding IsDateChecked}"
                                     ContentStringFormat="{}{0}.00"
                                     Foreground="Black"
+                                    FontSize="16"
                                     />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -107,20 +120,21 @@
                 <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                     <Label Content="Data: " HorizontalAlignment="Center" FontSize="18" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal" >
-                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding TemperatureCommand}" Margin="2,2,2,2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" >
-                            T
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding TemperatureCommand}" Margin="5" Padding="3" FontSize="20" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="150" >
+                            Temperature
                         </Button>
 
-                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding WindSpeedCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35" >
-                            WS
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding WindSpeedCommand}" Margin="5" Padding="3" FontSize="20" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="150" >
+                            Wind Speed
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding PressureCommand}" Margin="5" Padding="3" FontSize="20" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="150">
+                            Pressure
                         </Button>
 
-                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding PressureCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35">
-                            P
-                        </Button>
-
-                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding HumidityCommand}" Margin="2" Padding="2 3" FontSize="18" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="35" >
-                            H
+                        <Button Style="{DynamicResource ButtonStyle1}" Command="{Binding HumidityCommand}" Margin="5" Padding="3" FontSize="20" FontFamily="Georgia" IsEnabled="{Binding IsTimeSelected}" Width="150" >
+                            Humidity
                         </Button>
                     </StackPanel>
                 </StackPanel>
@@ -138,7 +152,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Content="Deviations by site: " HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
-            <views:MeanDeviationsView Grid.Row="1" DataContext="{Binding DayDeviationsViewModel}"/>
+            <views:MeanDeviationsView Grid.Row="1" DataContext="{Binding MeanDeviationsViewModel}"/>
 
         </Grid>
     </Grid>

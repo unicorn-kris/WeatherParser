@@ -15,7 +15,7 @@ namespace WeatherParser.WPF.ViewModels
         {
             this.WeatherDataPresentations = CastToPresentationEntity(await weatherDataProtoGismeteo.GetDeviationsOfRealFromForecastAsync(new WeatherDataRequest()
             {
-                Date = DateTime.SpecifyKind((DateTime)selectedDate, DateTimeKind.Utc).ToTimestamp(),
+                Date = DateTime.SpecifyKind(selectedDate.Value.Date, DateTimeKind.Utc).ToTimestamp(),
                 SiteID = selectedSite.ID.ToString()
             }));
         }

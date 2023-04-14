@@ -186,6 +186,11 @@ namespace WeatherParser.Repository
             throw new NotImplementedException();
         }
 
+        public Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SaveWeatherDataAsync(WeatherDataRepository weatherData)
         {
             string pathMain = @"../WeatherParser.Repository/SaveFiles";

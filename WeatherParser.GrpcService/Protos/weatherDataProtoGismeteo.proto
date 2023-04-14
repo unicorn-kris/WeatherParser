@@ -15,6 +15,7 @@ service WeatherDataProtoGismeteo {
   rpc GetSites(google.protobuf.Empty) returns (SitesList) {}
   rpc GetDeviationsOfRealFromForecast(WeatherDataRequest) returns (WeatherDataGetResponse) {}
   rpc GetMeanDeviationsOfRealForecast(GetMeanDeviationsRequest) returns (WeatherDataGetResponse) {}
+  rpc HaveRealDataOnDate (WeatherDataRequest) returns (BoolResponse) {}
 }
 
 message WeatherDataRequest{
@@ -90,4 +91,8 @@ message TargetDateWeather {
 
 message WeatherDataGetResponse {
 	repeated TargetDateWeather WeatherData = 1;
+}
+
+message BoolResponse{
+	bool HaveData = 1;
 }

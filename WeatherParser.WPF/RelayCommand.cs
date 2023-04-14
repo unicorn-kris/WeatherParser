@@ -9,12 +9,15 @@ namespace WeatherParser.WPF
 
         private readonly Action<object?> _action;
 
-        public RelayCommand(Action<object?> action)
+        private readonly Func<object?, bool>? _funcAction;
+
+        public RelayCommand(Action<object?> action, Func<object?, bool>? funcAction = null)
         {
             _action = action;
+            _funcAction = funcAction;
         }
 
-        public virtual bool CanExecute(object? parameter) => true;
+        public virtual bool CanExecute(object? parameter) => _funcAction?.Invoke(parameter) ?? true;
 
         public virtual void Execute(object? parameter)
         {

@@ -18,7 +18,7 @@ namespace WeatherParser.WinService
 
             _plugins = plugins;
 
-            _timer = new CronTimer("0 0 * * *", TimeZoneInfo.Utc);
+            _timer = new CronTimer("1 0 * * *", TimeZoneInfo.Utc);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

@@ -19,5 +19,7 @@ namespace WeatherParser.Repository.Contract
         Task<List<SiteRepository>> GetSitesAsync();
 
         Task AddSitesAsync(IEnumerable<IWeatherPlugin> plugins);
+
+        Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId);
     }
 }
