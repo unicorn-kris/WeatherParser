@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WeatherParser.WPF.ViewModels;
 
 namespace WeatherParser.WPF
 {
@@ -19,9 +9,18 @@ namespace WeatherParser.WPF
     /// </summary>
     public partial class ExcelLoadWindow : Window
     {
+        private IContainer _container;
+
         public ExcelLoadWindow()
         {
             InitializeComponent();
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<WPFModule>();
+            _container = builder.Build();
+
+            DataContext = _container.Resolve<ExcelWindowViewModel>();
         }
     }
 }
+ 
