@@ -17,7 +17,7 @@ namespace WeatherParser.WPF.ViewModels
             this.WeatherDataPresentations = CastToPresentationEntity(await weatherDataProtoGismeteo.GetMeanDeviationsOfRealForecastAsync(new GetMeanDeviationsRequest()
             {
                 SiteID = selectedSite.ID.ToString(),
-                Days = 3
+                Days = DaysCount
             }));
         }
     }

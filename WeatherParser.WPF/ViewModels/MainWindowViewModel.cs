@@ -40,7 +40,8 @@ namespace WeatherParser.WPF.ViewModels
         private bool _pressButtonReal;
 
         private bool _pressButtonDeviations;
-        //private int _day;
+        
+        private int? _day;
 
         #endregion
 
@@ -77,7 +78,7 @@ namespace WeatherParser.WPF.ViewModels
 
         #region props
 
-        public DeviationsViewModel MeanDeviationsViewModel { get; }
+        public MeanDeviationsViewModel MeanDeviationsViewModel { get; }
 
         public DeviationsViewModel DayDeviationsViewModel { get; }
 
@@ -183,11 +184,20 @@ namespace WeatherParser.WPF.ViewModels
 
         public RelayCommand RealDataCommand { get; }
 
-        //public int Day
-        //{
-        //    get => _day;
-        //    set => OnPropertyChanged(value, ref _day);
-        //}
+        public int? Day
+        {
+            get => _day;
+            set {
+                OnPropertyChanged(value, ref _day);
+
+                if (Day != null)
+                {
+                    MeanDeviationsViewModel.DaysCount = (int)Day;
+                    MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
+                }
+
+            }
+        }
 
         public string Error => throw new NotImplementedException();
 
@@ -377,8 +387,6 @@ namespace WeatherParser.WPF.ViewModels
             {
                 await DayDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
             }
-
-            await MeanDeviationsViewModel.GetWeatherAsync(_weatherParserService, SelectedSite, SelectedDate);
         }
 
         private void SetPressButtonsProps()
