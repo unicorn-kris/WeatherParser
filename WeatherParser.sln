@@ -31,15 +31,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entities", "Entities", "{53
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.Entities", "WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj", "{1074F572-7445-484C-94C2-87FE7F6F79FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.ForecaService", "WeatherParser.Service.ForecaService\WeatherParser.Service.ForecaService.csproj", "{37BABCEA-C835-4B11-9E75-09E2107FB556}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.Common", "WeatherParser.Service.Common\WeatherParser.Service.Common.csproj", "{12A0752F-D2FD-4703-9F6C-64BED5E80496}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.Service.OpenWeatherMapService", "WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj", "{9662FF40-6F92-458D-AD9B-CDD7CA7A524D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.WinService", "WeatherParser.WinService\WeatherParser.WinService.csproj", "{AB0AD056-D7A7-4554-8859-3A1AC5DF5322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherParser.MAUI", "WeatherParser.MAUI\WeatherParser.MAUI.csproj", "{18F76742-34D0-433C-9D61-19FFB672FC91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherParser.MAUI", "WeatherParser.MAUI\WeatherParser.MAUI.csproj", "{18F76742-34D0-433C-9D61-19FFB672FC91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +77,6 @@ Global
 		{1074F572-7445-484C-94C2-87FE7F6F79FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1074F572-7445-484C-94C2-87FE7F6F79FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1074F572-7445-484C-94C2-87FE7F6F79FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37BABCEA-C835-4B11-9E75-09E2107FB556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37BABCEA-C835-4B11-9E75-09E2107FB556}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37BABCEA-C835-4B11-9E75-09E2107FB556}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37BABCEA-C835-4B11-9E75-09E2107FB556}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -117,7 +111,6 @@ Global
 		{7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}
 		{5384F156-3757-40B6-8450-38BA5CEC8185} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}
 		{1074F572-7445-484C-94C2-87FE7F6F79FE} = {5384F156-3757-40B6-8450-38BA5CEC8185}
-		{37BABCEA-C835-4B11-9E75-09E2107FB556} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
 		{12A0752F-D2FD-4703-9F6C-64BED5E80496} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
 		{9662FF40-6F92-458D-AD9B-CDD7CA7A524D} = {7A413FED-90C8-41AF-9EDF-E9DBF90F8E8A}
 		{AB0AD056-D7A7-4554-8859-3A1AC5DF5322} = {15B178C3-09CA-4D0A-A9AE-6C8A92EEB685}

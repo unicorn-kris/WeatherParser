@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +8,7 @@ using WeatherParser.Repository.Contract;
 using WeatherParser.Repository.Entities;
 using WeatherParser.Service.Contract;
 using WeatherParser.Service.Entities;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WeatherParser.Service
 {
@@ -38,7 +41,6 @@ namespace WeatherParser.Service
                         Humidity = weather.Humidity,
                         Pressure = weather.Pressure,
                         Temperature = weather.Temperature,
-                        WindDirection = weather.WindDirection,
                         WindSpeed = weather.WindSpeed
                     });
                 }
@@ -208,6 +210,209 @@ namespace WeatherParser.Service
             return weatherDataList;
         }
 
+        public Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId)
+        {
+            return _weatherParserRepository.HaveRealDataOnDay(targetDate, siteId);
+        }
+
+        public async Task SaveDataInExcel(string path, Guid siteId)
+        {
+            var dataFromdb = await _weatherParserRepository.GetAllWeatherDataBySiteAsync(siteId).ConfigureAwait(false);
+
+            var dataForSaving = new List<ExcelWeatherDataFull>();
+
+            foreach (var data in dataFromdb)
+            {
+                foreach (var weather in data.Weather)
+                {
+                    if (dataForSaving.Any(x => x.CurrentDate == weather.Date))
+                    {
+                        dataForSaving.Where(x => x.CurrentDate == weather.Date).First().Weather.Add(new ExcelWeather()
+                        {
+                            Date = data.TargetDate,
+                            Hours = weather.Hours,
+                            Humidity = weather.Humidity,
+                            Pressure = weather.Pressure,
+                            Temperature = weather.Temperature,
+                            WindSpeed = weather.WindSpeed
+
+                        });
+                    }
+                    else
+                    {
+                        dataForSaving.Add(new ExcelWeatherDataFull()
+                        {
+                            CurrentDate = data.TargetDate,
+                            Weather = new List<ExcelWeather>() {
+                                new ExcelWeather() {
+                                    Date = data.TargetDate,
+                                    Hours = weather.Hours,
+                                    Humidity = weather.Humidity,
+                                    Pressure = weather.Pressure,
+                                    Temperature = weather.Temperature,
+                                    WindSpeed = weather.WindSpeed
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            Excel.Application excelApp = null;
+
+            int worksheetCount = 0;
+
+            //create new instance
+            excelApp = new Excel.Application();
+
+            //suppress displaying alerts (such as prompting to overwrite existing file)
+            excelApp.DisplayAlerts = false;
+
+            //set Excel visability
+            excelApp.Visible = true;
+
+            //create new workbook
+            var workbook = excelApp.Workbooks.Add();
+
+            //get number of existing worksheets
+            worksheetCount = workbook.Sheets.Count;
+
+            //add a worksheet and set the value to the new worksheet
+            var worksheetTemperature = (Excel.Worksheet)workbook.Sheets.Add();
+            var worksheetPressure = (Excel.Worksheet)workbook.Sheets.Add();
+            var worksheetHumidity = (Excel.Worksheet)workbook.Sheets.Add();
+            var worksheetWindSpeed = (Excel.Worksheet)workbook.Sheets.Add();
+
+            var rowNum = 0;
+            if (dataForSaving.Any())
+            {
+                foreach (var data in dataForSaving)
+                {
+                    for (int j = 0; j < data.Weather.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            worksheetTemperature.Cells[rowNum, 0] = data.CurrentDate;
+                            worksheetPressure.Cells[rowNum, 0] = data.CurrentDate;
+                            worksheetHumidity.Cells[rowNum, 0] = data.CurrentDate;
+                            worksheetWindSpeed.Cells[rowNum, 0] = data.CurrentDate;
+                        }
+
+                        for (int k = -1; k < data.Weather[j].Hours.Count; k++)
+                        {
+                            //set value of cell
+                            if (k == -1)
+                            {
+                                worksheetTemperature.Cells[rowNum, 1] = data.Weather[j].Date;
+                                worksheetPressure.Cells[rowNum, 1] = data.Weather[j].Date;
+                                worksheetHumidity.Cells[rowNum, 1] = data.Weather[j].Date;
+                                worksheetWindSpeed.Cells[rowNum, 1] = data.Weather[j].Date;
+                            }
+                            else
+                            {
+                                worksheetTemperature.Cells[rowNum, k] = data.Weather[j].Temperature[k];
+                                worksheetPressure.Cells[rowNum, k] = data.Weather[j].Pressure[k];
+                                worksheetHumidity.Cells[rowNum, k] = data.Weather[j].Humidity[k];
+                                worksheetWindSpeed.Cells[rowNum, k] = data.Weather[j].WindSpeed[k];
+                            }
+                        }
+                    }
+                    ++rowNum;
+                }
+            }
+
+            if (workbook != null)
+            {
+                //save Workbook - if file exists, overwrite it
+                workbook.SaveAs(path);
+
+                //close workbook
+                workbook.Close();
+
+                //release all resources
+                System.Runtime.InteropServices.Marshal.FinalReleaseComObject(workbook);
+            }
+
+            if (excelApp != null)
+            {
+                //close Excel
+                excelApp.Quit();
+
+                //release all resources
+                System.Runtime.InteropServices.Marshal.FinalReleaseComObject(excelApp);
+            }
+        }
+
+        public async Task SaveDataFromExcel(string filePath)
+        {
+            var rows = new List<Dictionary<string, string>>();
+
+            var keys = new List<string>();
+
+            //read excel
+            using (SpreadsheetDocument doc = SpreadsheetDocument.Open(filePath, false))
+            {
+                var workbookPart = doc.WorkbookPart;
+                var worksheetPart = workbookPart.WorksheetParts.First();
+                var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                foreach (Row r in sheetData.Elements<Row>())
+                {
+                    int numStr;
+
+                    var row = new Dictionary<string, string>();
+                    if (int.TryParse(r.Elements<Cell>().First().CellValue.Text, out numStr))
+                    {
+                        if (numStr == 0)
+                        {
+                            for (int i = 1; i < r.Elements<Cell>().Count(); ++i)
+                            {
+                                Cell c = r.Elements<Cell>().ElementAt(i);
+
+                                string value = c.InnerText;
+
+                                if (c.DataType.Value == CellValues.SharedString)
+                                {
+                                    var stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>()
+                                        .FirstOrDefault();
+                                    if (stringTable != null)
+                                        value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
+                                }
+
+                                keys.Add(value);
+                            }
+                        }
+                        else
+                        {
+                            int keynum = 0;
+
+                            for (int i = 1; i < r.Elements<Cell>().Count(); ++i)
+                            {
+                                Cell c = r.Elements<Cell>().ElementAt(i);
+
+                                string value = c.InnerText;
+
+                                if (c.DataType.Value == CellValues.SharedString)
+                                {
+                                    var stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>()
+                                        .FirstOrDefault();
+                                    if (stringTable != null)
+                                        value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
+                                }
+
+                                row[keys[keynum]] = value;
+                                keynum++;
+                            }
+                            rows.Add(row);
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
 
         private List<WeatherDataService> GetDeviations(List<WeatherDataRepository> data, DateTime targetDate)
         {
@@ -267,9 +472,26 @@ namespace WeatherParser.Service
             return weatherDataList;
         }
 
-        public Task<bool> HaveRealDataOnDay(DateTime targetDate, Guid siteId)
+        private class ExcelWeatherDataFull
         {
-           return _weatherParserRepository.HaveRealDataOnDay(targetDate, siteId);
+            public DateTime CurrentDate { get; set; }
+
+            public List<ExcelWeather> Weather { get; set; }
+        }
+
+        private class ExcelWeather
+        {
+            public DateTime Date { get; set; }
+
+            public List<int> Hours { get; set; }
+
+            public List<double> Temperature { get; set; }
+
+            public List<double> Pressure { get; set; }
+
+            public List<double> Humidity { get; set; }
+
+            public List<double> WindSpeed { get; set; }
         }
     }
 }

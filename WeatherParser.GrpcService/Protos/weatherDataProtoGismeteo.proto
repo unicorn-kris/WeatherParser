@@ -16,6 +16,7 @@ service WeatherDataProtoGismeteo {
   rpc GetDeviationsOfRealFromForecast(WeatherDataRequest) returns (WeatherDataGetResponse) {}
   rpc GetMeanDeviationsOfRealForecast(GetMeanDeviationsRequest) returns (WeatherDataGetResponse) {}
   rpc HaveRealDataOnDate (WeatherDataRequest) returns (BoolResponse) {}
+  rpc SaveDataInExcel (SaveExcelRequest) returns (google.protobuf.Empty) {}
 }
 
 message WeatherDataRequest{
@@ -95,4 +96,9 @@ message WeatherDataGetResponse {
 
 message BoolResponse{
 	bool HaveData = 1;
+}
+
+message SaveExcelRequest{
+  string path = 1;
+  string siteID = 2;
 }

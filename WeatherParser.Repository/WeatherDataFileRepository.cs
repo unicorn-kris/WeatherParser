@@ -42,7 +42,6 @@ namespace WeatherParser.Repository
                             Temperature = new List<double>(),
                             Humidity = new List<double>(),
                             Pressure = new List<double>(),
-                            WindDirection = new List<string>(),
                             WindSpeed = new List<double>()
                         };
 
@@ -110,28 +109,6 @@ namespace WeatherParser.Repository
                             }
                         }
                         dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindSpeed = windSpeed;
-                        indexWeatherData += 1;
-                    }
-                }
-            }
-
-            using (StreamReader fileWindDirection = new StreamReader("../WeatherParser.Repository/SaveFiles/WindDirection.txt"))
-            {
-                indexWeatherData = 0;
-
-                while (!fileWindDirection.EndOfStream)
-                {
-                    var tempStr = fileWindDirection.ReadLine().Trim().Split(' ');
-
-                    if (DateTime.Parse(tempStr[1]) == targetDate.Date)
-                    {
-                        var windDir = new List<string>();
-
-                        for (int i = 2; i < tempStr.Length; ++i)
-                        {
-                            windDir.Add(tempStr[i]);
-                        }
-                        dataInFiles[DateTime.Parse(tempStr[0])][indexWeatherData].WindDirection = windDir;
                         indexWeatherData += 1;
                     }
                 }
@@ -242,21 +219,6 @@ namespace WeatherParser.Repository
                         fileWindSpeed.Write($" {windspOfWeatherData}");
                     }
                     fileWindSpeed.WriteLine();
-                }
-            }
-
-            if (!File.ReadAllLines("../WeatherParser.Repository/SaveFiles/WindDirection.txt")
-                .Any(c => DateTime.Parse(c.Trim().Split(' ')[1]) == weatherData.TargetDate.Date))
-            {
-                using (StreamWriter fileWindDirection = new StreamWriter("../WeatherParser.Repository/SaveFiles/WindDirection.txt", true))
-                {
-                    fileWindDirection.Write($"{weatherData.TargetDate.ToShortDateString()} ");
-                    fileWindDirection.Write($"{weatherData.Weather.FirstOrDefault().Date.ToShortDateString()} ");
-                    foreach (var winddirOfWeatherData in weatherData.Weather.FirstOrDefault().WindDirection)
-                    {
-                        fileWindDirection.Write($"{winddirOfWeatherData} ");
-                    }
-                    fileWindDirection.WriteLine();
                 }
             }
 

@@ -11,6 +11,7 @@ namespace WeatherParser.Repository.Entities
         //IN this date i get a weather
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime TargetDate { get; set; }
+
         public List<WeatherRepository> Weather { get; set; }
     }
 }

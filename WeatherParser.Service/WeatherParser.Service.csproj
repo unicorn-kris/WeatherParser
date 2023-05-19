@@ -9,14 +9,15 @@
     <ProjectReference Include="..\WeatherParser.Presentation.Entities\WeatherParser.Presentation.Entities.csproj" />
     <ProjectReference Include="..\WeatherParser.Repository\WeatherParser.Repository.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.Entities\WeatherParser.Service.Entities.csproj" />
-    <ProjectReference Include="..\WeatherParser.Service.ForecaService\WeatherParser.Service.ForecaService.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.GismeteoService\WeatherParser.Service.GismeteoService.csproj" />
     <ProjectReference Include="..\WeatherParser.Service.OpenWeatherMapService\WeatherParser.Service.OpenWeatherMapService.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.0.1" />
     <PackageReference Include="AngleSharp.Io" Version="1.0.0" />
-    <PackageReference Include="Autofac" Version="6.5.0" />
+    <PackageReference Include="Autofac" Version="7.0.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
   </ItemGroup>
 </Project>

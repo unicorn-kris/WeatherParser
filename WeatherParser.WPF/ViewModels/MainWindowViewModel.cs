@@ -207,19 +207,19 @@ namespace WeatherParser.WPF.ViewModels
             {
                 string error = string.Empty;
 
-                //switch (columnName)
-                //{
-                //    //TODO: error for days count!
+                switch (columnName)
+                {
+                    //TODO: error for days count!
 
-                //    case "Day":
-                //        var days = (LastDate - FirstDate).Value.Days;
+                    case "Day":
+                        var days = (LastDate - FirstDate).Value.Days;
 
-                //        if ((Day < 0) || (Day > days))
-                //        {
-                //            error = $"Количество дней должно быть больше 0 и не меньше {days}";
-                //        }
-                //        break;
-                //}
+                        if ((Day < 0) || (Day > days))
+                        {
+                            error = $"Количество дней должно быть больше 0 и не меньше {days}";
+                        }
+                        break;
+                }
                 return error;
             }
         }

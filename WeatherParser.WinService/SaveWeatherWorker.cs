@@ -53,7 +53,6 @@ namespace WeatherParser.WinService
                         Pressure = weather.Pressure,
                         Humidity = weather.Humidity,
                         Temperature = weather.Temperature,
-                        WindDirection = weather.WindDirection,
                         WindSpeed = weather.WindSpeed,
                         Hours = weather.Hours
                     });

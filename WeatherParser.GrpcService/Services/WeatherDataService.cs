@@ -167,14 +167,30 @@ namespace WeatherParser.GrpcService.Services
         {
             try
             {
-                return new BoolResponse() { 
-                    HaveData = await _weatherParserService.HaveRealDataOnDay(request.Date.ToDateTime(), new Guid(request.SiteID)) 
+                return new BoolResponse()
+                {
+                    HaveData = await _weatherParserService.HaveRealDataOnDay(request.Date.ToDateTime(), new Guid(request.SiteID))
                 };
             }
 
             catch (Exception ex)
             {
                 _logger.LogError(ex, "HaveRealDataOnDate failed");
+                throw new RpcException(new Status(StatusCode.Internal, ex.Message));
+            }
+        }
+
+        public override async Task<Empty> SaveDataInExcel(SaveExcelRequest request, ServerCallContext context)
+        {
+            try
+            {
+                await _weatherParserService.SaveDataInExcel(request.Path, new Guid(request.SiteID));
+                return new Empty();
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SaveDataInExcel failed");
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }

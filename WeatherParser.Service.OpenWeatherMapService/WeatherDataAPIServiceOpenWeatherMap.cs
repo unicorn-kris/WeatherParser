@@ -39,7 +39,6 @@ namespace WeatherParser.Service.OpenWeatherMapService
                         Humidity = new List<double>(),
                         Pressure = new List<double>(),
                         Temperature = new List<double>(),
-                        WindDirection = new List<string>(),
                         WindSpeed = new List<double>(),
                         Hours = new List<int>()
                     });

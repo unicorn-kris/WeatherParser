@@ -50,7 +50,6 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     Temperature = new List<double>(),
                     Humidity = new List<double>(),
                     Pressure = new List<double>(),
-                    WindDirection = new List<string>(),
                     WindSpeed = new List<double>(),
                     Hours = new List<int>()
                 };
@@ -96,13 +95,6 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     else
                     {
                         weatherData.WindSpeed.Add(int.Parse(windSpeed));
-                    }
-
-                    if (windSpeed != "0")
-                    {
-                        weatherData.WindDirection.Add(windDirections[0]
-                             .GetElementsByClassName("row-item")[i]
-                             .GetElementsByClassName("direction")[0].TextContent.Trim());
                     }
 
                     weatherData.Pressure.Add(int.Parse(pressures[0]

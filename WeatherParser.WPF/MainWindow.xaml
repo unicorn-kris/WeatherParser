@@ -161,8 +161,7 @@
             </Grid>
             <views:MeanDeviationsView Grid.Row="2" DataContext="{Binding MeanDeviationsViewModel}"/>
 
-            0-,+6
-/7        </Grid>
+        </Grid>
     </Grid>
 
 </Window>

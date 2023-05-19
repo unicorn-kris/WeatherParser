@@ -36,7 +36,6 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     Temperature = new List<double>(),
                     Humidity = new List<double>(),
                     Pressure = new List<double>(),
-                    WindDirection = new List<string>(),
                     WindSpeed = new List<double>()
                 };
 
@@ -172,29 +171,6 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                             {
                                 listOfWeatherData.WindSpeed.Add(int.Parse(windSpeed[j]));
                             }
-                        }
-                    }
-
-                    //wind-direction
-                    HtmlNodeCollection linkWindDirect = document.DocumentNode.SelectNodes("/html/body/section[2]/div[1]/section[10]/div/div[3]/div/div/div[3]/div/div[2]");
-                    if (linkWindDirect != null)
-                    {
-                        string[] windDir = new string[8];
-
-                        var k = 0;
-
-                        foreach (HtmlNode link in linkWindDirect)
-                        {
-                            if (k < 8)
-                            {
-                                windDir[k] = link.InnerText;
-                                ++k;
-                            }
-                        }
-
-                        for (int j = 0; j < 8; ++j)
-                        {
-                            listOfWeatherData.WindDirection.Add(windDir[j]);
                         }
                     }
                 }
