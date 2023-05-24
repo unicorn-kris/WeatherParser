@@ -40,7 +40,6 @@ namespace WeatherParser.Service.Plugins.GismeteoService
 
                 var temperatures = parsedHtml.GetElementsByClassName("widget-row-chart widget-row-chart-temperature");
                 var windSpeeds = parsedHtml.GetElementsByClassName("widget-row widget-row-wind-speed-gust row-with-caption").Any() ? parsedHtml.GetElementsByClassName("widget-row widget-row-wind-speed-gust row-with-caption") : parsedHtml.GetElementsByClassName("widget-row widget-row-wind-speed row-with-caption");
-                var windDirections = parsedHtml.GetElementsByClassName("widget-row widget-row-wind-direction");
                 var pressures = parsedHtml.GetElementsByClassName("widget-row-chart widget-row-chart-pressure");
                 var humidities = parsedHtml.GetElementsByClassName("widget-row widget-row-humidity");
                 var date = parsedHtml.GetElementsByClassName("tab-content");

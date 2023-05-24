@@ -5,8 +5,60 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WeatherParser.WPF"
         mc:Ignorable="d"
-        Title="ExcelLoadWindow" Height="450" Width="800">
+        Title="Excel Load" Height="270" Width="500">
     <Grid>
-        
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#93a397"/>
+                <GradientStop Color="#c7cbbe" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="10">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="40*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Choose site" FontSize="20" FontFamily="Georgia" Foreground="Black" VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}" VerticalAlignment="Center" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="15"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Choose folder" FontSize="20" FontFamily="Georgia" Foreground="Black" VerticalAlignment="Center"/>
+            <DockPanel Grid.Row="1"  Grid.Column="1" LastChildFill="True">
+                <Button Content="..." Command="{Binding ChooseFolderCommand}"  VerticalAlignment="Center" DockPanel.Dock="Right" Width="30" Height="25" Padding="10 0 10 0"/>
+                <TextBox FontSize="15" Padding="3" FontFamily="Georgia" Text="{Binding FilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+            </DockPanel>
+
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="File name" FontSize="20" FontFamily="Georgia" Foreground="Black" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="2" Grid.Column="1" FontSize="15"  Padding="3" FontFamily="Georgia" Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+            <Button Grid.Column="2" Content="Save data" FontSize="20" Command="{Binding SaveInExcelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10"/>
+        </Grid>
+
+
+
     </Grid>
 </Window>

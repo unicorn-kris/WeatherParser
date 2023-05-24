@@ -54,7 +54,6 @@ message WeatherDataProto{
 	Pressures Pressures = 4;
 	Humidities Humidities = 5;
 	WindSpeeds WindSpeeds = 6;
-	WindDirections WindDirections = 7;
 }
 
 message Temperatures{
@@ -75,10 +74,6 @@ message Humidities{
 
 message WindSpeeds{
 	repeated double WindSpeed = 1;
-}
-
-message WindDirections{
-	repeated google.protobuf.StringValue WindDirection = 1;
 }
 
 message WeatherDataList{

@@ -30,9 +30,6 @@
     <Content Include="SaveFiles\Temperature.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SaveFiles\WindDirection.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="SaveFiles\WindSpeed.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

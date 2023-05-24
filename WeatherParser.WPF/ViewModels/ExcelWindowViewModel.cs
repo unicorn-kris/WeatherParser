@@ -1,16 +1,14 @@
-﻿using Autofac;
-using System.Collections.ObjectModel;
+﻿using Google.Protobuf.WellKnownTypes;
 using System;
-using System.IO;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Forms;
 using WeatherParser.GrpcService.Services;
 using WeatherParser.Presentation.Entities;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace WeatherParser.WPF.ViewModels
 {
-    internal class ExcelWindowViewModel: NotifyPropertyChangedBase
+    internal class ExcelWindowViewModel : NotifyPropertyChangedBase
     {
         #region fields
 
@@ -21,6 +19,8 @@ namespace WeatherParser.WPF.ViewModels
         private string _fileName;
 
         private string _filePath;
+
+        private bool _isAllDataSelected = false;
         #endregion
 
         #region ctor
@@ -30,6 +30,15 @@ namespace WeatherParser.WPF.ViewModels
             _weatherParserService = weatherParserService;
 
             ChooseFolderCommand = new RelayCommand(ChooseFolder);
+            SaveInExcelCommand = new RelayCommand(SaveInExcel, x => _isAllDataSelected);
+
+            var sitesService = _weatherParserService.GetSites(new Empty());
+            Sites = new ObservableCollection<SitePresentation>();
+
+            foreach (var site in sitesService.Sites)
+            {
+                Sites.Add(new SitePresentation() { ID = new Guid(site.SiteId), Name = site.SiteName });
+            }
         }
 
         #endregion
@@ -45,6 +54,8 @@ namespace WeatherParser.WPF.ViewModels
             set
             {
                 OnPropertyChanged(value, ref _fileName);
+                _isAllDataSelected = CheckAllData();
+                SaveInExcelCommand.NotifyCanExecuteChanged();
             }
         }
 
@@ -54,8 +65,26 @@ namespace WeatherParser.WPF.ViewModels
             set
             {
                 OnPropertyChanged(value, ref _selectedSite);
+                _isAllDataSelected = CheckAllData();
+                SaveInExcelCommand.NotifyCanExecuteChanged();
             }
         }
+
+        public string FilePath
+        {
+            get => _filePath;
+            set
+            {
+                OnPropertyChanged(value, ref _filePath);
+                _isAllDataSelected = CheckAllData();
+                SaveInExcelCommand.NotifyCanExecuteChanged();
+            }
+        }
+
+        public ObservableCollection<SitePresentation> Sites
+        {
+            get;
+        } = new ObservableCollection<SitePresentation>();
 
         #endregion
 
@@ -69,31 +98,33 @@ namespace WeatherParser.WPF.ViewModels
             {
                 if (!string.IsNullOrWhiteSpace(folderBrowser.SelectedPath))
                 {
-                    _filePath = folderBrowser.SelectedPath;
+                    FilePath = folderBrowser.SelectedPath;
                 }
             }
         }
 
-        public async Task SaveInExcel()
+        public void SaveInExcel(object? obj)
         {
-            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-
-            DialogResult result = folderBrowser.ShowDialog();
-
-            if (result == DialogResult.OK)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(folderBrowser.SelectedPath))
+                if (!_fileName.ToLower().Contains(".xlsx") && !_fileName.ToLower().Contains(".xls"))
                 {
-                    try
-                    {
-                        await _weatherParserService.SaveDataInExcelAsync(new SaveExcelRequest() { Path = _filePath + '\\' + _fileName, SiteID = _selectedSite.ID.ToString() });
-                    }
-                    catch (Exception ex)
-                    {
-                        //show error
-                    }
+                    _fileName = _fileName + ".xlsx";
                 }
+                _weatherParserService.SaveDataInExcel(new SaveExcelRequest() { Path = _filePath + '\\' + _fileName, SiteID = _selectedSite.ID.ToString() });
+                System.Windows.MessageBox.Show("Saving finish", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                ((Window)obj).Close();
             }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ((Window)obj).Close();
+            }
+        }
+
+        private bool CheckAllData()
+        {
+            return !string.IsNullOrEmpty(_fileName) && !string.IsNullOrEmpty(_filePath) && _selectedSite != null;
         }
     }
 }

@@ -38,6 +38,7 @@
                 <StackPanel>
                     <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                     <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
+                    <Button Command="{Binding SaveDataInExcelCommand}" Content="Save data in Excel" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
                 </StackPanel>
             </ComboBox>
 

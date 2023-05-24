@@ -67,8 +67,9 @@ namespace WeatherParser.WPF.ViewModels
             DeviationsDataCommand = new RelayCommand(ShowDeviationsDataCommand, x => _pressButtonDeviations);
 
             RestartAppCommand = new RelayCommand(Restart);
-
             RefreshDataCommand = new RelayCommand(RefreshData);
+
+            SaveDataInExcelCommand = new RelayCommand(SaveDataInExcel);
 
             RefreshData(null);
             _container = container;
@@ -180,6 +181,8 @@ namespace WeatherParser.WPF.ViewModels
 
         public ICommand RefreshDataCommand { get; }
 
+        public ICommand SaveDataInExcelCommand { get; }
+
         public RelayCommand DeviationsDataCommand { get; }
 
         public RelayCommand RealDataCommand { get; }
@@ -285,10 +288,7 @@ namespace WeatherParser.WPF.ViewModels
             ForecastViewModel.VisibilityProp = Visibility.Collapsed;
             DayDeviationsViewModel.VisibilityProp = Visibility.Visible;
         }
-        #endregion
-
-        #region private
-
+        
         private void Restart(object? parameter)
         {
             Process.Start(Process.GetCurrentProcess().MainModule.FileName);
@@ -322,6 +322,16 @@ namespace WeatherParser.WPF.ViewModels
             DayDeviationsViewModel.RefreshChart();
             MeanDeviationsViewModel.RefreshChart();
         }
+
+        private void SaveDataInExcel(object? parameter)
+        {
+            ExcelLoadWindow excelLoadWindow = new ExcelLoadWindow();
+            excelLoadWindow.Show();
+        }
+
+        #endregion
+
+        #region private
 
         private void DisableButtonsAndCheckBoxes()
         {

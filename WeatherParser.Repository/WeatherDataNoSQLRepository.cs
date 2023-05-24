@@ -37,8 +37,6 @@ namespace WeatherParser.Repository
             var fieldsBuilder = Builders<WeatherDataRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            var collectionSite = _db.GetCollection<WeatherDataRepository>(siteCollectionName);
-
             var sortUp = Builders<WeatherDataRepository>.Sort.Ascending(data => data.TargetDate);
             var sortDown = Builders<WeatherDataRepository>.Sort.Descending(data => data.TargetDate);
 
@@ -150,19 +148,10 @@ namespace WeatherParser.Repository
 
         public async Task<List<SiteRepository>> GetSitesAsync()
         {
-            var sites = new List<SiteRepository>();
-
             var fieldsBuilder = Builders<SiteRepository>.Projection;
             var fields = fieldsBuilder.Exclude("_id");
 
-            var DBsites = _db.GetCollection<SiteRepository>(SitesCollectionName).Find(new BsonDocument()).Project<SiteRepository>(fields).ToList();
-
-            foreach (var DBsite in DBsites)
-            {
-                sites.Add(new SiteRepository() { ID = DBsite.ID, Name = DBsite.Name, Rating = DBsite.Rating });
-            }
-
-            return sites;
+            return _db.GetCollection<SiteRepository>(SitesCollectionName).Find(new BsonDocument()).Project<SiteRepository>(fields).ToList();
         }
 
         public async Task AddSitesAsync(IEnumerable<IWeatherPlugin> plugins)

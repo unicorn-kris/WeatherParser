@@ -225,9 +225,9 @@ namespace WeatherParser.Service
             {
                 foreach (var weather in data.Weather)
                 {
-                    if (dataForSaving.Any(x => x.CurrentDate == weather.Date))
+                    if (dataForSaving.Any(x => x.CurrentDate.Date == weather.Date.Date))
                     {
-                        dataForSaving.Where(x => x.CurrentDate == weather.Date).First().Weather.Add(new ExcelWeather()
+                        dataForSaving.Where(x => x.CurrentDate.Date == weather.Date.Date).First().Weather.Add(new ExcelWeather()
                         {
                             Date = data.TargetDate,
                             Hours = weather.Hours,
@@ -242,7 +242,7 @@ namespace WeatherParser.Service
                     {
                         dataForSaving.Add(new ExcelWeatherDataFull()
                         {
-                            CurrentDate = data.TargetDate,
+                            CurrentDate = weather.Date,
                             Weather = new List<ExcelWeather>() {
                                 new ExcelWeather() {
                                     Date = data.TargetDate,
@@ -265,11 +265,7 @@ namespace WeatherParser.Service
             //create new instance
             excelApp = new Excel.Application();
 
-            //suppress displaying alerts (such as prompting to overwrite existing file)
-            excelApp.DisplayAlerts = false;
-
-            //set Excel visability
-            excelApp.Visible = true;
+            excelApp.Visible = false;
 
             //create new workbook
             var workbook = excelApp.Workbooks.Add();
@@ -340,77 +336,6 @@ namespace WeatherParser.Service
 
                 //release all resources
                 System.Runtime.InteropServices.Marshal.FinalReleaseComObject(excelApp);
-            }
-        }
-
-        public async Task SaveDataFromExcel(string filePath)
-        {
-            var rows = new List<Dictionary<string, string>>();
-
-            var keys = new List<string>();
-
-            //read excel
-            using (SpreadsheetDocument doc = SpreadsheetDocument.Open(filePath, false))
-            {
-                var workbookPart = doc.WorkbookPart;
-                var worksheetPart = workbookPart.WorksheetParts.First();
-                var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-
-                foreach (Row r in sheetData.Elements<Row>())
-                {
-                    int numStr;
-
-                    var row = new Dictionary<string, string>();
-                    if (int.TryParse(r.Elements<Cell>().First().CellValue.Text, out numStr))
-                    {
-                        if (numStr == 0)
-                        {
-                            for (int i = 1; i < r.Elements<Cell>().Count(); ++i)
-                            {
-                                Cell c = r.Elements<Cell>().ElementAt(i);
-
-                                string value = c.InnerText;
-
-                                if (c.DataType.Value == CellValues.SharedString)
-                                {
-                                    var stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>()
-                                        .FirstOrDefault();
-                                    if (stringTable != null)
-                                        value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
-                                }
-
-                                keys.Add(value);
-                            }
-                        }
-                        else
-                        {
-                            int keynum = 0;
-
-                            for (int i = 1; i < r.Elements<Cell>().Count(); ++i)
-                            {
-                                Cell c = r.Elements<Cell>().ElementAt(i);
-
-                                string value = c.InnerText;
-
-                                if (c.DataType.Value == CellValues.SharedString)
-                                {
-                                    var stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>()
-                                        .FirstOrDefault();
-                                    if (stringTable != null)
-                                        value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
-                                }
-
-                                row[keys[keynum]] = value;
-                                keynum++;
-                            }
-                            rows.Add(row);
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
             }
         }
 

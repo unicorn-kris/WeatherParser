@@ -21,5 +21,7 @@ namespace WeatherParser.Repository.Entities
         public List<double> Humidity { get; set; }
 
         public List<double> WindSpeed { get; set; }
+
+        public List<string> WindDirection{ get; set; }
     }
 }
