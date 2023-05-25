@@ -344,54 +344,58 @@ namespace WeatherParser.Service
             //map weatherdatarepository to weatherdataservice
             var weatherDataList = new List<WeatherDataService>();
 
-            var targetData = data
+            var targetDataDate = data
                 .Where(x => x.TargetDate.Date.Equals(targetDate.Date))
-                .FirstOrDefault()
-                    .Weather
-                    .Where(x => x.Date.Date.Equals(targetDate.Date))
-                    .FirstOrDefault();
+                .FirstOrDefault();
 
-            foreach (var weatherData in data)
-            {
-                var weathers = new List<WeatherService>();
+            if (targetDataDate != null) {
+                var targetData = targetDataDate
+                        .Weather
+                        .Where(x => x.Date.Date.Equals(targetDate.Date))
+                        .FirstOrDefault();
 
-                foreach (var weather in weatherData.Weather)
+                foreach (var weatherData in data)
                 {
-                    var humidities = new List<double>();
-                    var temperatures = new List<double>();
-                    var pressures = new List<double>();
-                    var windSpeeds = new List<double>();
-                    var hours = new List<int>();
+                    var weathers = new List<WeatherService>();
 
-                    //all arrays of weather have a one size for one site
-                    for (int i = 0; i < (weather.Temperature.Count < targetData.Temperature.Count ? weather.Temperature.Count : targetData.Temperature.Count); i++)
+                    foreach (var weather in weatherData.Weather)
                     {
-                        if (targetData.Hours.Contains(weather.Hours[i]))
+                        var humidities = new List<double>();
+                        var temperatures = new List<double>();
+                        var pressures = new List<double>();
+                        var windSpeeds = new List<double>();
+                        var hours = new List<int>();
+
+                        //all arrays of weather have a one size for one site
+                        for (int i = 0; i < (weather.Temperature.Count < targetData.Temperature.Count ? weather.Temperature.Count : targetData.Temperature.Count); i++)
                         {
-                            temperatures.Add(targetData.Temperature[i] - weather.Temperature[i]);
-                            humidities.Add(targetData.Humidity[i] - weather.Humidity[i]);
-                            pressures.Add(targetData.Pressure[i] - weather.Pressure[i]);
-                            windSpeeds.Add(targetData.WindSpeed[i] - weather.WindSpeed[i]);
-                            hours.Add(weather.Hours[i]);
+                            if (targetData.Hours.Contains(weather.Hours[i]))
+                            {
+                                temperatures.Add(targetData.Temperature[i] - weather.Temperature[i]);
+                                humidities.Add(targetData.Humidity[i] - weather.Humidity[i]);
+                                pressures.Add(targetData.Pressure[i] - weather.Pressure[i]);
+                                windSpeeds.Add(targetData.WindSpeed[i] - weather.WindSpeed[i]);
+                                hours.Add(weather.Hours[i]);
+                            }
                         }
-                    }
 
-                    weathers.Add(new WeatherService()
+                        weathers.Add(new WeatherService()
+                        {
+                            Hours = hours,
+                            Date = weather.Date,
+                            Humidity = humidities,
+                            Pressure = pressures,
+                            Temperature = temperatures,
+                            WindSpeed = windSpeeds
+                        });
+                    }
+                    weatherDataList.Add(new WeatherDataService()
                     {
-                        Hours = hours,
-                        Date = weather.Date,
-                        Humidity = humidities,
-                        Pressure = pressures,
-                        Temperature = temperatures,
-                        WindSpeed = windSpeeds
+                        SiteId = weatherData.SiteID,
+                        TargetDate = weatherData.TargetDate,
+                        Weather = weathers
                     });
                 }
-                weatherDataList.Add(new WeatherDataService()
-                {
-                    SiteId = weatherData.SiteID,
-                    TargetDate = weatherData.TargetDate,
-                    Weather = weathers
-                });
             }
 
             return weatherDataList;
