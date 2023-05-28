@@ -29,6 +29,8 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                 urls.Add((string)field.GetValue(null));
             }
 
+            var countOfDays = 1;
+
             foreach (string url in urls)
             {
                 WeatherService listOfWeatherData = new WeatherService()
@@ -39,8 +41,9 @@ namespace WeatherParser.Service.Plugins.GismeteoService
                     WindSpeed = new List<double>()
                 };
 
-                //TODO PARSE DATE
-                listOfWeatherData.Date = DateTime.UtcNow.AddDays(1);
+
+                listOfWeatherData.Date = DateTime.UtcNow.AddDays(countOfDays);
+                countOfDays++;
 
                 string pageContent = LoadPage(url);
                 HtmlAgilityPack.HtmlDocument document = new HtmlAgilityPack.HtmlDocument();

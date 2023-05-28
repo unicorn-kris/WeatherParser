@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -258,6 +259,162 @@ namespace WeatherParser.Service
                 }
             }
 
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(path, SpreadsheetDocumentType.Workbook))
+            {
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                workbookpart.Workbook = new Workbook();
+
+                // Add a WorksheetPart to the WorkbookPart.
+                WorksheetPart worksheetPartTemperature = workbookpart.AddNewPart<WorksheetPart>();
+                WorksheetPart worksheetPartHumidity = workbookpart.AddNewPart<WorksheetPart>();
+                WorksheetPart worksheetPartPressure = workbookpart.AddNewPart<WorksheetPart>();
+                WorksheetPart worksheetPartWindSpeed = workbookpart.AddNewPart<WorksheetPart>();
+
+                worksheetPartTemperature.Worksheet = new Worksheet(new SheetData());
+                worksheetPartHumidity.Worksheet = new Worksheet(new SheetData());
+                worksheetPartPressure.Worksheet = new Worksheet(new SheetData());
+                worksheetPartWindSpeed.Worksheet = new Worksheet(new SheetData());
+
+                // Add Sheets to the Workbook.
+                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+
+                // Append a new worksheet and associate it with the workbook.
+                Sheet sheetTemperature = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPartTemperature), SheetId = 1, Name = "Temperature" };
+                Sheet sheetHumidity = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPartHumidity), SheetId = 1, Name = "Humidity" };
+                Sheet sheetPressure = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPartPressure), SheetId = 1, Name = "Pressure" };
+                Sheet sheetWindSpeed = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPartWindSpeed), SheetId = 1, Name = "WindSpeed" };
+
+                sheets.Append(sheetTemperature);
+                sheets.Append(sheetHumidity);
+                sheets.Append(sheetPressure);
+                sheets.Append(sheetWindSpeed);
+
+                // Get the sheetData cell table.
+                SheetData sheetDataTemperature = worksheetPartTemperature.Worksheet.GetFirstChild<SheetData>();
+                SheetData sheetDataHumidity = worksheetPartHumidity.Worksheet.GetFirstChild<SheetData>();
+                SheetData sheetDataPressure = worksheetPartPressure.Worksheet.GetFirstChild<SheetData>();
+                SheetData sheetDataWindSpeed = worksheetPartWindSpeed.Worksheet.GetFirstChild<SheetData>();
+
+                // Add a row to the cell table.
+                UInt32Value rowNum = 1;
+                if (dataForSaving.Any())
+                {
+                    foreach (var data in dataForSaving)
+                    {
+                        for (int j = 0; j < data.Weather.Count; j++)
+                        {
+                            Row rowTemperature = new Row() { RowIndex = rowNum };
+                            Row rowHumidity = new Row() { RowIndex = rowNum };
+                            Row rowPressure = new Row() { RowIndex = rowNum };
+                            Row rowWindSpeed = new Row() { RowIndex = rowNum };
+
+                            sheetDataTemperature.Append(rowTemperature);
+                            sheetDataPressure.Append(rowPressure);
+                            sheetDataHumidity.Append(rowHumidity);
+                            sheetDataWindSpeed.Append(rowWindSpeed);
+
+                            if (j == 0)
+                            {
+                                InsertCell(rowTemperature, 1, data.CurrentDate.Date.ToString(), CellValues.String);
+                                InsertCell(rowPressure, 1, data.CurrentDate.Date.ToString(), CellValues.String);
+                                InsertCell(rowHumidity, 1, data.CurrentDate.Date.ToString(), CellValues.String);
+                                InsertCell(rowWindSpeed, 1, data.CurrentDate.Date.ToString(), CellValues.String);
+
+                            }
+                            else
+                            {
+                                InsertCell(rowTemperature, 1, string.Empty, CellValues.String);
+                                InsertCell(rowHumidity, 1, string.Empty, CellValues.String);
+                                InsertCell(rowPressure, 1, string.Empty, CellValues.String);
+                                InsertCell(rowWindSpeed, 1, string.Empty, CellValues.String);
+
+                            }
+
+                            for (int k = -1; k < data.Weather[j].Hours.Count; k++)
+                            {
+                                if (k == -1)
+                                {
+                                    InsertCell(rowTemperature, k+3, data.Weather[j].Date.ToString(), CellValues.String);
+                                    InsertCell(rowPressure, k + 3, data.Weather[j].Date.ToString(), CellValues.String);
+                                    InsertCell(rowHumidity, k + 3, data.Weather[j].Date.ToString(), CellValues.String);
+                                    InsertCell(rowWindSpeed, k + 3, data.Weather[j].Date.ToString(), CellValues.String);
+
+                                }
+                                else
+                                {
+                                    InsertCell(rowTemperature, k+3, data.Weather[j].Temperature[k].ToString(), CellValues.Number);
+                                    InsertCell(rowHumidity, k + 3, data.Weather[j].Humidity[k].ToString(), CellValues.Number);
+                                    InsertCell(rowPressure, k + 3, data.Weather[j].Pressure[k].ToString(), CellValues.Number);
+                                    InsertCell(rowWindSpeed, k + 3, data.Weather[j].WindSpeed[k].ToString(), CellValues.Number);
+
+                                }
+                            }
+                            ++rowNum;
+                        }
+                    }
+                }
+
+                workbookpart.Workbook.Save();
+                spreadsheetDocument.Close();
+            }
+        }
+
+        //Добавление Ячейки в строку (На вход подаем: строку, номер колонки, тип значения,)
+        static void InsertCell(Row row, int cell_num, string val, CellValues type)
+        {
+            Cell refCell = null;
+            Cell newCell = new Cell() { CellReference = cell_num.ToString() + ":" + row.RowIndex.ToString() };
+            row.InsertBefore(newCell, refCell);
+
+            // Устанавливает тип значения.
+            newCell.CellValue = new CellValue(val);
+            newCell.DataType = new EnumValue<CellValues>(type);
+
+        }
+
+        public async Task SaveDataInExcel1(string path, Guid siteId)
+        {
+            var dataFromdb = await _weatherParserRepository.GetAllWeatherDataBySiteAsync(siteId).ConfigureAwait(false);
+
+            var dataForSaving = new List<ExcelWeatherDataFull>();
+
+            foreach (var data in dataFromdb)
+            {
+                foreach (var weather in data.Weather)
+                {
+                    if (dataForSaving.Any(x => x.CurrentDate.Date == weather.Date.Date))
+                    {
+                        dataForSaving.Where(x => x.CurrentDate.Date == weather.Date.Date).First().Weather.Add(new ExcelWeather()
+                        {
+                            Date = data.TargetDate,
+                            Hours = weather.Hours,
+                            Humidity = weather.Humidity,
+                            Pressure = weather.Pressure,
+                            Temperature = weather.Temperature,
+                            WindSpeed = weather.WindSpeed
+
+                        });
+                    }
+                    else
+                    {
+                        dataForSaving.Add(new ExcelWeatherDataFull()
+                        {
+                            CurrentDate = weather.Date,
+                            Weather = new List<ExcelWeather>() {
+                                new ExcelWeather() {
+                                    Date = data.TargetDate,
+                                    Hours = weather.Hours,
+                                    Humidity = weather.Humidity,
+                                    Pressure = weather.Pressure,
+                                    Temperature = weather.Temperature,
+                                    WindSpeed = weather.WindSpeed
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
             Excel.Application excelApp = null;
 
             int worksheetCount = 0;
@@ -348,7 +505,8 @@ namespace WeatherParser.Service
                 .Where(x => x.TargetDate.Date.Equals(targetDate.Date))
                 .FirstOrDefault();
 
-            if (targetDataDate != null) {
+            if (targetDataDate != null)
+            {
                 var targetData = targetDataDate
                         .Weather
                         .Where(x => x.Date.Date.Equals(targetDate.Date))

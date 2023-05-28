@@ -7,7 +7,7 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" 
         xmlns:views="clr-namespace:WeatherParser.WPF.Views"     
         mc:Ignorable="d"
-        Width="1400" Height="1100">
+        Title="Weather" Width="1400" Height="1100">
     
     <Window.Resources>
         <ResourceDictionary>
