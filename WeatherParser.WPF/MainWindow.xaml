@@ -21,8 +21,8 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#93a397"/>
-                <GradientStop Color="#c7cbbe" Offset="1"/>
+                <GradientStop Color="#e3e3e3"/>
+                <GradientStop Color="#f6f6f6" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
 
@@ -32,29 +32,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="#86988c">
 
-            <ComboBox HorizontalAlignment="Left" Text="Restart">
-                <StackPanel>
-                    <Button Command="{Binding RefreshDataCommand}" Content="Refresh data" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding RestartAppCommand}" Content="Restart application" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                    <Button Command="{Binding SaveDataInExcelCommand}" Content="Save data in Excel" Margin="0 5" Padding="0 3" FontSize="15" FontFamily="Georgia"/>
-                </StackPanel>
-            </ComboBox>
+        <Menu VerticalAlignment="Top"  Background="#dfdfdf">
+            <MenuItem Header="▼" FontSize="30">
+                <MenuItem Header="Refresh data" FontSize="15" Command="{Binding RefreshDataCommand}" ></MenuItem>
+                <MenuItem Header="Restart application" FontSize="15" Command="{Binding RestartAppCommand}" ></MenuItem>
+                <Separator />
+                <MenuItem Header="Save data in Excel" FontSize="15" Command="{Binding SaveDataInExcelCommand}" ></MenuItem>
+            </MenuItem>
+            <StackPanel>
+                <TextBlock >Select site:</TextBlock>
+                <ComboBox FontSize="15" Width="200" Text="Select Site" SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Padding="2 0" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </Menu>
 
 
-            <ComboBox  SelectedItem="{Binding SelectedSite}" ItemsSource="{Binding Sites}" HorizontalAlignment="Center">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
-        </Grid>
-
-
-        <Grid Grid.Row="1">
+            <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70*"/>
@@ -95,7 +94,7 @@
                         <ColumnDefinition Width="30*" />
                     </Grid.ColumnDefinitions>
 
-                    <Calendar Grid.Column="0" Margin="5 0" CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" Style="{DynamicResource CalendarStyle1}" SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}" Background="#FF8A9C92" BorderBrush="#FF8A9C92" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Calendar Grid.Column="0" Margin="5 0" CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" Style="{DynamicResource CalendarStyle1}" SelectedDate="{Binding SelectedDate}" DisplayDateStart="{Binding FirstDate}" DisplayDateEnd="{Binding LastDate}" IsEnabled="{Binding HaveDates}" Background="#d4d4d4" BorderBrush="#FF8A9C92" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <StackPanel Grid.Column="1" Margin="10 0">
                         <Label Content="Time: " FontSize="16" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
@@ -158,7 +157,7 @@
             <Label Grid.Row="0" Content="Deviations by site: " HorizontalAlignment="Center" FontSize="30" FontFamily="Georgia" Foreground="Black" FontWeight="Bold"/>
             <Grid Grid.Row="1" >
                 <Label Content="Select count of days: " FontSize="20" FontFamily="Georgia" Foreground="Black" FontWeight="Bold" Margin="20 0 0 0" />
-                <xctk:IntegerUpDown Minimum="1" Background="#c7cbcc" Maximum="7" Value="{Binding Day}" IsEnabled="{Binding IsTimeSelected}" Width="50" HorizontalAlignment="Left" Margin="250 0 0 0"/>
+                <xctk:IntegerUpDown Minimum="1" Background="#dcdcdc" Maximum="7" Value="{Binding Day}" IsEnabled="{Binding IsTimeSelected}" Width="50" HorizontalAlignment="Left" Margin="250 0 0 0"/>
             </Grid>
             <views:MeanDeviationsView Grid.Row="2" DataContext="{Binding MeanDeviationsViewModel}"/>
 

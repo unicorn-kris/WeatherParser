@@ -11,13 +11,13 @@
         </Setter>
     </Style>
 
-    <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDAE6BC"/>
+    <SolidColorBrush x:Key="Button.Static.Background" Color="#eeeeee"/>
     <SolidColorBrush x:Key="Button.Static.Border" Color="#91a59a"/>
-    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFAECEB9"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#cecece"/>
     <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#91a59a"/>
-    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#c7cbbe"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="#dcdcdc"/>
     <SolidColorBrush x:Key="Button.Pressed.Border" Color="#91a59a"/>
-    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#c7cbbe"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="White"/>
     <SolidColorBrush x:Key="Button.Disabled.Border" Color="#91a59a"/>
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="Black"/>
     
